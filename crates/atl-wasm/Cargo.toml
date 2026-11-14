@@ -1,0 +1,27 @@
+# Browser and worker build of atl-sdk. Outside the native root workspace.
+[workspace]
+
+[package]
+name = "atl-wasm"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "WebAssembly build of atl-sdk for browsers, workers and Deno"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+atl-sdk = { path = "../atl-sdk", default-features = false }
+js-sys = "0.3"
+serde-wasm-bindgen = "0.6"
+serde = "1"
+serde_json = { version = "1", features = ["preserve_order"] }
+wasm-bindgen = "0.2"
+wasm-bindgen-futures = "0.4"
+
+[profile.release]
+opt-level = "s"
+lto = true
+codegen-units = 1

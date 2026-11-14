@@ -1,0 +1,22 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>atl wasm smoke</title>
+<pre id="out">running</pre>
+<script type="module">
+  import init, { Client, markdownToWiki } from "/pkg/atl_wasm.js"
+  const out = document.getElementById("out")
+  try {
+    await init()
+    const client = Client.withConnections({
+      jira: {
+        deployment: "cloud",
+        base_url: location.origin,
+        auth: { kind: "bearer", token: "t" },
+      },
+    }).configured(undefined, 0)
+    const page = await client.task("jira_issue_list", { project: "A" })
+    out.textContent = "OK " + page.issues[0].key + " " + markdownToWiki("**hi**")
+  } catch (err) {
+    out.textContent = "FAIL " + (err?.message ?? err)
+  }
+</script>

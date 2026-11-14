@@ -1,0 +1,125 @@
+/**
+ * TypeScript SDK for the Atlassian suite (Node.js, Bun, Deno), built on the
+ * `atl` Rust core through Node-API.
+ *
+ * ```ts
+ * import { Client } from "atl-sdk"
+ * const client = Client.fromEnv()                      // credentials from `atl auth login`
+ * const page = await client.jiraIssueList({ project: "ABC", status: ["In Progress"] })
+ * const doc = await client.confluencePageGet({ page: "DOCS:Handbook" })
+ * const raw = await client.call("jira", "getIssue", { params: { issueIdOrKey: "ABC-1" } })
+ * ```
+ */
+import path from "node:path"
+import { Connections, rethrow, TaskDef, Tasks } from "./common"
+
+export * from "./common"
+
+interface NativeClient {
+  configured(readOnly?: boolean, maxRetries?: number): NativeClient
+  task(name: string, args: string): Promise<string>
+  call(service: string, operation: string, args: string): Promise<string>
+  request(
+    service: string,
+    method: string,
+    path: string,
+    query: string,
+    body?: string,
+  ): Promise<string>
+}
+
+interface NativeBinding {
+  NativeClient: {
+    fromEnv(profile?: string): NativeClient
+    fromConnections(json: string): NativeClient
+  }
+  taskList(): string
+  markdownToAdf(markdown: string): string
+  adfToMarkdown(adf: string): string
+  markdownToStorage(markdown: string): string
+  storageToMarkdown(storage: string): string
+  markdownToWiki(markdown: string): string
+  wikiToMarkdown(wiki: string): string
+}
+
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const native = require(
+  path.join(__dirname, "..", "native", `${process.platform}-${process.arch}`, "atl.node"),
+) as NativeBinding
+
+async function wrap<T>(promise: Promise<string>): Promise<T> {
+  try {
+    return JSON.parse(await promise) as T
+  } catch (err) {
+    rethrow(err)
+  }
+}
+
+function sync<T>(fn: () => T): T {
+  try {
+    return fn()
+  } catch (err) {
+    rethrow(err)
+  }
+}
+
+export class Client extends Tasks {
+  private constructor(private readonly inner: NativeClient) {
+    super()
+  }
+
+  /** Credentials from `atl auth login` and the ATL_* environment variables. */
+  static fromEnv(profile?: string): Client {
+    return new Client(sync(() => native.NativeClient.fromEnv(profile)))
+  }
+
+  static withConnections(connections: Connections): Client {
+    return new Client(sync(() => native.NativeClient.fromConnections(JSON.stringify(connections))))
+  }
+
+  /** A copy that refuses writes and/or retries a different number of times. */
+  configured(options: { readOnly?: boolean; maxRetries?: number }): Client {
+    return new Client(this.inner.configured(options.readOnly, options.maxRetries))
+  }
+
+  task<T = unknown>(name: string, args: Record<string, unknown> = {}): Promise<T> {
+    return wrap<T>(this.inner.task(name, JSON.stringify(args)))
+  }
+
+  /** Runs any generated operation, for example `call("jira", "getIssue", { params: { issueIdOrKey: "A-1" } })`. */
+  call<T = unknown>(
+    service: string,
+    operation: string,
+    args: { params?: Record<string, unknown>; body?: unknown; files?: string[] } = {},
+  ): Promise<T> {
+    return wrap<T>(this.inner.call(service, operation, JSON.stringify(args)))
+  }
+
+  /** Sends a request to any path on a service's server. */
+  request<T = unknown>(
+    service: string,
+    method: string,
+    path: string,
+    options: { query?: Record<string, unknown>; body?: unknown } = {},
+  ): Promise<T> {
+    const body = options.body === undefined ? undefined : JSON.stringify(options.body)
+    return wrap<T>(
+      this.inner.request(service, method, path, JSON.stringify(options.query ?? {}), body),
+    )
+  }
+}
+
+/** Every task with its description and the JSON Schema of its arguments. */
+export function tasks(): TaskDef[] {
+  return JSON.parse(native.taskList()) as TaskDef[]
+}
+
+export const markup = {
+  markdownToAdf: (markdown: string): Record<string, unknown> =>
+    JSON.parse(native.markdownToAdf(markdown)),
+  adfToMarkdown: (adf: unknown): string => sync(() => native.adfToMarkdown(JSON.stringify(adf))),
+  markdownToStorage: native.markdownToStorage,
+  storageToMarkdown: native.storageToMarkdown,
+  markdownToWiki: native.markdownToWiki,
+  wikiToMarkdown: native.wikiToMarkdown,
+}

@@ -1,0 +1,28 @@
+# Outside the root workspace: building a PyO3 test harness links libpython,
+# which `cargo test --workspace` must not need. The empty table stops Cargo
+# from walking up to the root manifest.
+[workspace]
+
+[package]
+name = "atl-py"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Python bindings for atl-sdk (Jira, Confluence, Bitbucket, Trello, Atlassian Admin)"
+publish = false
+
+[lib]
+name = "_atl"
+crate-type = ["cdylib"]
+
+[dependencies]
+atl-sdk = { path = "../atl-sdk" }
+# One wheel per interpreter, including free-threaded CPython 3.14t and 3.15t
+# (abi3 cannot target free-threaded builds).
+pyo3 = { version = "0.30", features = ["extension-module"] }
+serde_json = { version = "1", features = ["preserve_order"] }
+tokio = { version = "1", features = ["rt-multi-thread"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

@@ -1,0 +1,53 @@
+[package]
+name = "atl"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords = ["atlassian", "jira", "confluence", "bitbucket", "cli"]
+categories = ["command-line-utilities", "api-bindings"]
+description = "atl: one CLI and MCP server for Jira, Confluence, Bitbucket, Trello and Atlassian Admin, Cloud and Data Center"
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "atl"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+base64.workspace = true
+atl-mcp.workspace = true
+atl-sdk = { workspace = true, features = ["clap"] }
+clap.workspace = true
+clap_complete.workspace = true
+dialoguer.workspace = true
+tempfile.workspace = true
+ratatui.workspace = true
+reqwest.workspace = true
+self-replace.workspace = true
+semver.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+url.workspace = true
+toml.workspace = true
+jaq-core = "3.1.2"
+jaq-std = "3.0.4"
+jaq-json = "2.0.3"
+clap_mangen = "0.3.3"
+shlex = "2.0.1"
+comfy-table = { version = "8", default-features = false }
+csv = "1"
+open = "5"
+edit = "0.1"
+percent-encoding.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true
+tokio.workspace = true
+unicode-width = "0.2"
+wiremock.workspace = true

@@ -1,0 +1,27 @@
+# Outside the root workspace: this package needs a Node-API runtime, which
+# must not become a prerequisite for `cargo test --workspace`.
+[workspace]
+
+[package]
+name = "atl-node"
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+description = "Node-API bindings for atl-sdk (Node.js, Bun, Deno)"
+publish = false
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+atl-sdk = { path = "../atl-sdk" }
+napi = { version = "3", features = ["napi9", "tokio_rt"] }
+napi-derive = "3"
+serde_json = { version = "1", features = ["preserve_order"] }
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

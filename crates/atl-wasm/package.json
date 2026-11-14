@@ -1,0 +1,55 @@
+{
+  "name": "atl-sdk-wasm",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin (Cloud and Data Center) for browsers, workers and Deno, built on the atl Rust core compiled to WebAssembly",
+  "keywords": [
+    "atlassian",
+    "bitbucket",
+    "confluence",
+    "jira",
+    "sdk",
+    "trello",
+    "wasm"
+  ],
+  "homepage": "https://github.com/racetozero/atlassian-toolkit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/racetozero/atlassian-toolkit.git",
+    "directory": "crates/atl-wasm"
+  },
+  "files": [
+    "dist",
+    "pkg/atl_wasm.js",
+    "pkg/atl_wasm.d.ts",
+    "pkg/atl_wasm_bg.wasm",
+    "README.md",
+    "LICENSE"
+  ],
+  "type": "module",
+  "sideEffects": [
+    "./pkg/atl_wasm.js"
+  ],
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build:wasm": "wasm-pack build --target web --out-dir pkg --release",
+    "build:ts": "bun build ./js/index.ts --outdir dist --target browser --format esm --external '*/pkg/atl_wasm.js' && dts-bundle-generator --silent --no-check --external-imports ../pkg/atl_wasm.js -o dist/index.d.ts js/index.ts",
+    "build": "bun run build:wasm && bun run build:ts",
+    "test": "deno test --allow-net --allow-read test/sdk_test.ts",
+    "test:size": "bun test/size.mjs"
+  },
+  "devDependencies": {
+    "dts-bundle-generator": "^9.5.1",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

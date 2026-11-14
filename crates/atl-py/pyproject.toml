@@ -1,0 +1,50 @@
+[build-system]
+requires = ["maturin>=1.9,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "atl-sdk"
+requires-python = ">=3.11"
+description = "Python SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin (Cloud and Data Center), built on the atl Rust core"
+readme = "README.md"
+license = { text = "MIT" }
+keywords = ["atlassian", "jira", "confluence", "bitbucket", "trello"]
+classifiers = [
+  "Programming Language :: Rust",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
+  "Programming Language :: Python :: Free Threading :: 3 - Stable",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Topic :: Software Development :: Libraries",
+]
+dynamic = ["version"]
+
+[project.urls]
+Homepage = "https://github.com/racetozero/atlassian-toolkit"
+Repository = "https://github.com/racetozero/atlassian-toolkit"
+Changelog = "https://github.com/racetozero/atlassian-toolkit/blob/main/CHANGELOG.md"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[tool.uv]
+# `uv sync` builds the extension with maturin; rebuild when the Rust changes.
+cache-keys = [
+  { file = "pyproject.toml" },
+  { file = "Cargo.toml" },
+  { file = "src/**/*.rs" },
+  { file = "../atl-sdk/Cargo.toml" },
+  { file = "../atl-sdk/src/**/*.rs" },
+]
+
+[tool.maturin]
+module-name = "atl_sdk._atl"
+python-source = "python"
+features = ["pyo3/extension-module"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

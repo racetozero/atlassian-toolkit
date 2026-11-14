@@ -1,0 +1,43 @@
+{
+  "name": "atl-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin (Cloud and Data Center) for Node.js, Bun and Deno, built on the atl Rust core",
+  "keywords": [
+    "atlassian",
+    "bitbucket",
+    "confluence",
+    "jira",
+    "sdk",
+    "trello"
+  ],
+  "homepage": "https://github.com/racetozero/atlassian-toolkit",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/racetozero/atlassian-toolkit.git",
+    "directory": "crates/atl-node"
+  },
+  "files": [
+    "dist",
+    "native",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build:native": "cargo build --release && bun scripts/copy-native.mjs",
+    "build:ts": "bun build ./ts/index.ts --outdir dist --target node --format cjs --packages external && tsc -p tsconfig.json --emitDeclarationOnly",
+    "build": "bun run build:native && bun run build:ts",
+    "test": "node --test test/sdk.test.cjs",
+    "test:bun": "bun test test/sdk.test.cjs",
+    "test:deno": "deno test --allow-all test/deno-smoke.mts"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

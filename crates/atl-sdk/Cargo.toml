@@ -1,0 +1,74 @@
+[package]
+name = "atl-sdk"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+readme = "../../README.md"
+keywords = ["atlassian", "jira", "confluence", "bitbucket", "sdk"]
+categories = ["api-bindings", "web-programming::http-client"]
+description = "Rust SDK for the Atlassian suite (Jira, Confluence, Bitbucket, Trello, Admin) generated from Atlassian's OpenAPI documents"
+build = "build.rs"
+
+[lib]
+name = "atl_sdk"
+
+[lints]
+workspace = true
+
+[features]
+default = ["native"]
+# Everything that needs an operating system: TLS, HTTP/2, proxies, gzip,
+# streaming file uploads, tokio timers, and the home directory. Turn it off
+# for WebAssembly, where the browser's fetch does this work.
+native = [
+  "dep:dirs",
+  "dep:tokio",
+  "reqwest/rustls",
+  "reqwest/charset",
+  "reqwest/http2",
+  "reqwest/system-proxy",
+  "reqwest/gzip",
+  "reqwest/stream",
+]
+
+# `clap::Args` for the issue filters, used by the atl CLI.
+clap = ["dep:clap"]
+
+[dependencies]
+clap = { workspace = true, optional = true }
+dirs = { workspace = true, optional = true }
+percent-encoding.workspace = true
+pulldown-cmark.workspace = true
+htmd.workspace = true
+reqwest.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+schemars.workspace = true
+thiserror.workspace = true
+tokio = { workspace = true, optional = true }
+toml.workspace = true
+url.workspace = true
+
+# `~/.netrc` logins for Data Center.
+netrc = "0.4"
+# Title patterns (`--exclude`, `--pattern`): `*` and `?`, no regex engine,
+# which keeps the WebAssembly build small.
+wildmatch = "2"
+# YAML front matter of exported Confluence pages.
+serde_yaml_ng = "0.10"
+async-lock = "3"
+futures-util = "0.3"
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+gloo-timers.workspace = true
+
+[build-dependencies]
+serde_json = { workspace = true }
+
+[dev-dependencies]
+futures = "0.3"
+tempfile.workspace = true
+tokio.workspace = true
+wiremock.workspace = true

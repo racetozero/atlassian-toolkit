@@ -1,0 +1,79 @@
+[workspace]
+resolver = "2"
+members = ["crates/atl-sdk", "crates/atl-mcp", "crates/atl"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/racetozero/atlassian-toolkit"
+homepage = "https://github.com/racetozero/atlassian-toolkit"
+
+[workspace.lints.rust]
+unsafe_code = "forbid"
+
+# dist writes `homepage` into the Homebrew formula.
+[workspace.lints.cargo]
+redundant_homepage = "allow"
+
+[workspace.lints.clippy]
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
+
+[workspace.dependencies]
+anyhow = "1"
+base64 = "0.22"
+atl-mcp = { path = "crates/atl-mcp", version = "0.1.0" }
+atl-sdk = { path = "crates/atl-sdk", version = "0.1.0" }
+clap = { version = "4", features = ["derive", "string", "wrap_help", "env"] }
+dirs = "7"
+dialoguer = { version = "0.12", default-features = false }
+gloo-timers = { version = "0.3", features = ["futures"] }
+# Dynamic completion is an unstable clap_complete feature; pin the exact version.
+clap_complete = { version = "=4.6.11", features = ["unstable-dynamic"] }
+self-replace = "1"
+semver = { version = "1", features = ["serde"] }
+percent-encoding = "2"
+pulldown-cmark = { version = "0.13", default-features = false, features = ["html"] }
+htmd = "0.5"
+ratatui = "0.30"
+reqwest = { version = "0.13", default-features = false, features = [
+  "json",
+  "form",
+  "query",
+  "multipart",
+] }
+serde = { version = "1", features = ["derive"] }
+serde_json = { version = "1", features = ["preserve_order", "raw_value"] }
+schemars = "1"
+tempfile = "3"
+thiserror = "2"
+tokio = { version = "1", features = [
+  "rt-multi-thread",
+  "macros",
+  "io-util",
+  "io-std",
+  "sync",
+  "time",
+  "fs",
+  "net",
+  "process",
+] }
+toml = "1"
+url = "2"
+wiremock = "0.6"
+
+[profile.dev.build-override]
+# build.rs normalizes ~9 MB of OpenAPI JSON; an optimized build script keeps
+# rebuilds of the catalog under a second.
+opt-level = 3
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+strip = "symbols"
+
+# The profile cargo-dist builds release archives with.
+[profile.dist]
+inherits = "release"
