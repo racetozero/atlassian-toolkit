@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.2
+
+### Changed
+
+- `atl --help` lists the product commands (admin, bitbucket, confluence,
+  jira, jsm, trello) in their own Products section, and the usage line reads
+  `atl [OPTIONS] <PRODUCT|COMMAND>`.
+
 ## 0.0.1
 
 The first public release.

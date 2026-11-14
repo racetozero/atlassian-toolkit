@@ -1,6 +1,6 @@
 {
   "name": "atlassian-toolkit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "TypeScript SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin (Cloud and Data Center) for Node.js, Bun and Deno, built on the atl Rust core",
   "keywords": [
     "atlassian",

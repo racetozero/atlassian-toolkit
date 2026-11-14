@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "atl"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "anyhow",
  "atlassian-toolkit",
@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "atlassian-toolkit"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "async-lock",
  "clap",
@@ -204,7 +204,7 @@ dependencies = [
 
 [[package]]
 name = "atlassian-toolkit-mcp"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "anyhow",
  "atlassian-toolkit",

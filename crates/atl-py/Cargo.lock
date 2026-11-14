@@ -33,7 +33,7 @@ dependencies = [
 
 [[package]]
 name = "atl-py"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "atlassian-toolkit",
  "pyo3",
@@ -43,7 +43,7 @@ dependencies = [
 
 [[package]]
 name = "atlassian-toolkit"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "async-lock",
  "dirs",
