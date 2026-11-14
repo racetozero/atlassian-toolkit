@@ -24,8 +24,8 @@ unimplemented = "warn"
 [workspace.dependencies]
 anyhow = "1"
 base64 = "0.22"
-atl-mcp = { path = "crates/atl-mcp", version = "0.0.1" }
-atl-sdk = { path = "crates/atl-sdk", version = "0.0.1" }
+atl-mcp = { package = "atlassian-toolkit-mcp", path = "crates/atl-mcp", version = "0.0.1" }
+atl-sdk = { package = "atlassian-toolkit", path = "crates/atl-sdk", version = "0.0.1" }
 clap = { version = "4", features = ["derive", "string", "wrap_help", "env"] }
 dirs = "7"
 dialoguer = { version = "0.12", default-features = false }

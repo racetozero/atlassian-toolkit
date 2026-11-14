@@ -2,12 +2,12 @@
 
 All the SDKs use the same Rust core and the same tasks as the CLI. `jira_issue_list` returns the same result in Python as in `atl jira issue list --agent`.
 
-| Language                                 | Install                    | Source            |
-| ---------------------------------------- | -------------------------- | ----------------- |
-| Rust                                     | `cargo add atl-sdk`        | `crates/atl-sdk`  |
-| Python 3.11+                             | `uv add atlassian-toolkit` | `crates/atl-py`   |
-| Node.js, Bun, Deno                       | `bun add atl-sdk`          | `crates/atl-node` |
-| Browsers, workers and Deno (WebAssembly) | `bun add atl-sdk-wasm`     | `crates/atl-wasm` |
+| Language                                 | Install                          | Source            |
+| ---------------------------------------- | -------------------------------- | ----------------- |
+| Rust                                     | `cargo add atlassian-toolkit`    | `crates/atl-sdk`  |
+| Python 3.11+                             | `uv add atlassian-toolkit`       | `crates/atl-py`   |
+| Node.js, Bun, Deno                       | `bun add atlassian-toolkit`      | `crates/atl-node` |
+| Browsers, workers and Deno (WebAssembly) | `bun add atlassian-toolkit-wasm` | `crates/atl-wasm` |
 
 Each SDK has:
 
@@ -36,7 +36,7 @@ The method arguments are typed with `TypedDict`, so your editor completes them.
 ## TypeScript
 
 ```ts
-import { Client } from "atl-sdk"
+import { Client } from "atlassian-toolkit"
 
 const client = Client.fromEnv()
 const { issues } = await client.jiraIssueList({ project: "ABC" })
@@ -45,7 +45,7 @@ const { issues } = await client.jiraIssueList({ project: "ABC" })
 ## WebAssembly
 
 ```ts
-import { init, Client } from "atl-sdk-wasm"
+import { init, Client } from "atlassian-toolkit-wasm"
 
 await init()
 const client = Client.withConnections({
@@ -76,4 +76,4 @@ async fn main() -> atl_sdk::Result<()> {
 }
 ```
 
-The product modules (`atl_sdk::jira`, `confluence`, `bitbucket`, `jsm`, `trello`, `admin`) hide the differences between Cloud and Data Center. `atl_sdk::markup` converts Markdown to and from ADF and Confluence storage format. See [docs.rs/atl-sdk](https://docs.rs/atl-sdk) for the full API.
+The product modules (`atl_sdk::jira`, `confluence`, `bitbucket`, `jsm`, `trello`, `admin`) hide the differences between Cloud and Data Center. `atl_sdk::markup` converts Markdown to and from ADF and Confluence storage format. See [docs.rs/atlassian-toolkit](https://docs.rs/atlassian-toolkit) for the full API.

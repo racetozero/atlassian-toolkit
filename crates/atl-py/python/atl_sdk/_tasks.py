@@ -1,6 +1,6 @@
 """Generated from the task registry (crates/atl-sdk/src/tasks.rs) by
 crates/atl-sdk/tests/sdk_types.rs. Do not edit; run
-`ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types`.
+`ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.
 """
 
 from __future__ import annotations

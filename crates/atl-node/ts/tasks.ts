@@ -1,6 +1,6 @@
 // Generated from the task registry (crates/atl-sdk/src/tasks.rs) by
 // crates/atl-sdk/tests/sdk_types.rs. Do not edit; run
-// `ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types`.
+// `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.
 import type { TaskResults } from "./common.ts"
 
 /** The result type of a task: from `TaskResults` when known, else `unknown`. */

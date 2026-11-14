@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Refresh the vendored Atlassian OpenAPI documents used to generate the
-# command catalog. Run from the repository root, then `cargo test -p atl-sdk`.
+# command catalog. Run from the repository root, then `cargo test -p atlassian-toolkit`.
 set -euo pipefail
 
 dest="crates/atl-sdk/specs"

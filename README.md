@@ -5,8 +5,8 @@
 [![Rust](https://img.shields.io/badge/Rust-stable-orange?logo=rust)](https://github.com/racetozero/atlassian-toolkit/blob/main/rust-toolchain.toml)
 [![Downloads](https://img.shields.io/github/downloads/racetozero/atlassian-toolkit/total)](https://github.com/racetozero/atlassian-toolkit/releases)
 [![crates.io](https://img.shields.io/crates/v/atl?label=crates.io)](https://crates.io/crates/atl)
-[![npm SDK](https://img.shields.io/npm/v/atl-sdk?label=npm%20SDK)](https://www.npmjs.com/package/atl-sdk)
-[![npm WASM](https://img.shields.io/npm/v/atl-sdk-wasm?label=npm%20WASM)](https://www.npmjs.com/package/atl-sdk-wasm)
+[![npm SDK](https://img.shields.io/npm/v/atlassian-toolkit?label=npm%20SDK)](https://www.npmjs.com/package/atlassian-toolkit)
+[![npm WASM](https://img.shields.io/npm/v/atlassian-toolkit-wasm?label=npm%20WASM)](https://www.npmjs.com/package/atlassian-toolkit-wasm)
 [![PyPI](https://img.shields.io/pypi/v/atlassian-toolkit?label=PyPI)](https://pypi.org/project/atlassian-toolkit/)
 [![Python](https://img.shields.io/pypi/pyversions/atlassian-toolkit)](https://pypi.org/project/atlassian-toolkit/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
@@ -175,7 +175,7 @@ issues = atl_sdk.Client().jira_issue_list(project='ABC')['issues']
 ```
 
 ```ts
-import { Client } from "atl-sdk"
+import { Client } from "atlassian-toolkit"
 
 const { issues } = await Client.fromEnv().jiraIssueList({ project: "ABC" })
 ```

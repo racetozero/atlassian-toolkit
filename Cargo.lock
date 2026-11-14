@@ -144,8 +144,8 @@ name = "atl"
 version = "0.0.1"
 dependencies = [
  "anyhow",
- "atl-mcp",
- "atl-sdk",
+ "atlassian-toolkit",
+ "atlassian-toolkit-mcp",
  "base64 0.22.1",
  "clap",
  "clap_complete",
@@ -175,18 +175,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "atl-mcp"
-version = "0.0.1"
-dependencies = [
- "anyhow",
- "atl-sdk",
- "rmcp",
- "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "atl-sdk"
+name = "atlassian-toolkit"
 version = "0.0.1"
 dependencies = [
  "async-lock",
@@ -211,6 +200,17 @@ dependencies = [
  "url",
  "wildmatch",
  "wiremock",
+]
+
+[[package]]
+name = "atlassian-toolkit-mcp"
+version = "0.0.1"
+dependencies = [
+ "anyhow",
+ "atlassian-toolkit",
+ "rmcp",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

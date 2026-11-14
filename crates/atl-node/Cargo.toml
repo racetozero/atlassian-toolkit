@@ -7,14 +7,14 @@ name = "atl-node"
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
-description = "Node-API bindings for atl-sdk (Node.js, Bun, Deno)"
+description = "Node-API bindings for atlassian-toolkit (Node.js, Bun, Deno)"
 publish = false
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-atl-sdk = { path = "../atl-sdk" }
+atl-sdk = { package = "atlassian-toolkit", path = "../atl-sdk" }
 napi = { version = "3", features = ["napi9", "tokio_rt"] }
 napi-derive = "3"
 serde_json = { version = "1", features = ["preserve_order"] }

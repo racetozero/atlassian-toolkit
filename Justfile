@@ -14,7 +14,7 @@ test:
 check: test
     cargo fmt --all --check
     cargo clippy --workspace --all-targets -- -D warnings
-    cargo check -p atl-sdk --target wasm32-unknown-unknown --no-default-features
+    cargo check -p atlassian-toolkit --target wasm32-unknown-unknown --no-default-features
 
 # Build the release binary and run dry runs on Cloud and Data Center.
 smoke:

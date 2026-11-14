@@ -1,4 +1,4 @@
-//! Node-API bindings for `atl-sdk`, loaded by Node.js, Bun and Deno.
+//! Node-API bindings for `atlassian-toolkit`, loaded by Node.js, Bun and Deno.
 //!
 //! JSON strings cross the boundary; `ts/index.ts` adds types and turns the
 //! SDK's JSON error objects into `AtlError`. Async methods run on napi's

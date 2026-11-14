@@ -1,9 +1,9 @@
-# atl-sdk-wasm (TypeScript for browsers, workers and Deno)
+# atlassian-toolkit-wasm (TypeScript for browsers, workers and Deno)
 
 The `atl` Rust core compiled to WebAssembly with wasm-bindgen. Same tasks, generated operations and Markdown converters as the Node and Python SDKs; HTTP goes through the platform's `fetch`.
 
 ```ts
-import { init, Client, markup } from "atl-sdk-wasm" // bun add atl-sdk-wasm
+import { init, Client, markup } from "atlassian-toolkit-wasm" // bun add atlassian-toolkit-wasm
 
 await init()
 const client = Client.withConnections({

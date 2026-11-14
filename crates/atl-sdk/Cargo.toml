@@ -1,5 +1,5 @@
 [package]
-name = "atl-sdk"
+name = "atlassian-toolkit"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

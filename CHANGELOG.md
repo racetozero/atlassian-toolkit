@@ -72,7 +72,7 @@ The first public release.
   masked. `atl auth token [PRODUCT]` prints a stored token for scripts.
 - The TypeScript and Python SDKs have a typed method for every task,
   generated from the task schemas (`ATL_UPDATE_SDK_TYPES=1 cargo test -p
-atl-sdk --test sdk_types`).
+atlassian-toolkit --test sdk_types`).
 - Bitbucket: `pr comments` (general and inline), `pr checks` (exit 1 when a
   build failed), `pr unapprove`, `pr create --draft`, `pr ready`,
   `branch create|delete`, `commit list`, `pipeline stop`.
@@ -94,7 +94,7 @@ atl-sdk --test sdk_types`).
 - Release binaries are built with profile-guided optimization, the Python
   SDK has a wheel for each CPython version from 3.11 to 3.15 (including the
   free-threaded 3.14t and 3.15t), and the WebAssembly SDK is published to npm
-  as `atl-sdk-wasm`.
+  as `atlassian-toolkit-wasm`.
 - Issue lists (`jira issue list`, `sprint issues`, `epic issues`, `filter
 run`) print a table in a terminal; `--browse` (`-i`) opens the full-screen
   browser.

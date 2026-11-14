@@ -35,7 +35,7 @@ dependencies = [
 name = "atl-node"
 version = "0.0.1"
 dependencies = [
- "atl-sdk",
+ "atlassian-toolkit",
  "napi",
  "napi-build",
  "napi-derive",
@@ -43,7 +43,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "atl-sdk"
+name = "atlassian-toolkit"
 version = "0.0.1"
 dependencies = [
  "async-lock",

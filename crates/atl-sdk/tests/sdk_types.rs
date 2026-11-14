@@ -1,11 +1,11 @@
 //! Generates the typed task helpers of the TypeScript and Python SDKs from the
 //! task registry, and fails when the checked-in files are out of date.
-//! `ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types` rewrites them.
+//! `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types` rewrites them.
 
 use serde_json::Value;
 use std::path::PathBuf;
 
-const HEADER: &str = "Generated from the task registry (crates/atl-sdk/src/tasks.rs) by\ncrates/atl-sdk/tests/sdk_types.rs. Do not edit; run\n`ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types`.";
+const HEADER: &str = "Generated from the task registry (crates/atl-sdk/src/tasks.rs) by\ncrates/atl-sdk/tests/sdk_types.rs. Do not edit; run\n`ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.";
 
 fn pascal(name: &str) -> String {
     name.split('_')
@@ -312,7 +312,7 @@ fn generated_sdk_types_match_the_task_registry() {
         let current = std::fs::read_to_string(&path).unwrap_or_default();
         assert!(
             current == text,
-            "{} is out of date with the task registry; run `ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types` and commit crates/atl-node/ts/tasks.ts and crates/atl-py/python/atl_sdk/_tasks.py",
+            "{} is out of date with the task registry; run `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types` and commit crates/atl-node/ts/tasks.ts and crates/atl-py/python/atl_sdk/_tasks.py",
             path.display()
         );
     }

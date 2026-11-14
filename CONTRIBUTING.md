@@ -19,7 +19,7 @@ just sdk-test-all    # every Rust and SDK test
 ## Making a change
 
 - A product command maps its flags to one SDK task in `crates/atl-sdk/src/tasks.rs`, so the CLI, the MCP server and every SDK get it. Add the task first, then the command.
-- After adding or changing a task, regenerate the TypeScript and Python types: `ATL_UPDATE_SDK_TYPES=1 cargo test -p atl-sdk --test sdk_types`.
+- After adding or changing a task, regenerate the TypeScript and Python types: `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.
 - Tests run against mock servers (`wiremock` in Rust); they never need a real Atlassian site. Cover Cloud and Data Center when they differ.
 - Error messages say what the user did, what is accepted, and how to fix it.
 - Update `docs/`, the skills in `.agents/skills/` and `CHANGELOG.md` when behavior changes. After you change a skill, run `ATL_UPDATE_SKILLS=1 cargo test -p atl --bin atl skills` to copy it into `crates/atl/skills/`, which `atl skill` embeds.

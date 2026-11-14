@@ -3,7 +3,7 @@
  * `atl` Rust core through Node-API.
  *
  * ```ts
- * import { Client } from "atl-sdk"
+ * import { Client } from "atlassian-toolkit"
  * const client = Client.fromEnv()                      // credentials from `atl auth login`
  * const page = await client.jiraIssueList({ project: "ABC", status: ["In Progress"] })
  * const doc = await client.confluencePageGet({ page: "DOCS:Handbook" })

@@ -1,9 +1,9 @@
-# atl-sdk (TypeScript for Node.js, Bun and Deno)
+# atlassian-toolkit (TypeScript for Node.js, Bun and Deno)
 
 Jira, Confluence, Bitbucket, Trello and Atlassian Admin, on Cloud and Data Center, from TypeScript. A Node-API addon built from the `atl` Rust core with napi-rs; Bun and Deno load the same addon.
 
 ```ts
-import { Client, AtlError, markup } from "atl-sdk"
+import { Client, AtlError, markup } from "atlassian-toolkit"
 
 const client = Client.fromEnv() // uses `atl auth login`
 const { issues } = await client.jiraIssueList({ project: "ABC", assignee: "me" })

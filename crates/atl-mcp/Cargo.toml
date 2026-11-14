@@ -1,5 +1,5 @@
 [package]
-name = "atl-mcp"
+name = "atlassian-toolkit-mcp"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,7 +8,7 @@ homepage.workspace = true
 readme = "../../README.md"
 keywords = ["atlassian", "jira", "confluence", "mcp", "ai"]
 categories = ["api-bindings"]
-description = "Model Context Protocol server exposing the Atlassian suite through atl-sdk"
+description = "Model Context Protocol server exposing the Atlassian suite through atlassian-toolkit"
 
 [lib]
 name = "atl_mcp"

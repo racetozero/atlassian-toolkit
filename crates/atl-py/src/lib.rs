@@ -1,4 +1,4 @@
-//! Python bindings for `atl-sdk`.
+//! Python bindings for `atlassian-toolkit`.
 //!
 //! The native module `atl_sdk._atl` is a thin adapter: JSON strings in, JSON
 //! strings out, and errors as `AtlError` carrying the SDK's JSON error object.

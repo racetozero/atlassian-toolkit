@@ -14,7 +14,20 @@ dependencies = [
 ]
 
 [[package]]
-name = "atl-sdk"
+name = "atl-wasm"
+version = "0.0.1"
+dependencies = [
+ "atlassian-toolkit",
+ "js-sys",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+]
+
+[[package]]
+name = "atlassian-toolkit"
 version = "0.0.1"
 dependencies = [
  "async-lock",
@@ -33,19 +46,6 @@ dependencies = [
  "toml",
  "url",
  "wildmatch",
-]
-
-[[package]]
-name = "atl-wasm"
-version = "0.0.1"
-dependencies = [
- "atl-sdk",
- "js-sys",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "wasm-bindgen",
- "wasm-bindgen-futures",
 ]
 
 [[package]]

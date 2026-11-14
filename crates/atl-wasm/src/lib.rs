@@ -1,4 +1,4 @@
-//! WebAssembly bindings for `atl-sdk`: the same tasks, generated operations
+//! WebAssembly bindings for `atlassian-toolkit`: the same tasks, generated operations
 //! and Markdown converters as the native SDKs, running on the platform's
 //! `fetch`. Values cross as plain JavaScript objects; failures reject with an
 //! `Error` whose message is the SDK's JSON error object, which `js/index.ts`

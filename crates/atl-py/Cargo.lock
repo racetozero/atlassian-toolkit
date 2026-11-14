@@ -35,14 +35,14 @@ dependencies = [
 name = "atl-py"
 version = "0.0.1"
 dependencies = [
- "atl-sdk",
+ "atlassian-toolkit",
  "pyo3",
  "serde_json",
  "tokio",
 ]
 
 [[package]]
-name = "atl-sdk"
+name = "atlassian-toolkit"
 version = "0.0.1"
 dependencies = [
  "async-lock",

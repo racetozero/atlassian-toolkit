@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "atl-sdk",
+      "name": "atlassian-toolkit",
       "devDependencies": {
         "@types/node": "^24.0.0",
         "typescript": "^5.9.0",

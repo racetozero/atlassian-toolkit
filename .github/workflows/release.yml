@@ -7,9 +7,9 @@
 # where Rust provides a profiling runtime; the default token permission is
 # read-only; the Homebrew formula uses the musl builds on Linux and is
 # published after announce with a tap deploy key; announce waits for the
-# crates.io, npm and PyPI jobs, which publish atl-sdk, atl-mcp and atl
-# (crates), the Node SDK atl-sdk with native add-ons for six platforms and the
-# WebAssembly SDK atl-sdk-wasm (npm), and one wheel per platform and
+# crates.io, npm and PyPI jobs, which publish atlassian-toolkit, atlassian-toolkit-mcp and atl
+# (crates), the Node SDK atlassian-toolkit with native add-ons for six platforms and the
+# WebAssembly SDK atlassian-toolkit-wasm (npm), and one wheel per platform and
 # interpreter of the Python SDK atlassian-toolkit (PyPI). `dist generate` removes these
 # overrides. Reapply them after a dist upgrade.
 #
@@ -449,7 +449,7 @@ jobs:
           set -euo pipefail
           abi="cp${PYTHON_VERSION/./}"
           compgen -G "dist/*-${abi%%t}-${abi}-*" > /dev/null
-          uv pip install --python python --system --no-deps dist/*.whl
+          uv pip install --python "$(python -c 'import sys; print(sys.executable)')" --system --no-deps dist/*.whl
           python -c 'import atl_sdk; atl_sdk.tasks()'
           if [[ "$PYTHON_VERSION" == *t ]]; then
             python -c 'import sys, atl_sdk._atl; assert not sys._is_gil_enabled()'
@@ -479,8 +479,8 @@ jobs:
         run: |
           set -euo pipefail
           version="${VERSION#v}"
-          test "$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name | IN("atl-sdk", "atl-mcp", "atl")) | .version' | sort -u)" = "$version"
-          for crate in atl-sdk atl-mcp atl; do
+          test "$(cargo metadata --no-deps --format-version 1 | jq -r '.packages[] | select(.name | IN("atlassian-toolkit", "atlassian-toolkit-mcp", "atl")) | .version' | sort -u)" = "$version"
+          for crate in atlassian-toolkit atlassian-toolkit-mcp atl; do
             # Reruns after a partial release must not try to republish versions.
             if curl -fsS "https://crates.io/api/v1/crates/$crate/$version" > /dev/null; then
               echo "$crate $version already published"
@@ -525,8 +525,8 @@ jobs:
           bun install --frozen-lockfile
           bun run build:ts
           npm install -g 'npm@^11.5.1'
-          if npm view "atl-sdk@$version" version > /dev/null 2>&1; then
-            echo "atl-sdk $version already published"
+          if npm view "atlassian-toolkit@$version" version > /dev/null 2>&1; then
+            echo "atlassian-toolkit $version already published"
           else
             npm publish --access public
           fi
@@ -568,8 +568,8 @@ jobs:
           test -s pkg/atl_wasm_bg.wasm
           bun run test:size
           npm install -g 'npm@^11.5.1'
-          if npm view "atl-sdk-wasm@$version" version > /dev/null 2>&1; then
-            echo "atl-sdk-wasm $version already published"
+          if npm view "atlassian-toolkit-wasm@$version" version > /dev/null 2>&1; then
+            echo "atlassian-toolkit-wasm $version already published"
           else
             npm publish --access public
           fi

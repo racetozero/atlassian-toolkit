@@ -1,4 +1,4 @@
-# Browser and worker build of atl-sdk. Outside the native root workspace.
+# Browser and worker build of atlassian-toolkit. Outside the native root workspace.
 [workspace]
 
 [package]
@@ -6,14 +6,14 @@ name = "atl-wasm"
 version = "0.0.1"
 edition = "2024"
 license = "MIT"
-description = "WebAssembly build of atl-sdk for browsers, workers and Deno"
+description = "WebAssembly build of atlassian-toolkit for browsers, workers and Deno"
 publish = false
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [dependencies]
-atl-sdk = { path = "../atl-sdk", default-features = false }
+atl-sdk = { package = "atlassian-toolkit", path = "../atl-sdk", default-features = false }
 js-sys = "0.3"
 serde-wasm-bindgen = "0.6"
 serde = "1"

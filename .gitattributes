@@ -1,0 +1,3 @@
+# Keep LF endings on every platform: the skills and the generated SDK types
+# are compared byte for byte, and Windows checkouts would otherwise use CRLF.
+* text=auto eol=lf
