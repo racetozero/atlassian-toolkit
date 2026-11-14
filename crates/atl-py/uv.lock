@@ -3,7 +3,7 @@ revision = 5
 requires-python = ">=3.11"
 
 [[package]]
-name = "atl-sdk"
+name = "atlassian-toolkit"
 source = { editable = "." }
 
 [package.dev-dependencies]

@@ -2,12 +2,12 @@
 
 All the SDKs use the same Rust core and the same tasks as the CLI. `jira_issue_list` returns the same result in Python as in `atl jira issue list --agent`.
 
-| Language                                 | Install                | Source            |
-| ---------------------------------------- | ---------------------- | ----------------- |
-| Rust                                     | `cargo add atl-sdk`    | `crates/atl-sdk`  |
-| Python 3.11+                             | `uv add atl-sdk`       | `crates/atl-py`   |
-| Node.js, Bun, Deno                       | `bun add atl-sdk`      | `crates/atl-node` |
-| Browsers, workers and Deno (WebAssembly) | `bun add atl-sdk-wasm` | `crates/atl-wasm` |
+| Language                                 | Install                    | Source            |
+| ---------------------------------------- | -------------------------- | ----------------- |
+| Rust                                     | `cargo add atl-sdk`        | `crates/atl-sdk`  |
+| Python 3.11+                             | `uv add atlassian-toolkit` | `crates/atl-py`   |
+| Node.js, Bun, Deno                       | `bun add atl-sdk`          | `crates/atl-node` |
+| Browsers, workers and Deno (WebAssembly) | `bun add atl-sdk-wasm`     | `crates/atl-wasm` |
 
 Each SDK has:
 

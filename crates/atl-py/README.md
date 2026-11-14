@@ -1,6 +1,6 @@
-# atl-sdk (Python)
+# atlassian-toolkit (Python SDK)
 
-Python SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin, on Cloud and Data Center, built on the `atl` Rust core. Wheels cover CPython 3.11 to 3.15, including the free-threaded 3.14t and 3.15t builds.
+Python SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin, on Cloud and Data Center, built on the `atl` Rust core. Install it with `uv add atlassian-toolkit`, then `import atl_sdk`. Wheels cover CPython 3.11 to 3.15, including the free-threaded 3.14t and 3.15t builds.
 
 ```python
 import atl_sdk

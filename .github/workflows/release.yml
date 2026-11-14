@@ -10,7 +10,7 @@
 # crates.io, npm and PyPI jobs, which publish atl-sdk, atl-mcp and atl
 # (crates), the Node SDK atl-sdk with native add-ons for six platforms and the
 # WebAssembly SDK atl-sdk-wasm (npm), and one wheel per platform and
-# interpreter of the Python SDK atl-sdk (PyPI). `dist generate` removes these
+# interpreter of the Python SDK atlassian-toolkit (PyPI). `dist generate` removes these
 # overrides. Reapply them after a dist upgrade.
 #
 # CI that:

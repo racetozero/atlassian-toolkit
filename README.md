@@ -7,8 +7,8 @@
 [![crates.io](https://img.shields.io/crates/v/atl?label=crates.io)](https://crates.io/crates/atl)
 [![npm SDK](https://img.shields.io/npm/v/atl-sdk?label=npm%20SDK)](https://www.npmjs.com/package/atl-sdk)
 [![npm WASM](https://img.shields.io/npm/v/atl-sdk-wasm?label=npm%20WASM)](https://www.npmjs.com/package/atl-sdk-wasm)
-[![PyPI](https://img.shields.io/pypi/v/atl-sdk?label=PyPI)](https://pypi.org/project/atl-sdk/)
-[![Python](https://img.shields.io/pypi/pyversions/atl-sdk)](https://pypi.org/project/atl-sdk/)
+[![PyPI](https://img.shields.io/pypi/v/atlassian-toolkit?label=PyPI)](https://pypi.org/project/atlassian-toolkit/)
+[![Python](https://img.shields.io/pypi/pyversions/atlassian-toolkit)](https://pypi.org/project/atlassian-toolkit/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
 **Use Jira, Confluence and Bitbucket from your terminal, or let your AI agent use them for you.**
