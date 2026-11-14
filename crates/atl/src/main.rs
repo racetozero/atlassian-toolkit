@@ -36,8 +36,26 @@ pub enum Exit {
     Internal = 5,
 }
 
-#[tokio::main]
-async fn main() -> ExitCode {
+/// Runs on a thread with an 8 MiB stack: Windows gives the main thread
+/// 1 MiB, and in debug builds clap's derived `jira issue` command tree
+/// needs more than that.
+fn main() -> ExitCode {
+    std::thread::Builder::new()
+        .name("atl".into())
+        .stack_size(8 << 20)
+        .spawn(|| {
+            tokio::runtime::Builder::new_multi_thread()
+                .enable_all()
+                .build()
+                .expect("cannot start the tokio runtime")
+                .block_on(run())
+        })
+        .expect("cannot start the main thread")
+        .join()
+        .unwrap_or_else(|panic| std::panic::resume_unwind(panic))
+}
+
+async fn run() -> ExitCode {
     // Answers shell completion requests (COMPLETE=<shell>) and exits.
     clap_complete::CompleteEnv::with_factory(cli::completion_command).complete();
     let args: Vec<String> = std::env::args().collect();
