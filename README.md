@@ -1,4 +1,4 @@
-# atl
+# Atlassian Toolkit - `atl`
 
 [![CI](https://github.com/racetozero/atlassian-toolkit/actions/workflows/ci.yml/badge.svg)](https://github.com/racetozero/atlassian-toolkit/actions/workflows/ci.yml)
 [![Release](https://img.shields.io/github/v/release/racetozero/atlassian-toolkit?sort=semver)](https://github.com/racetozero/atlassian-toolkit/releases)
@@ -10,6 +10,9 @@
 [![PyPI](https://img.shields.io/pypi/v/atlassian-toolkit?label=PyPI)](https://pypi.org/project/atlassian-toolkit/)
 [![Python](https://img.shields.io/pypi/pyversions/atlassian-toolkit)](https://pypi.org/project/atlassian-toolkit/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+<img width="652" height="88" alt="image" src="https://github.com/user-attachments/assets/69960258-59d4-4ea5-8c37-055d86281021" />
+
 
 **Use Jira, Confluence and Bitbucket from your terminal, or let your AI agent use them for you.**
 
