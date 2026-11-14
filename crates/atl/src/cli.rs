@@ -806,7 +806,9 @@ fn grouped_help(command: Command) -> Command {
          {header}Commands:{header:#}\n{others}\n\
          {header}Options:{header:#}\n{{options}}{{after-help}}"
     );
-    command.help_template(template)
+    command
+        .help_template(template)
+        .subcommand_value_name("PRODUCT|COMMAND")
 }
 
 fn api_command() -> Command {
