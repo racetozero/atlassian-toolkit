@@ -23,6 +23,26 @@ atl jira issue list -a me -s ~Done
 
 That command lists your open issues. Most of what you do in `atl` reads like that.
 
+## Install
+
+On macOS or Linux:
+
+```sh
+curl -LsSf https://raw.githubusercontent.com/racetozero/atlassian-toolkit/main/install.sh | sh
+```
+
+On Windows:
+
+```powershell
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/racetozero/atlassian-toolkit/main/install.ps1 | iex"
+```
+
+Or use Homebrew (`brew install racetozero/tap/atl`) or Cargo (`cargo install atl`).
+
+`atl` is a single file with nothing else to install. When a new version is out, `atl` prints a short notice after a command, and `atl update` installs it.
+
+Then sign in with `atl auth login` ([details](#sign-in)).
+
 ## Why atl
 
 - **Agent ready.** Add `--agent` and every command prints one JSON line. Nothing prompts. When a value is missing, the error lists the valid choices, so the agent gets it right on the next try. Destructive commands wait for `--yes`.
@@ -113,24 +133,6 @@ atl api jira get /rest/api/3/serverInfo
 ```
 
 [More about `atl api`](docs/api.md).
-
-## Install
-
-On macOS or Linux:
-
-```sh
-curl -LsSf https://raw.githubusercontent.com/racetozero/atlassian-toolkit/main/install.sh | sh
-```
-
-On Windows:
-
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/racetozero/atlassian-toolkit/main/install.ps1 | iex"
-```
-
-Or use Homebrew (`brew install racetozero/tap/atl`) or Cargo (`cargo install atl`).
-
-`atl` is a single file with nothing else to install. When a new version is out, `atl` prints a short notice after a command, and `atl update` installs it.
 
 ## Sign in
 

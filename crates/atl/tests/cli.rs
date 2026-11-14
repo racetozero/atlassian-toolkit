@@ -2007,9 +2007,9 @@ async fn skill_prints_lists_and_installs_the_skills() {
     assert!(dir.path().join("atl-jsm/SKILL.md").is_file());
 }
 
-fn command_names(help: &str) -> Vec<String> {
+fn command_names(help: &str, heading: &str) -> Vec<String> {
     help.lines()
-        .skip_while(|line| *line != "Commands:")
+        .skip_while(|line| *line != heading)
         .skip(1)
         .take_while(|line| !line.is_empty())
         .filter(|line| line.starts_with("  ") && !line.starts_with("   "))
@@ -2031,11 +2031,30 @@ async fn help_lists_commands_alphabetically_at_every_level() {
         &["api", "jira", "--help"],
     ] {
         let output = env.run(args, None).await;
-        let names = command_names(&String::from_utf8_lossy(&output.stdout));
+        let names = command_names(&String::from_utf8_lossy(&output.stdout), "Commands:");
         let mut sorted = names.clone();
         sorted.sort();
         assert!(names.len() > 2, "atl {args:?} lists commands");
         assert_eq!(names, sorted, "atl {}", args.join(" "));
+    }
+}
+
+#[tokio::test(flavor = "multi_thread")]
+async fn root_help_lists_the_products_in_their_own_section() {
+    let env = Env::new();
+    for args in [&["-h"][..], &["--help"]] {
+        let output = env.run(args, None).await;
+        let help = String::from_utf8_lossy(&output.stdout);
+        let products = ["admin", "bitbucket", "confluence", "jira", "jsm", "trello"];
+        assert_eq!(command_names(&help, "Products:"), products, "atl {args:?}");
+        let commands = command_names(&help, "Commands:");
+        assert!(commands.contains(&"api".to_owned()), "atl {args:?}");
+        assert!(
+            commands
+                .iter()
+                .all(|name| !products.contains(&name.as_str())),
+            "atl {args:?}"
+        );
     }
 }
 

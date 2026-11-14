@@ -441,7 +441,7 @@ pub async fn run(argv: Vec<String>) -> Result<Exit> {
             selected.then(|| &positionals[2..]),
         ));
     }
-    let mut command = alphabetical(Cli::command().subcommand(api));
+    let mut command = grouped_help(alphabetical(Cli::command().subcommand(api)));
     let matches = match command.try_get_matches_from_mut(&argv) {
         Ok(matches) => matches,
         Err(err) if !err.use_stderr() => {
@@ -760,6 +760,53 @@ pub fn completion_command() -> Command {
 /// and completion: clap sorts subcommands with the same display order by name.
 fn alphabetical(command: Command) -> Command {
     command.mut_subcommands(|sub| alphabetical(sub).display_order(0))
+}
+
+/// Puts the product commands in their own section of `atl --help`: clap
+/// lists every subcommand under one heading.
+fn grouped_help(command: Command) -> Command {
+    const PRODUCTS: [&str; 6] = ["admin", "bitbucket", "confluence", "jira", "jsm", "trello"];
+    let styles = command.get_styles();
+    let (header, literal) = (styles.get_header(), styles.get_literal());
+    let mut subcommands: Vec<(&str, String)> = command
+        .get_subcommands()
+        .map(|sub| {
+            (
+                sub.get_name(),
+                sub.get_about().map(ToString::to_string).unwrap_or_default(),
+            )
+        })
+        .collect();
+    subcommands.sort();
+    // clap adds `help` when it builds the command, after this runs.
+    subcommands.push((
+        "help",
+        "Print this message or the help of the given subcommand(s)".to_owned(),
+    ));
+    let width = subcommands
+        .iter()
+        .map(|(name, _)| name.len())
+        .max()
+        .unwrap_or(0);
+    let (mut products, mut others) = (String::new(), String::new());
+    for (name, about) in subcommands {
+        let section = match PRODUCTS.contains(&name) {
+            true => &mut products,
+            false => &mut others,
+        };
+        let pad = width - name.len();
+        section.push_str(&format!(
+            "  {literal}{name}{literal:#}{:pad$}  {about}\n",
+            ""
+        ));
+    }
+    let template = format!(
+        "{{before-help}}{{about-with-newline}}\n{{usage-heading}} {{usage}}\n\n\
+         {header}Products:{header:#}\n{products}\n\
+         {header}Commands:{header:#}\n{others}\n\
+         {header}Options:{header:#}\n{{options}}{{after-help}}"
+    );
+    command.help_template(template)
 }
 
 fn api_command() -> Command {
