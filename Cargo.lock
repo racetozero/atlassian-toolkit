@@ -141,7 +141,7 @@ dependencies = [
 
 [[package]]
 name = "atl"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "atl-mcp",
@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "atl-mcp"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "anyhow",
  "atl-sdk",
@@ -187,7 +187,7 @@ dependencies = [
 
 [[package]]
 name = "atl-sdk"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "async-lock",
  "clap",

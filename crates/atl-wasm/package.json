@@ -1,6 +1,6 @@
 {
   "name": "atl-sdk-wasm",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "description": "TypeScript SDK for Jira, Confluence, Bitbucket, Trello and Atlassian Admin (Cloud and Data Center) for browsers, workers and Deno, built on the atl Rust core compiled to WebAssembly",
   "keywords": [
     "atlassian",
