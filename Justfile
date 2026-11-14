@@ -5,12 +5,15 @@ default:
 fmt:
     @prek run --all-files
 
-# Format, lint with warnings as errors, and run every test.
-check:
+# Run every Rust test: the CLI, the SDK, the MCP server, and the doc examples.
+test:
+    @cargo nextest run --workspace
+    @cargo test --workspace --doc
+
+# Format, lint with warnings as errors, run every Rust test, and check the wasm build.
+check: test
     cargo fmt --all --check
     cargo clippy --workspace --all-targets -- -D warnings
-    cargo nextest run --workspace
-    cargo test --workspace --doc
     cargo check -p atl-sdk --target wasm32-unknown-unknown --no-default-features
 
 # Build the release binary and run dry runs on Cloud and Data Center.
@@ -37,19 +40,19 @@ install:
     cargo install --path crates/atl
 
 # Python SDK: build the extension with uv (maturin backend) and run pytest.
-sdk-python:
+sdk-test-python:
     cd crates/atl-py && uv sync -q --python 3.11 && uv run --no-sync pytest -q
 
 # Node/Bun/Deno SDK: build the napi addon and TypeScript, then test on all three runtimes.
-sdk-node:
+sdk-test-node:
     cd crates/atl-node && bun install --silent && bun run build && bun run test && bun run test:bun && bun run test:deno
 
 # WebAssembly SDK: build with wasm-pack and test in Deno.
-sdk-wasm:
+sdk-test-wasm:
     cd crates/atl-wasm && bun install --silent && bun run build && bun run test && bun run test:size
 
-# Every SDK.
-sdk-all: sdk-python sdk-node sdk-wasm
+# Every Rust test and every SDK test.
+sdk-test-all: test sdk-test-python sdk-test-node sdk-test-wasm
 
 # Test the cross-platform PGO build and benchmark helpers.
 pgo-test:

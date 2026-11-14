@@ -8,10 +8,12 @@ You need the Rust toolchain from `rust-toolchain.toml` and [just](https://github
 
 ```sh
 just fmt          # every pre-commit hook on all files (prek): rustfmt, ruff, oxfmt, clippy
-just check        # fmt, clippy with warnings as errors, every Rust test, the wasm build
-just sdk-python   # Python SDK tests
-just sdk-node     # Node, Bun and Deno tests
-just sdk-wasm     # WebAssembly SDK tests
+just test            # every Rust test
+just check           # fmt, clippy with warnings as errors, every Rust test, the wasm build
+just sdk-test-python # Python SDK tests
+just sdk-test-node   # Node, Bun and Deno tests
+just sdk-test-wasm   # WebAssembly SDK tests
+just sdk-test-all    # every Rust and SDK test
 ```
 
 ## Making a change
