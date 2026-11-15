@@ -6,7 +6,7 @@ use crate::error::{Error, Result};
 use crate::jsm::ServiceDesk;
 use schemars::JsonSchema;
 use serde::Deserialize;
-use serde_json::{Value, json};
+use serde_json::Value;
 
 #[derive(Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
@@ -129,97 +129,97 @@ pub(super) static TASKS: &[TaskDef] = &[
     task!(
         "jsm_desk_list",
         true,
-        Empty,
+        Empty => Vec<crate::jsm::Desk>,
         "Jira Service Management service desks (id, project key, name)."
     ),
     task!(
         "jsm_request_types",
         true,
-        DeskArgs,
+        DeskArgs => Vec<crate::jsm::RequestType>,
         "Request types of a service desk."
     ),
     task!(
         "jsm_queue_list",
         true,
-        DeskArgs,
+        DeskArgs => Vec<crate::jsm::Queue>,
         "Queues of a service desk with issue counts."
     ),
     task!(
         "jsm_queue_issues",
         true,
-        QueueIssuesArgs,
+        QueueIssuesArgs => Vec<crate::jira::IssueSummary>,
         "Issues in a service desk queue (by queue ID or name)."
     ),
     task!(
         "jsm_request_list",
         true,
-        RequestListArgs,
+        RequestListArgs => Vec<crate::jsm::Request>,
         "Customer requests by status, optionally of one service desk."
     ),
     task!(
         "jsm_request_view",
         true,
-        RequestViewArgs,
+        RequestViewArgs => crate::jsm::RequestDetail,
         "One customer request with its description and latest comments."
     ),
     task!(
         "jsm_request_create",
         false,
-        RequestCreateArgs,
+        RequestCreateArgs => crate::jsm::Request,
         "Raise a customer request, optionally for a customer."
     ),
     task!(
         "jsm_request_comment",
         false,
-        RequestCommentArgs,
+        RequestCommentArgs => crate::jsm::RequestComment,
         "Reply to a customer request, or add an internal note."
     ),
     task!(
         "jsm_request_transitions",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jsm::RequestTransition>,
         "Transitions available on a customer request."
     ),
     task!(
         "jsm_request_move",
         false,
-        RequestMoveArgs,
+        RequestMoveArgs => RequestMoved,
         "Run a customer request transition by name or ID."
     ),
     task!(
         "jsm_request_approvals",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jsm::Approval>,
         "Approvals of a JSM request: name, decision (pending, approved, declined), approvers, and whether you can answer."
     ),
     task!(
         "jsm_request_approve",
         false,
-        ApproveArgs,
+        ApproveArgs => crate::jsm::Approval,
         "Approve or decline (decision: decline) a JSM request's approval; without an ID, the one pending approval you can answer."
     ),
     task!(
         "jsm_request_participants",
         false,
-        ParticipantsArgs,
+        ParticipantsArgs => Participants,
         "List a JSM request's participants, after adding and removing any (me, an email or a name)."
     ),
     task!(
         "jsm_request_sla",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jsm::Sla>,
         "SLAs of a JSM request: state (ongoing, paused, met, breached), time remaining and goal."
     ),
     task!(
         "jsm_request_attach",
         false,
-        RequestAttachArgs,
+        RequestAttachArgs => Vec<crate::jsm::RequestAttachment>,
         "Attach local files to a JSM request (public unless internal)."
     ),
     task!(
         "jsm_request_attachments",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jsm::RequestAttachment>,
         "Attachments of a JSM request with download URLs."
     ),
 ];
@@ -229,7 +229,7 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
     match name {
         "jsm_request_approvals" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(desk.approvals(&a.key).await?)
+            output(name, desk.approvals(&a.key).await?)
         }
         "jsm_request_approve" => {
             let a: ApproveArgs = parse(name, args)?;
@@ -242,48 +242,55 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                     )));
                 }
             };
-            to_json(
+            output(
+                name,
                 desk.answer_approval(&a.key, a.approval.as_deref(), approve)
                     .await?,
             )
         }
         "jsm_request_participants" => {
             let a: ParticipantsArgs = parse(name, args)?;
-            Ok(
-                json!({ "key": a.key, "participants": desk.participants(&a.key, &a.add, &a.remove).await? }),
+            let participants = desk.participants(&a.key, &a.add, &a.remove).await?;
+            output(
+                name,
+                Participants {
+                    key: a.key,
+                    participants,
+                },
             )
         }
         "jsm_request_sla" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(desk.slas(&a.key).await?)
+            output(name, desk.slas(&a.key).await?)
         }
         "jsm_request_attach" => {
             let a: RequestAttachArgs = parse(name, args)?;
-            to_json(desk.attach(&a.key, &a.files, !a.internal).await?)
+            output(name, desk.attach(&a.key, &a.files, !a.internal).await?)
         }
         "jsm_request_attachments" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(desk.attachments(&a.key).await?)
+            output(name, desk.attachments(&a.key).await?)
         }
         "jsm_desk_list" => {
             let _: Empty = parse(name, args)?;
-            to_json(desk.desks().await?)
+            output(name, desk.desks().await?)
         }
         "jsm_request_types" => {
             let a: DeskArgs = parse(name, args)?;
-            to_json(desk.request_types(&a.desk).await?)
+            output(name, desk.request_types(&a.desk).await?)
         }
         "jsm_queue_list" => {
             let a: DeskArgs = parse(name, args)?;
-            to_json(desk.queues(&a.desk).await?)
+            output(name, desk.queues(&a.desk).await?)
         }
         "jsm_queue_issues" => {
             let a: QueueIssuesArgs = parse(name, args)?;
-            to_json(desk.queue_issues(&a.desk, &a.queue, a.limit).await?)
+            output(name, desk.queue_issues(&a.desk, &a.queue, a.limit).await?)
         }
         "jsm_request_list" => {
             let a: RequestListArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 desk.requests(
                     a.desk.as_deref(),
                     &a.status,
@@ -296,11 +303,12 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "jsm_request_view" => {
             let a: RequestViewArgs = parse(name, args)?;
-            to_json(desk.request(&a.key, a.comments).await?)
+            output(name, desk.request(&a.key, a.comments).await?)
         }
         "jsm_request_create" => {
             let a: RequestCreateArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 desk.create(
                     &a.desk,
                     &a.request_type,
@@ -313,19 +321,42 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "jsm_request_comment" => {
             let a: RequestCommentArgs = parse(name, args)?;
-            to_json(desk.comment(&a.key, &a.body, a.internal).await?)
+            output(name, desk.comment(&a.key, &a.body, a.internal).await?)
         }
         "jsm_request_transitions" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(desk.transitions(&a.key).await?)
+            output(name, desk.transitions(&a.key).await?)
         }
         "jsm_request_move" => {
             let a: RequestMoveArgs = parse(name, args)?;
             let t = desk
                 .transition(&a.key, &a.transition, a.comment.as_deref())
                 .await?;
-            Ok(json!({ "key": a.key, "transition": t.name, "id": t.id }))
+            output(
+                name,
+                RequestMoved {
+                    key: a.key,
+                    transition: t.name,
+                    id: t.id,
+                },
+            )
         }
         _ => Err(unknown(name)),
     }
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Participants {
+    key: String,
+    /// Every participant after the change.
+    participants: Vec<String>,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct RequestMoved {
+    key: String,
+    /// The transition that ran.
+    transition: String,
+    /// Its ID.
+    id: String,
 }

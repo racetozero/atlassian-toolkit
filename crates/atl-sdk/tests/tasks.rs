@@ -1492,7 +1492,7 @@ async fn jira_unlink_remote_links_and_releases() {
         .remote_link("A-1", "https://ci/1", Some("CI"))
         .await
         .expect("remote link");
-    assert_eq!(link["id"], 7);
+    assert_eq!(link.id, Some(7));
     let releases = jira.releases("A").await.expect("releases");
     let names: Vec<&str> = releases.iter().map(|r| r.name.as_str()).collect();
     assert_eq!(names, ["1.0", "1.1"]);

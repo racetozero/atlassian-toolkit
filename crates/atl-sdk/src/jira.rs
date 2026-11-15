@@ -233,7 +233,7 @@ impl IssueQuery {
     }
 }
 
-#[derive(Debug, Clone, Serialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, PartialEq, schemars::JsonSchema)]
 pub struct IssueSummary {
     pub key: String,
     pub summary: String,
@@ -248,7 +248,25 @@ pub struct IssueSummary {
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+/// A worklog that `Jira::worklog` added.
+#[derive(Debug, Clone, serde::Serialize, schemars::JsonSchema)]
+pub struct WorklogAdded {
+    pub key: String,
+    pub worklog_id: Option<String>,
+    pub time_spent: String,
+}
+
+/// A web link that `Jira::remote_link` added to an issue.
+#[derive(Debug, Clone, serde::Serialize, schemars::JsonSchema)]
+pub struct RemoteLink {
+    pub key: String,
+    /// Jira's ID of the link.
+    pub id: Option<u64>,
+    pub url: String,
+    pub title: String,
+}
+
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct IssuePage {
     pub issues: Vec<IssueSummary>,
     /// Pass back as `page_token` for the next page.
@@ -257,7 +275,7 @@ pub struct IssuePage {
     pub total: Option<u64>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Comment {
     pub id: String,
     pub author: Option<String>,
@@ -266,7 +284,7 @@ pub struct Comment {
     pub body: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct IssueDetail {
     #[serde(flatten)]
     pub summary: IssueSummary,
@@ -379,7 +397,7 @@ pub struct CloneOptions {
 }
 
 /// A project version ("release").
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Release {
     pub id: String,
     pub name: String,
@@ -414,7 +432,7 @@ fn replace_text(value: &mut Value, find: &str, with: &str) {
 }
 
 /// A system or custom field, from `GET /rest/api/{2|3}/field`.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Field {
     /// For example `customfield_10016` or `duedate`.
     pub id: String,
@@ -430,7 +448,7 @@ pub struct Field {
     pub custom_type: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Watchers {
     /// True when the signed-in user watches the issue.
     pub watching: bool,
@@ -438,13 +456,13 @@ pub struct Watchers {
     pub watchers: Vec<User>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Created {
     pub key: String,
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Transition {
     pub id: String,
     pub name: String,
@@ -452,7 +470,7 @@ pub struct Transition {
     pub to: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct User {
     /// Account ID (Cloud) or username (Data Center).
     pub id: String,
@@ -460,7 +478,7 @@ pub struct User {
     pub email: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Project {
     pub key: String,
     pub name: String,
@@ -469,7 +487,7 @@ pub struct Project {
     pub project_type: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Board {
     pub id: u64,
     pub name: String,
@@ -477,7 +495,7 @@ pub struct Board {
     pub board_type: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Sprint {
     pub id: u64,
     pub name: String,
@@ -1174,14 +1192,14 @@ impl<'a> Jira<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct JqlCheck {
     pub valid: bool,
     pub errors: Vec<String>,
     pub warnings: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct JqlField {
     /// The name to use in JQL.
     pub name: String,
@@ -1189,19 +1207,19 @@ pub struct JqlField {
     pub operators: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct JqlReference {
     pub fields: Vec<JqlField>,
     pub functions: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Suggestion {
     pub value: String,
     pub display: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Filter {
     pub id: String,
     pub name: String,
@@ -1211,7 +1229,7 @@ pub struct Filter {
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct LinkType {
     pub name: String,
     /// Phrase from the first issue to the second ("blocks").
@@ -1220,7 +1238,7 @@ pub struct LinkType {
     pub inward: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Attachment {
     pub id: String,
     pub filename: String,
@@ -1608,7 +1626,7 @@ impl Jira<'_> {
         time_spent: &str,
         comment: Option<&str>,
         started: Option<&str>,
-    ) -> Result<Value> {
+    ) -> Result<WorklogAdded> {
         let mut body = json!({ "timeSpent": time_spent });
         if let Some(comment) = comment {
             body["comment"] = self.body(comment);
@@ -1624,7 +1642,11 @@ impl Jira<'_> {
                 Some(body),
             )
             .await?;
-        Ok(json!({ "key": key, "worklog_id": text(&response, "/id"), "time_spent": time_spent }))
+        Ok(WorklogAdded {
+            key: key.to_owned(),
+            worklog_id: text(&response, "/id"),
+            time_spent: time_spent.to_owned(),
+        })
     }
 
     /// Open epics of a project.
@@ -1967,7 +1989,12 @@ impl Jira<'_> {
     }
 
     /// Adds a web link ("remote link") to an issue.
-    pub async fn remote_link(&self, key: &str, url: &str, title: Option<&str>) -> Result<Value> {
+    pub async fn remote_link(
+        &self,
+        key: &str,
+        url: &str,
+        title: Option<&str>,
+    ) -> Result<RemoteLink> {
         let title = title.unwrap_or(url);
         let response = self
             .send(
@@ -1977,7 +2004,12 @@ impl Jira<'_> {
                 Some(json!({ "object": { "url": url, "title": title } })),
             )
             .await?;
-        Ok(json!({ "key": key, "id": response.get("id"), "url": url, "title": title }))
+        Ok(RemoteLink {
+            key: key.to_owned(),
+            id: response.get("id").and_then(Value::as_u64),
+            url: url.to_owned(),
+            title: title.to_owned(),
+        })
     }
 
     /// The versions ("releases") of a project, in server order.
@@ -2120,7 +2152,7 @@ pub fn find_issue_key(text: &str) -> Option<String> {
     None
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct IssueLink {
     /// The phrase from this issue's side, for example "blocks" or "is blocked by".
     pub relation: String,
@@ -2129,7 +2161,7 @@ pub struct IssueLink {
     pub status: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Worklog {
     pub id: String,
     pub author: Option<String>,
@@ -2142,7 +2174,7 @@ pub struct Worklog {
 }
 
 /// One changed field of one history entry.
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Change {
     pub created: Option<String>,
     pub author: Option<String>,
@@ -2151,7 +2183,7 @@ pub struct Change {
     pub to: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Component {
     pub id: String,
     pub name: String,

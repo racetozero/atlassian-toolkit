@@ -26,7 +26,7 @@ use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 
 /// The `---` block at the top of a Markdown file, as YAML.
-#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize, schemars::JsonSchema)]
 #[serde(default)]
 pub struct FrontMatter {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -207,7 +207,7 @@ pub struct ExportOptions {
     pub dry_run: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Exported {
     pub id: String,
     pub title: String,
@@ -341,7 +341,7 @@ pub struct PushOptions {
     pub dry_run: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Pushed {
     pub file: String,
     pub id: String,
@@ -583,7 +583,7 @@ pub struct CopyOptions {
     pub dry_run: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Copied {
     pub source: String,
     /// The new page (empty in a dry run).

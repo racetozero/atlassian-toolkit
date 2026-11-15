@@ -1,6 +1,6 @@
 //! The task registry: every task-level Jira, Confluence, Bitbucket and Jira
 //! Service Management operation as a named JSON-in, JSON-out function with a
-//! JSON Schema for its arguments. Names start with the product (`jira_`,
+//! JSON Schema for its arguments and one for its result. Names start with the product (`jira_`,
 //! `confluence_`, `bitbucket_`, `jsm_`, `trello_`, `admin_`), the same as
 //! `atl <product> ...`.
 //!
@@ -10,8 +10,8 @@
 use crate::client::Client;
 use crate::error::{Error, Result};
 use schemars::JsonSchema;
-use serde::Deserialize;
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 #[derive(Clone, Copy)]
@@ -25,20 +25,37 @@ pub struct TaskDef {
     pub destructive: bool,
     /// JSON Schema of the arguments object.
     pub schema: fn() -> Value,
+    /// JSON Schema of the result.
+    pub output: fn() -> Value,
 }
 
 impl TaskDef {
-    /// `{name, description, read_only, schema}`, as `atl task` and the SDKs list it.
+    /// `{name, description, read_only, schema, output_schema}`, as `atl task` and the SDKs list it.
     pub fn to_json(&self) -> Value {
-        json!({ "name": self.name, "description": self.description, "read_only": self.read_only, "schema": (self.schema)() })
+        json!({
+            "name": self.name,
+            "description": self.description,
+            "read_only": self.read_only,
+            "schema": (self.schema)(),
+            "output_schema": (self.output)(),
+        })
     }
 }
 
 fn schema<T: JsonSchema>() -> Value {
+    let mut value = output_schema::<T>();
+    if let Value::Object(map) = &mut value {
+        map.remove("title");
+    }
+    value
+}
+
+/// Like [`schema`], but keeps the `title` (the Rust type name), which the SDK
+/// generator uses to name result models.
+fn output_schema<T: JsonSchema>() -> Value {
     let mut value = serde_json::to_value(schemars::schema_for!(T)).unwrap_or_default();
     if let Value::Object(map) = &mut value {
         map.remove("$schema");
-        map.remove("title");
     }
     value
 }
@@ -66,20 +83,25 @@ fn default_true() -> bool {
     true
 }
 
+/// Registers a task: `task!("jira_issue_view", read_only, Args => Output, "description")`,
+/// with `destructive` after the description for tasks the CLI confirms first.
+/// The handler returns through [`output`], which checks the `Output` type in
+/// debug builds.
 macro_rules! task {
-    ($name:literal, $read_only:expr, $args:ty, $description:literal) => {
-        task!(@ $name, $read_only, false, $args, $description)
+    ($name:literal, $read_only:expr, $args:ty => $out:ty, $description:literal) => {
+        task!(@ $name, $read_only, false, $args, $out, $description)
     };
-    ($name:literal, $read_only:expr, $args:ty, $description:literal, destructive) => {
-        task!(@ $name, $read_only, true, $args, $description)
+    ($name:literal, $read_only:expr, $args:ty => $out:ty, $description:literal, destructive) => {
+        task!(@ $name, $read_only, true, $args, $out, $description)
     };
-    (@ $name:literal, $read_only:expr, $destructive:expr, $args:ty, $description:literal) => {
+    (@ $name:literal, $read_only:expr, $destructive:expr, $args:ty, $out:ty, $description:literal) => {
         TaskDef {
             name: $name,
             description: $description,
             read_only: $read_only,
             destructive: $destructive,
             schema: $crate::tasks::schema::<$args>,
+            output: $crate::tasks::output_schema::<$out>,
         }
     };
 }
@@ -125,9 +147,17 @@ fn parse<T: DeserializeOwned>(name: &str, args: Value) -> Result<T> {
     })
 }
 
-fn to_json(value: impl serde::Serialize) -> Result<Value> {
+/// Encodes the result of task `name`. Debug builds (every test) check that
+/// `T` has the output schema the task registered, so the published schema
+/// cannot drift from what the handler returns.
+fn output<T: Serialize + JsonSchema>(name: &str, value: T) -> Result<Value> {
+    debug_assert_eq!(
+        Some(output_schema::<T>()),
+        find(name).map(|task| (task.output)()),
+        "task `{name}` returns a type whose schema differs from the output type in its task! registration"
+    );
     serde_json::to_value(value)
-        .map_err(|err| Error::Invalid(format!("cannot encode the result: {err}")))
+        .map_err(|err| Error::Invalid(format!("cannot encode the result of `{name}`: {err}")))
 }
 
 /// Runs one task. `args` is a JSON object matching the task's schema.
@@ -169,6 +199,48 @@ mod tests {
         names.sort_unstable();
         names.dedup();
         assert_eq!(names.len(), list().len(), "task names are unique");
+    }
+
+    #[test]
+    fn output_schemas_are_objects_or_arrays_and_type_names_are_unique() {
+        let mut seen: std::collections::HashMap<String, (Value, &str)> = Default::default();
+        for task in list() {
+            let schema = (task.output)();
+            assert!(
+                matches!(schema["type"].as_str(), Some("object" | "array")),
+                "{}: the output must be an object or an array, got {schema}",
+                task.name
+            );
+            let named = schema["$defs"].as_object().into_iter().flatten();
+            let top = schema["title"]
+                .as_str()
+                .filter(|_| schema["type"] == "object")
+                .map(|title| (title.to_owned(), schema.clone()));
+            for (name, definition) in named.map(|(n, d)| (n.clone(), d.clone())).chain(top) {
+                let mut definition = definition;
+                if let Value::Object(map) = &mut definition {
+                    map.remove("$defs");
+                    map.remove("title");
+                }
+                if let Some((other, first)) = seen.get(&name) {
+                    assert_eq!(
+                        &definition, other,
+                        "type `{name}` in `{}` and `{first}` has two shapes; give one a \
+                         #[schemars(rename = \"...\")] so the SDK models get distinct names",
+                        task.name
+                    );
+                } else {
+                    seen.insert(name, (definition, task.name));
+                }
+            }
+        }
+    }
+
+    #[test]
+    #[cfg(debug_assertions)]
+    #[should_panic(expected = "returns a type whose schema differs")]
+    fn output_rejects_a_type_other_than_the_registered_one() {
+        let _ = output("jira_issue_count", Vec::<String>::new());
     }
 
     #[tokio::test]

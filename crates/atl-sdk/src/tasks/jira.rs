@@ -6,7 +6,7 @@ use crate::error::{Error, Result};
 use crate::jira::{CloneOptions, IssueEdit, IssueQuery, Jira, NewIssue, TransitionFields};
 use schemars::JsonSchema;
 use serde::Deserialize;
-use serde_json::{Value, json};
+use serde_json::Value;
 
 #[derive(Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
@@ -403,271 +403,271 @@ pub(super) static TASKS: &[TaskDef] = &[
     task!(
         "jira_issue_list",
         true,
-        IssueQuery,
+        IssueQuery => IssueList,
         "Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues."
     ),
     task!(
         "jira_issue_count",
         true,
-        IssueQuery,
+        IssueQuery => IssueCount,
         "Count Jira issues matching the same filters as issue_list."
     ),
     task!(
         "jira_issue_view",
         true,
-        IssueViewArgs,
+        IssueViewArgs => crate::jira::IssueDetail,
         "One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name."
     ),
     task!(
         "jira_issue_delete",
         false,
-        IssueDeleteArgs,
+        IssueDeleteArgs => IssueDeleted,
         "Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone.",
         destructive
     ),
     task!(
         "jira_issue_watchers",
         true,
-        KeyArgs,
+        KeyArgs => crate::jira::Watchers,
         "Who watches a Jira issue, and whether you do."
     ),
     task!(
         "jira_issue_watch",
         false,
-        WatchArgs,
+        WatchArgs => Watching,
         "Add a watcher to a Jira issue (default: you)."
     ),
     task!(
         "jira_issue_unwatch",
         false,
-        WatchArgs,
+        WatchArgs => Watching,
         "Remove a watcher from a Jira issue (default: you)."
     ),
     task!(
         "jira_field_list",
         true,
-        FieldListArgs,
+        FieldListArgs => Vec<crate::jira::Field>,
         "Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view."
     ),
     task!(
         "jira_issue_create",
         false,
-        IssueCreateArgs,
+        IssueCreateArgs => crate::jira::Created,
         "Create a Jira issue; the description is Markdown."
     ),
     task!(
         "jira_issue_edit",
         false,
-        IssueEditArgs,
+        IssueEditArgs => IssueUpdated,
         "Change a Jira issue's summary, description (Markdown), priority or labels."
     ),
     task!(
         "jira_issue_assign",
         false,
-        AssignArgs,
+        AssignArgs => Assigned,
         "Assign a Jira issue to me, nobody (x), or a user."
     ),
     task!(
         "jira_issue_transitions",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jira::Transition>,
         "Statuses a Jira issue can move to."
     ),
     task!(
         "jira_issue_move",
         false,
-        MoveArgs,
+        MoveArgs => Moved,
         "Move a Jira issue to another status (by status or transition name)."
     ),
     task!(
         "jira_issue_comment",
         false,
-        CommentArgs,
+        CommentArgs => crate::jira::Comment,
         "Add a Markdown comment to a Jira issue."
     ),
     task!(
         "jira_issue_link",
         false,
-        LinkArgs,
+        LinkArgs => Linked,
         "Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2."
     ),
     task!(
         "jira_issue_unlink",
         false,
-        UnlinkArgs,
+        UnlinkArgs => Unlinked,
         "Remove the links between two Jira issues (optionally only one link type)."
     ),
     task!(
         "jira_issue_remote_link",
         false,
-        RemoteLinkArgs,
+        RemoteLinkArgs => crate::jira::RemoteLink,
         "Add a web link (URL and title) to a Jira issue."
     ),
     task!(
         "jira_comment_list",
         true,
-        CommentListArgs,
+        CommentListArgs => Vec<crate::jira::Comment>,
         "Every comment of a Jira issue, oldest first, with IDs, as Markdown."
     ),
     task!(
         "jira_comment_edit",
         false,
-        CommentEditArgs,
+        CommentEditArgs => crate::jira::Comment,
         "Replace the text of a Jira comment (Markdown)."
     ),
     task!(
         "jira_comment_delete",
         false,
-        CommentDeleteArgs,
+        CommentDeleteArgs => CommentDeleted,
         "Delete a Jira comment. Cannot be undone.",
         destructive
     ),
     task!(
         "jira_worklog_list",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jira::Worklog>,
         "Time logged on a Jira issue: author, time spent, start, comment."
     ),
     task!(
         "jira_issue_history",
         true,
-        HistoryArgs,
+        HistoryArgs => Vec<crate::jira::Change>,
         "Field changes of a Jira issue, newest first: when, who, field, from, to."
     ),
     task!(
         "jira_component_list",
         true,
-        ProjectKeyArgs,
+        ProjectKeyArgs => Vec<crate::jira::Component>,
         "Components of a Jira project with their leads."
     ),
     task!(
         "jira_sprint_create",
         false,
-        SprintCreateArgs,
+        SprintCreateArgs => crate::jira::Sprint,
         "Create a future sprint on a board (default: the project's first board)."
     ),
     task!(
         "jira_sprint_start",
         false,
-        SprintStartArgs,
+        SprintStartArgs => crate::jira::Sprint,
         "Start a future sprint; Jira needs a start and an end date."
     ),
     task!(
         "jira_sprint_close",
         false,
-        SprintArgs,
+        SprintArgs => crate::jira::Sprint,
         "Complete an active sprint."
     ),
     task!(
         "jira_release_list",
         true,
-        ReleaseListArgs,
+        ReleaseListArgs => Vec<crate::jira::Release>,
         "Versions (releases) of a Jira project: name, released, archived, release date."
     ),
     task!(
         "jira_issue_link_types",
         true,
-        Empty,
+        Empty => Vec<crate::jira::LinkType>,
         "Jira issue link types with their outward and inward phrases."
     ),
     task!(
         "jira_issue_clone",
         false,
-        CloneArgs,
+        CloneArgs => crate::jira::Created,
         "Copy a Jira issue (summary, description, type, labels, priority, components, parent)."
     ),
     task!(
         "jira_issue_worklog",
         false,
-        WorklogArgs,
+        WorklogArgs => crate::jira::WorklogAdded,
         "Log time on a Jira issue."
     ),
     task!(
         "jira_issue_attach",
         false,
-        IssueAttachArgs,
+        IssueAttachArgs => Vec<crate::jira::Attachment>,
         "Upload local files to a Jira issue."
     ),
     task!(
         "jira_issue_attachments",
         true,
-        KeyArgs,
+        KeyArgs => Vec<crate::jira::Attachment>,
         "List a Jira issue's attachments."
     ),
     task!(
         "jira_jql_check",
         true,
-        JqlArgs,
+        JqlArgs => crate::jira::JqlCheck,
         "Validate JQL with Jira's parser; returns valid, errors, warnings."
     ),
     task!(
         "jira_jql_fields",
         true,
-        Empty,
+        Empty => crate::jira::JqlReference,
         "Fields (with operators) and functions usable in JQL on this site."
     ),
     task!(
         "jira_jql_suggest",
         true,
-        SuggestArgs,
+        SuggestArgs => Vec<crate::jira::Suggestion>,
         "Value suggestions for a JQL field, for example field=status prefix=In."
     ),
     task!(
         "jira_filter_list",
         true,
-        FilterListArgs,
+        FilterListArgs => Vec<crate::jira::Filter>,
         "Saved Jira filters (Cloud: all visible, Data Center: favourites)."
     ),
     task!(
         "jira_filter_run",
         true,
-        FilterRunArgs,
+        FilterRunArgs => IssueList,
         "Run a saved Jira filter by ID or exact name; returns issue records."
     ),
     task!(
         "jira_epic_list",
         true,
-        EpicListArgs,
+        EpicListArgs => Vec<crate::jira::IssueSummary>,
         "Open epics, optionally of one project."
     ),
     task!(
         "jira_epic_add",
         false,
-        EpicAddArgs,
+        EpicAddArgs => EpicIssues,
         "Move issues into an epic."
     ),
     task!(
         "jira_epic_remove",
         false,
-        IssuesArgs,
+        IssuesArgs => EpicIssues,
         "Remove issues from their epic."
     ),
     task!(
         "jira_board_list",
         true,
-        ProjectArgs,
+        ProjectArgs => Vec<crate::jira::Board>,
         "Jira Software boards, optionally of one project."
     ),
     task!(
         "jira_sprint_list",
         true,
-        SprintListArgs,
+        SprintListArgs => BoardSprints,
         "Sprints of a board."
     ),
     task!(
         "jira_sprint_add",
         false,
-        SprintAddArgs,
+        SprintAddArgs => SprintIssues,
         "Move issues into a sprint."
     ),
-    task!("jira_project_list", true, Empty, "Jira projects."),
+    task!("jira_project_list", true, Empty => Vec<crate::jira::Project>, "Jira projects."),
     task!(
         "jira_issue_types",
         true,
-        ProjectKeyArgs,
+        ProjectKeyArgs => Vec<String>,
         "Issue type names of a Jira project (without sub-task types), for the `type` argument of jira_issue_create."
     ),
-    task!("jira_me", true, Empty, "The signed-in Jira user."),
+    task!("jira_me", true, Empty => crate::jira::User, "The signed-in Jira user."),
 ];
 
 pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Value> {
@@ -677,6 +677,7 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
             let a: IssueQuery = parse(name, args)?;
             let jql = a.to_jql();
             page_json(
+                name,
                 jira.search(&jql, a.limit, a.page_token.as_deref()).await?,
                 jql,
             )
@@ -684,34 +685,60 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "jira_issue_count" => {
             let a: IssueQuery = parse(name, args)?;
             let jql = a.to_jql();
-            Ok(json!({ "count": jira.count(&jql).await?, "jql": jql }))
+            output(
+                name,
+                IssueCount {
+                    count: jira.count(&jql).await?,
+                    jql,
+                },
+            )
         }
         "jira_issue_view" => {
             let a: IssueViewArgs = parse(name, args)?;
-            to_json(jira.issue(&a.key, a.comments, &a.fields).await?)
+            output(name, jira.issue(&a.key, a.comments, &a.fields).await?)
         }
         "jira_issue_delete" => {
             let a: IssueDeleteArgs = parse(name, args)?;
             jira.delete(&a.key, a.subtasks).await?;
-            Ok(json!({ "key": a.key, "deleted": true }))
+            output(
+                name,
+                IssueDeleted {
+                    key: a.key,
+                    deleted: true,
+                },
+            )
         }
         "jira_issue_watchers" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(jira.watchers(&a.key).await?)
+            output(name, jira.watchers(&a.key).await?)
         }
         "jira_issue_watch" => {
             let a: WatchArgs = parse(name, args)?;
             jira.watch(&a.key, &a.user).await?;
-            Ok(json!({ "key": a.key, "user": a.user, "watching": true }))
+            output(
+                name,
+                Watching {
+                    key: a.key,
+                    user: a.user,
+                    watching: true,
+                },
+            )
         }
         "jira_issue_unwatch" => {
             let a: WatchArgs = parse(name, args)?;
             jira.unwatch(&a.key, &a.user).await?;
-            Ok(json!({ "key": a.key, "user": a.user, "watching": false }))
+            output(
+                name,
+                Watching {
+                    key: a.key,
+                    user: a.user,
+                    watching: false,
+                },
+            )
         }
         "jira_field_list" => {
             let a: FieldListArgs = parse(name, args)?;
-            to_json(jira.fields(a.filter.as_deref()).await?)
+            output(name, jira.fields(a.filter.as_deref()).await?)
         }
         "jira_issue_create" => {
             let a: IssueCreateArgs = parse(name, args)?;
@@ -731,7 +758,7 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 reporter: a.reporter,
                 fields: a.fields.into_iter().collect(),
             };
-            to_json(jira.create(&new).await?)
+            output(name, jira.create(&new).await?)
         }
         "jira_issue_edit" => {
             let a: IssueEditArgs = parse(name, args)?;
@@ -755,16 +782,30 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 skip_notify: a.skip_notify,
             };
             jira.edit(&a.key, &edit).await?;
-            Ok(json!({ "key": a.key, "updated": true, "url": jira.browse_url(&a.key) }))
+            let url = jira.browse_url(&a.key);
+            output(
+                name,
+                IssueUpdated {
+                    key: a.key,
+                    updated: true,
+                    url,
+                },
+            )
         }
         "jira_issue_assign" => {
             let a: AssignArgs = parse(name, args)?;
             jira.assign(&a.key, &a.user).await?;
-            Ok(json!({ "key": a.key, "assignee": a.user }))
+            output(
+                name,
+                Assigned {
+                    key: a.key,
+                    assignee: a.user,
+                },
+            )
         }
         "jira_issue_transitions" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(jira.transitions(&a.key).await?)
+            output(name, jira.transitions(&a.key).await?)
         }
         "jira_issue_move" => {
             let a: MoveArgs = parse(name, args)?;
@@ -779,55 +820,87 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                     },
                 )
                 .await?;
-            Ok(json!({ "key": a.key, "status": t.to, "transition": t.name }))
+            output(
+                name,
+                Moved {
+                    key: a.key,
+                    status: t.to,
+                    transition: t.name,
+                },
+            )
         }
         "jira_issue_comment" => {
             let a: CommentArgs = parse(name, args)?;
-            to_json(jira.comment(&a.key, &a.body, a.internal).await?)
+            output(name, jira.comment(&a.key, &a.body, a.internal).await?)
         }
         "jira_issue_link" => {
             let a: LinkArgs = parse(name, args)?;
             let kind = jira.link(&a.from, &a.to, &a.kind).await?;
-            Ok(json!({ "from": a.from, "to": a.to, "type": kind.name }))
+            output(
+                name,
+                Linked {
+                    from: a.from,
+                    to: a.to,
+                    kind: kind.name,
+                },
+            )
         }
         "jira_issue_unlink" => {
             let a: UnlinkArgs = parse(name, args)?;
             let removed = jira.unlink(&a.from, &a.to, a.kind.as_deref()).await?;
-            Ok(json!({ "from": a.from, "to": a.to, "removed": removed }))
+            output(
+                name,
+                Unlinked {
+                    from: a.from,
+                    to: a.to,
+                    removed,
+                },
+            )
         }
         "jira_issue_remote_link" => {
             let a: RemoteLinkArgs = parse(name, args)?;
-            jira.remote_link(&a.key, &a.url, a.title.as_deref()).await
+            output(
+                name,
+                jira.remote_link(&a.key, &a.url, a.title.as_deref()).await?,
+            )
         }
         "jira_comment_list" => {
             let a: CommentListArgs = parse(name, args)?;
-            to_json(jira.comments(&a.key, a.limit).await?)
+            output(name, jira.comments(&a.key, a.limit).await?)
         }
         "jira_comment_edit" => {
             let a: CommentEditArgs = parse(name, args)?;
-            to_json(jira.edit_comment(&a.key, &a.id, &a.body).await?)
+            output(name, jira.edit_comment(&a.key, &a.id, &a.body).await?)
         }
         "jira_comment_delete" => {
             let a: CommentDeleteArgs = parse(name, args)?;
             jira.delete_comment(&a.key, &a.id).await?;
-            Ok(json!({ "key": a.key, "id": a.id, "deleted": true }))
+            output(
+                name,
+                CommentDeleted {
+                    key: a.key,
+                    id: a.id,
+                    deleted: true,
+                },
+            )
         }
         "jira_worklog_list" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(jira.worklogs(&a.key).await?)
+            output(name, jira.worklogs(&a.key).await?)
         }
         "jira_issue_history" => {
             let a: HistoryArgs = parse(name, args)?;
-            to_json(jira.history(&a.key, a.limit).await?)
+            output(name, jira.history(&a.key, a.limit).await?)
         }
         "jira_component_list" => {
             let a: ProjectKeyArgs = parse(name, args)?;
-            to_json(jira.components(&a.project).await?)
+            output(name, jira.components(&a.project).await?)
         }
         "jira_sprint_create" => {
             let a: SprintCreateArgs = parse(name, args)?;
             let board = jira.board_or_first(a.board, a.project.as_deref()).await?;
-            to_json(
+            output(
+                name,
                 jira.create_sprint(
                     board,
                     &a.name,
@@ -840,14 +913,15 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "jira_sprint_start" => {
             let a: SprintStartArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 jira.start_sprint(a.sprint, a.start.as_deref(), a.end.as_deref())
                     .await?,
             )
         }
         "jira_sprint_close" => {
             let a: SprintArgs = parse(name, args)?;
-            to_json(jira.close_sprint(a.sprint).await?)
+            output(name, jira.close_sprint(a.sprint).await?)
         }
         "jira_release_list" => {
             let a: ReleaseListArgs = parse(name, args)?;
@@ -868,7 +942,7 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 .into_iter()
                 .filter(keep)
                 .collect();
-            to_json(releases)
+            output(name, releases)
         }
         "jira_issue_clone" => {
             let a: CloneArgs = parse(name, args)?;
@@ -893,41 +967,45 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 labels: a.labels,
                 replace,
             };
-            to_json(jira.clone_issue(&a.key, &options).await?)
+            output(name, jira.clone_issue(&a.key, &options).await?)
         }
         "jira_issue_worklog" => {
             let a: WorklogArgs = parse(name, args)?;
-            jira.worklog(&a.key, &a.time, a.comment.as_deref(), a.started.as_deref())
-                .await
+            output(
+                name,
+                jira.worklog(&a.key, &a.time, a.comment.as_deref(), a.started.as_deref())
+                    .await?,
+            )
         }
         "jira_issue_attach" => {
             let a: IssueAttachArgs = parse(name, args)?;
-            to_json(jira.attach(&a.key, &a.files).await?)
+            output(name, jira.attach(&a.key, &a.files).await?)
         }
         "jira_issue_attachments" => {
             let a: KeyArgs = parse(name, args)?;
-            to_json(jira.attachments(&a.key).await?)
+            output(name, jira.attachments(&a.key).await?)
         }
         "jira_jql_check" => {
             let a: JqlArgs = parse(name, args)?;
-            to_json(jira.check_jql(&a.jql).await?)
+            output(name, jira.check_jql(&a.jql).await?)
         }
         "jira_jql_fields" => {
             let _: Empty = parse(name, args)?;
-            to_json(jira.jql_reference().await?)
+            output(name, jira.jql_reference().await?)
         }
         "jira_jql_suggest" => {
             let a: SuggestArgs = parse(name, args)?;
-            to_json(jira.suggest(&a.field, &a.prefix).await?)
+            output(name, jira.suggest(&a.field, &a.prefix).await?)
         }
         "jira_filter_list" => {
             let a: FilterListArgs = parse(name, args)?;
-            to_json(jira.filters(a.name.as_deref()).await?)
+            output(name, jira.filters(a.name.as_deref()).await?)
         }
         "jira_filter_run" => {
             let a: FilterRunArgs = parse(name, args)?;
             let filter = jira.filter(&a.filter).await?;
             page_json(
+                name,
                 jira.search(&filter.jql, a.limit, a.page_token.as_deref())
                     .await?,
                 filter.jql,
@@ -935,56 +1013,183 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "jira_epic_list" => {
             let a: EpicListArgs = parse(name, args)?;
-            to_json(jira.epics(a.project.as_deref(), a.limit).await?.issues)
+            output(
+                name,
+                jira.epics(a.project.as_deref(), a.limit).await?.issues,
+            )
         }
         "jira_epic_add" => {
             let a: EpicAddArgs = parse(name, args)?;
             jira.set_epic(Some(&a.epic), &a.issues).await?;
-            Ok(json!({ "epic": a.epic, "issues": a.issues }))
+            output(
+                name,
+                EpicIssues {
+                    epic: Some(a.epic),
+                    issues: a.issues,
+                },
+            )
         }
         "jira_epic_remove" => {
             let a: IssuesArgs = parse(name, args)?;
             jira.set_epic(None, &a.issues).await?;
-            Ok(json!({ "epic": null, "issues": a.issues }))
+            output(
+                name,
+                EpicIssues {
+                    epic: None,
+                    issues: a.issues,
+                },
+            )
         }
         "jira_board_list" => {
             let a: ProjectArgs = parse(name, args)?;
-            to_json(jira.boards(a.project.as_deref()).await?)
+            output(name, jira.boards(a.project.as_deref()).await?)
         }
         "jira_sprint_list" => {
             let a: SprintListArgs = parse(name, args)?;
             let board = jira.board_or_first(a.board, a.project.as_deref()).await?;
-            Ok(
-                json!({ "board": board, "sprints": to_json(jira.sprints(board, Some(&a.state)).await?)? }),
-            )
+            let sprints = jira.sprints(board, Some(&a.state)).await?;
+            output(name, BoardSprints { board, sprints })
         }
         "jira_sprint_add" => {
             let a: SprintAddArgs = parse(name, args)?;
             jira.sprint_add(a.sprint, &a.issues).await?;
-            Ok(json!({ "sprint": a.sprint, "issues": a.issues }))
+            output(
+                name,
+                SprintIssues {
+                    sprint: a.sprint,
+                    issues: a.issues,
+                },
+            )
         }
         "jira_project_list" => {
             let _: Empty = parse(name, args)?;
-            to_json(jira.projects().await?)
+            output(name, jira.projects().await?)
         }
         "jira_issue_types" => {
             let a: ProjectKeyArgs = parse(name, args)?;
-            to_json(jira.issue_types(&a.project).await?)
+            output(name, jira.issue_types(&a.project).await?)
         }
         "jira_me" => {
             let _: Empty = parse(name, args)?;
-            to_json(jira.me().await?)
+            output(name, jira.me().await?)
         }
         "jira_issue_link_types" => {
             let _: Empty = parse(name, args)?;
-            to_json(jira.link_types().await?)
+            output(name, jira.link_types().await?)
         }
         _ => Err(unknown(name)),
     }
 }
 
-fn page_json(page: crate::jira::IssuePage, jql: String) -> Result<Value> {
-    Ok(
-        json!({ "issues": to_json(&page.issues)?, "next_page_token": page.next_page_token, "total": page.total, "jql": jql }),
+fn page_json(name: &str, page: crate::jira::IssuePage, jql: String) -> Result<Value> {
+    let crate::jira::IssuePage {
+        issues,
+        next_page_token,
+        total,
+    } = page;
+    output(
+        name,
+        IssueList {
+            issues,
+            next_page_token,
+            total,
+            jql,
+        },
     )
+}
+
+/// A page of issues and the JQL that found them.
+#[derive(Serialize, JsonSchema)]
+struct IssueList {
+    issues: Vec<crate::jira::IssueSummary>,
+    /// Pass back as `page_token` for the next page.
+    next_page_token: Option<String>,
+    /// Total matches when the server reports it (Data Center).
+    total: Option<u64>,
+    jql: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct IssueCount {
+    count: u64,
+    jql: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct IssueDeleted {
+    key: String,
+    deleted: bool,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Watching {
+    key: String,
+    user: String,
+    /// True after a watch, false after an unwatch.
+    watching: bool,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct IssueUpdated {
+    key: String,
+    updated: bool,
+    url: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Assigned {
+    key: String,
+    assignee: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Moved {
+    key: String,
+    /// The status the issue is in now.
+    status: String,
+    /// The transition that moved it.
+    transition: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Linked {
+    from: String,
+    to: String,
+    /// The link type name.
+    #[serde(rename = "type")]
+    kind: String,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Unlinked {
+    from: String,
+    to: String,
+    /// The link types that were removed.
+    removed: Vec<String>,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct CommentDeleted {
+    key: String,
+    id: String,
+    deleted: bool,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct EpicIssues {
+    /// The epic, or none after a remove.
+    epic: Option<String>,
+    issues: Vec<String>,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct BoardSprints {
+    board: u64,
+    sprints: Vec<crate::jira::Sprint>,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct SprintIssues {
+    sprint: u64,
+    issues: Vec<String>,
 }

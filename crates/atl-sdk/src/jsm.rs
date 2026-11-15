@@ -10,21 +10,21 @@ use crate::json::{items, text};
 use serde::Serialize;
 use serde_json::{Value, json};
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Desk {
     pub id: String,
     pub project: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct RequestType {
     pub id: String,
     pub name: String,
     pub description: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Queue {
     pub id: String,
     pub name: String,
@@ -32,7 +32,7 @@ pub struct Queue {
     pub issues: Option<u64>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Request {
     pub key: String,
     pub summary: String,
@@ -44,7 +44,7 @@ pub struct Request {
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct RequestComment {
     pub id: String,
     pub author: Option<String>,
@@ -54,7 +54,7 @@ pub struct RequestComment {
     pub body: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct RequestDetail {
     #[serde(flatten)]
     pub request: Request,
@@ -62,13 +62,13 @@ pub struct RequestDetail {
     pub comments: Vec<RequestComment>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct RequestTransition {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Approval {
     pub id: String,
     pub name: String,
@@ -79,7 +79,7 @@ pub struct Approval {
     pub approvers: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Sla {
     pub name: String,
     /// ongoing, paused, met or breached.
@@ -90,7 +90,7 @@ pub struct Sla {
     pub goal: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct RequestAttachment {
     pub filename: String,
     pub author: Option<String>,

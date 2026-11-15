@@ -83,7 +83,7 @@ impl std::fmt::Display for RepoRef {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Repo {
     /// `owner/slug`.
     pub repo: String,
@@ -94,13 +94,13 @@ pub struct Repo {
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Branch {
     pub name: String,
     pub commit: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PullRequest {
     pub id: u64,
     pub title: String,
@@ -121,7 +121,7 @@ pub struct PullRequest {
     pub draft: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Pipeline {
     pub build_number: u64,
     pub uuid: Option<String>,
@@ -618,7 +618,7 @@ impl<'a> Bitbucket<'a> {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PipelineStep {
     pub uuid: String,
     pub name: String,
@@ -628,7 +628,7 @@ pub struct PipelineStep {
     pub seconds: Option<u64>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PipelineDetail {
     #[serde(flatten)]
     pub pipeline: Pipeline,
@@ -997,7 +997,7 @@ impl Bitbucket<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PrComment {
     pub id: String,
     pub author: Option<String>,
@@ -1013,7 +1013,7 @@ pub struct PrComment {
     pub resolved: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct BuildStatus {
     pub name: String,
     pub key: Option<String>,
@@ -1033,7 +1033,7 @@ impl BuildStatus {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Commit {
     pub hash: String,
     pub author: Option<String>,

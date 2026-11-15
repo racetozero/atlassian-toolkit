@@ -80,7 +80,7 @@ impl PageRef {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Page {
     pub id: String,
     pub title: String,
@@ -96,14 +96,14 @@ pub struct Page {
     pub storage: String,
 }
 
-#[derive(Debug, Clone, Serialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, PartialEq, schemars::JsonSchema)]
 pub struct PageSummary {
     pub id: String,
     pub title: String,
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Space {
     pub key: String,
     pub name: String,
@@ -113,7 +113,7 @@ pub struct Space {
     pub url: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct SearchHit {
     pub id: String,
     #[serde(rename = "type")]
@@ -533,7 +533,7 @@ impl<'a> Confluence<'a> {
 }
 
 /// One node of a page tree (see [`Confluence::tree`]).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct TreeNode {
     pub id: String,
     pub title: String,
@@ -670,7 +670,7 @@ pub fn text_cql(words: &str, space: Option<&str>, content_type: Option<&str>) ->
     clauses.join(" AND ")
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PageAttachment {
     pub id: String,
     pub title: String,
@@ -799,7 +799,7 @@ impl Confluence<'_> {
     }
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PageComment {
     pub id: String,
     /// Display name (account ID on Cloud when the name lookup fails).
@@ -815,7 +815,7 @@ pub struct PageComment {
     pub selection: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct PageVersion {
     pub number: u64,
     pub author: Option<String>,

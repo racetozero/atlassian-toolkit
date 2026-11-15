@@ -10,19 +10,19 @@ use crate::json::{items, text};
 use serde::Serialize;
 use serde_json::{Value, json};
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Org {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Directory {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct AdminUser {
     pub account_id: String,
     pub name: Option<String>,
@@ -33,7 +33,7 @@ pub struct AdminUser {
     pub directory: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Group {
     pub id: String,
     pub name: String,
@@ -42,7 +42,7 @@ pub struct Group {
     pub directory: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Domain {
     pub id: String,
     pub name: String,
@@ -50,7 +50,7 @@ pub struct Domain {
     pub status: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Event {
     pub id: String,
     pub time: Option<String>,

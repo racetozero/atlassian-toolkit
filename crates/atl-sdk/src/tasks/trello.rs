@@ -111,71 +111,71 @@ struct TrelloBoardArgs {
 }
 
 pub(super) static TASKS: &[TaskDef] = &[
-    task!("trello_board_list", true, Empty, "Your open Trello boards."),
+    task!("trello_board_list", true, Empty => Vec<crate::trello::Board>, "Your open Trello boards."),
     task!(
         "trello_list_list",
         true,
-        TrelloBoardArgs,
+        TrelloBoardArgs => Vec<crate::trello::List>,
         "Open lists of a Trello board (board by name, URL, short link or ID)."
     ),
     task!(
         "trello_card_list",
         true,
-        TrelloCardsArgs,
+        TrelloCardsArgs => Vec<crate::trello::Card>,
         "Cards of a Trello board or one of its lists, or your cards on every board (`mine`)."
     ),
     task!(
         "trello_card_view",
         true,
-        TrelloCardArgs,
+        TrelloCardArgs => crate::trello::CardDetail,
         "One Trello card with list, board, description and latest comments."
     ),
     task!(
         "trello_card_create",
         false,
-        TrelloCreateArgs,
+        TrelloCreateArgs => crate::trello::Card,
         "Create a Trello card in a list (by name with `board`, or by list ID)."
     ),
     task!(
         "trello_card_move",
         false,
-        TrelloMoveArgs,
+        TrelloMoveArgs => crate::trello::Card,
         "Move a Trello card to another list (by default on the card's own board)."
     ),
     task!(
         "trello_card_comment",
         false,
-        TrelloCommentArgs,
+        TrelloCommentArgs => crate::trello::CardComment,
         "Add a comment to a Trello card."
     ),
     task!(
         "trello_card_archive",
         false,
-        TrelloCardArgs,
+        TrelloCardArgs => crate::trello::Card,
         "Archive (close) a Trello card."
     ),
     task!(
         "trello_card_edit",
         false,
-        TrelloEditArgs,
+        TrelloEditArgs => crate::trello::Card,
         "Change a Trello card: name, description, due date, done, labels (by name or color) and members (username, name or me)."
     ),
     task!(
         "trello_checklist_list",
         true,
-        TrelloCardArgs,
+        TrelloCardArgs => Vec<crate::trello::Checklist>,
         "Checklists of a Trello card with their items and whether each is done."
     ),
     task!(
         "trello_checklist_create",
         false,
-        ChecklistCreateArgs,
+        ChecklistCreateArgs => crate::trello::Checklist,
         "Add a checklist with items to a Trello card."
     ),
     task!(
         "trello_checklist_check",
         false,
-        CheckArgs,
+        CheckArgs => crate::trello::CheckItem,
         "Tick (or with done: false, untick) a Trello checklist item by name or ID."
     ),
 ];
@@ -185,15 +185,16 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
     match name {
         "trello_board_list" => {
             let _: Empty = parse(name, args)?;
-            to_json(trello.boards().await?)
+            output(name, trello.boards().await?)
         }
         "trello_list_list" => {
             let a: TrelloBoardArgs = parse(name, args)?;
-            to_json(trello.lists(&a.board).await?)
+            output(name, trello.lists(&a.board).await?)
         }
         "trello_card_list" => {
             let a: TrelloCardsArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 trello
                     .cards(a.board.as_deref(), a.list.as_deref(), a.mine)
                     .await?,
@@ -201,11 +202,12 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "trello_card_view" => {
             let a: TrelloCardArgs = parse(name, args)?;
-            to_json(trello.card(&a.card).await?)
+            output(name, trello.card(&a.card).await?)
         }
         "trello_card_create" => {
             let a: TrelloCreateArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 trello
                     .create_card(
                         a.board.as_deref(),
@@ -219,7 +221,8 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "trello_card_move" => {
             let a: TrelloMoveArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 trello
                     .move_card(&a.card, &a.list, a.board.as_deref())
                     .await?,
@@ -227,7 +230,7 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "trello_card_comment" => {
             let a: TrelloCommentArgs = parse(name, args)?;
-            to_json(trello.comment(&a.card, &a.text).await?)
+            output(name, trello.comment(&a.card, &a.text).await?)
         }
         "trello_card_edit" => {
             let a: TrelloEditArgs = parse(name, args)?;
@@ -241,23 +244,26 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 add_members: a.add_members,
                 remove_members: a.remove_members,
             };
-            to_json(trello.edit_card(&a.card, &edit).await?)
+            output(name, trello.edit_card(&a.card, &edit).await?)
         }
         "trello_checklist_list" => {
             let a: TrelloCardArgs = parse(name, args)?;
-            to_json(trello.checklists(&a.card).await?)
+            output(name, trello.checklists(&a.card).await?)
         }
         "trello_checklist_create" => {
             let a: ChecklistCreateArgs = parse(name, args)?;
-            to_json(trello.create_checklist(&a.card, &a.name, &a.items).await?)
+            output(
+                name,
+                trello.create_checklist(&a.card, &a.name, &a.items).await?,
+            )
         }
         "trello_checklist_check" => {
             let a: CheckArgs = parse(name, args)?;
-            to_json(trello.check_item(&a.card, &a.item, a.done).await?)
+            output(name, trello.check_item(&a.card, &a.item, a.done).await?)
         }
         "trello_card_archive" => {
             let a: TrelloCardArgs = parse(name, args)?;
-            to_json(trello.archive(&a.card).await?)
+            output(name, trello.archive(&a.card).await?)
         }
         _ => Err(unknown(name)),
     }

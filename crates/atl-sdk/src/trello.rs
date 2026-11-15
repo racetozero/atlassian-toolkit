@@ -9,7 +9,8 @@ use crate::json::{items, text};
 use serde::Serialize;
 use serde_json::Value;
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
+#[schemars(rename = "TrelloBoard")]
 pub struct Board {
     pub id: String,
     pub name: String,
@@ -17,13 +18,14 @@ pub struct Board {
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
+#[schemars(rename = "TrelloList")]
 pub struct List {
     pub id: String,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Card {
     pub id: String,
     pub name: String,
@@ -36,14 +38,14 @@ pub struct Card {
     pub url: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct CheckItem {
     pub id: String,
     pub name: String,
     pub done: bool,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct Checklist {
     pub id: String,
     pub name: String,
@@ -64,14 +66,14 @@ pub struct CardEdit {
     pub remove_members: Vec<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct CardComment {
     pub author: Option<String>,
     pub date: Option<String>,
     pub text: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, schemars::JsonSchema)]
 pub struct CardDetail {
     #[serde(flatten)]
     pub card: Card,

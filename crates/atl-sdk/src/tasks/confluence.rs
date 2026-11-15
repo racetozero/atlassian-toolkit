@@ -7,7 +7,7 @@ use crate::error::{Error, Result};
 use crate::markup;
 use schemars::JsonSchema;
 use serde::Deserialize;
-use serde_json::{Value, json};
+use serde_json::Value;
 
 #[derive(Deserialize, JsonSchema)]
 #[serde(deny_unknown_fields)]
@@ -281,160 +281,160 @@ pub(super) static TASKS: &[TaskDef] = &[
     task!(
         "confluence_page_get",
         true,
-        PageGetArgs,
+        PageGetArgs => PageView,
         "A Confluence page as Markdown (with title, space, version, url)."
     ),
     task!(
         "confluence_page_create",
         false,
-        PageCreateArgs,
+        PageCreateArgs => crate::confluence::PageSummary,
         "Create a Confluence page from Markdown (or storage format)."
     ),
     task!(
         "confluence_blog_list",
         true,
-        BlogListArgs,
+        BlogListArgs => Vec<crate::confluence::PageSummary>,
         "Blog posts of a Confluence space, newest first."
     ),
     task!(
         "confluence_blog_get",
         true,
-        BlogGetArgs,
+        BlogGetArgs => crate::confluence::Page,
         "One Confluence blog post with its body as Markdown."
     ),
     task!(
         "confluence_blog_create",
         false,
-        BlogCreateArgs,
+        BlogCreateArgs => crate::confluence::PageSummary,
         "Publish a Confluence blog post from Markdown."
     ),
     task!(
         "confluence_space_create",
         false,
-        SpaceCreateArgs,
+        SpaceCreateArgs => crate::confluence::Space,
         "Create a Confluence space with a key, a name and an optional plain-text description."
     ),
     task!(
         "confluence_page_update",
         false,
-        PageUpdateArgs,
+        PageUpdateArgs => crate::confluence::PageSummary,
         "Replace a Confluence page's title and/or body; the version is bumped automatically."
     ),
     task!(
         "confluence_page_delete",
         false,
-        PageArgs,
+        PageArgs => Deleted,
         "Delete a Confluence page.",
         destructive
     ),
     task!(
         "confluence_page_children",
         true,
-        PageChildrenArgs,
+        PageChildrenArgs => Vec<crate::confluence::TreeNode>,
         "Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent."
     ),
     task!(
         "confluence_page_find",
         true,
-        PageFindArgs,
+        PageFindArgs => Vec<crate::confluence::SearchHit>,
         "Confluence pages whose title contains the words, optionally in one space."
     ),
     task!(
         "confluence_page_attach",
         false,
-        PageAttachArgs,
+        PageAttachArgs => Vec<crate::confluence::PageAttachment>,
         "Upload local files to a Confluence page."
     ),
     task!(
         "confluence_page_attachments",
         true,
-        PageAttachmentsArgs,
+        PageAttachmentsArgs => Vec<crate::confluence::PageAttachment>,
         "Attachments of a Confluence page with download URLs."
     ),
     task!(
         "confluence_page_comments",
         true,
-        PageCommentsArgs,
+        PageCommentsArgs => Vec<crate::confluence::PageComment>,
         "Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`."
     ),
     task!(
         "confluence_page_comment",
         false,
-        PageCommentArgs,
+        PageCommentArgs => crate::confluence::PageComment,
         "Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`."
     ),
     task!(
         "confluence_comment_delete",
         false,
-        IdArgs,
+        IdArgs => Deleted,
         "Delete a Confluence comment by ID.",
         destructive
     ),
     task!(
         "confluence_attachment_delete",
         false,
-        IdArgs,
+        IdArgs => Deleted,
         "Delete a Confluence attachment by ID.",
         destructive
     ),
     task!(
         "confluence_page_export",
         true,
-        PageExportArgs,
+        PageExportArgs => Vec<crate::docs::Exported>,
         "Export a Confluence page (and with `recursive` its tree) to local Markdown folders: <title>/index.md with front matter and _attachments/. Changes nothing on the server."
     ),
     task!(
         "confluence_page_push",
         false,
-        PagePushArgs,
+        PagePushArgs => Vec<crate::docs::Pushed>,
         "Publish local Markdown files: update the page in each file's front matter (refusing pages changed on the server unless `force`, skipping unchanged ones), create pages for new files under their folder's index.md, upload referenced images, and write ids and versions back."
     ),
     task!(
         "confluence_page_copy_tree",
         false,
-        PageCopyTreeArgs,
+        PageCopyTreeArgs => Vec<crate::docs::Copied>,
         "Copy a Confluence page and the pages below it under another page (titles, bodies, labels)."
     ),
     task!(
         "confluence_page_labels",
         true,
-        PageArgs,
+        PageArgs => Vec<String>,
         "Labels of a Confluence page."
     ),
     task!(
         "confluence_page_label",
         false,
-        PageLabelArgs,
+        PageLabelArgs => Vec<String>,
         "Add and remove labels on a Confluence page; returns the resulting labels."
     ),
     task!(
         "confluence_page_move",
         false,
-        PageMoveArgs,
+        PageMoveArgs => crate::confluence::PageSummary,
         "Move a Confluence page under another page (position append) or next to it (before/after, Cloud only)."
     ),
     task!(
         "confluence_page_history",
         true,
-        PageListArgs,
+        PageListArgs => Vec<crate::confluence::PageVersion>,
         "Versions of a Confluence page, newest first: number, author, date, message. Read one with confluence_page_get and `version`."
     ),
     task!(
         "confluence_space_list",
         true,
-        SpaceListArgs,
+        SpaceListArgs => Vec<crate::confluence::Space>,
         "Confluence spaces."
     ),
     task!(
         "confluence_space_pages",
         true,
-        SpacePagesArgs,
+        SpacePagesArgs => Vec<crate::confluence::PageSummary>,
         "Top-level pages of a Confluence space."
     ),
     task!(
         "confluence_search",
         true,
-        SearchArgs,
+        SearchArgs => SearchResults,
         "Search Confluence by words or CQL; returns id, type, title, space, excerpt, url."
     ),
 ];
@@ -445,22 +445,25 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "confluence_page_get" => {
             let a: PageGetArgs = parse(name, args)?;
             let page = confluence.page_at(&a.page, a.version).await?;
-            let mut value = to_json(&page)?;
-            if a.front_matter {
-                value["document"] = crate::docs::page_document(&page).into();
-            }
-            if a.storage {
-                value["storage"] = page.storage.into();
-            }
-            Ok(value)
+            let document = a.front_matter.then(|| crate::docs::page_document(&page));
+            let storage = a.storage.then(|| page.storage.clone());
+            output(
+                name,
+                PageView {
+                    page,
+                    document,
+                    storage,
+                },
+            )
         }
         "confluence_page_comments" => {
             let a: PageCommentsArgs = parse(name, args)?;
-            to_json(confluence.comments(&a.page, a.limit, a.inline).await?)
+            output(name, confluence.comments(&a.page, a.limit, a.inline).await?)
         }
         "confluence_page_comment" => {
             let a: PageCommentArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 confluence
                     .comment(&a.page, &a.body, a.parent.as_deref())
                     .await?,
@@ -469,12 +472,24 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "confluence_comment_delete" => {
             let a: IdArgs = parse(name, args)?;
             confluence.delete_comment(&a.id).await?;
-            Ok(json!({ "id": a.id, "deleted": true }))
+            output(
+                name,
+                Deleted {
+                    id: a.id,
+                    deleted: true,
+                },
+            )
         }
         "confluence_attachment_delete" => {
             let a: IdArgs = parse(name, args)?;
             confluence.delete_attachment(&a.id).await?;
-            Ok(json!({ "id": a.id, "deleted": true }))
+            output(
+                name,
+                Deleted {
+                    id: a.id,
+                    deleted: true,
+                },
+            )
         }
         "confluence_page_export" => {
             let a: PageExportArgs = parse(name, args)?;
@@ -485,7 +500,10 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 attachments: a.attachments,
                 dry_run: a.dry_run,
             };
-            to_json(crate::docs::export(&confluence, &a.page, &a.dest, &options).await?)
+            output(
+                name,
+                crate::docs::export(&confluence, &a.page, &a.dest, &options).await?,
+            )
         }
         "confluence_page_push" => {
             let a: PagePushArgs = parse(name, args)?;
@@ -495,7 +513,10 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 force: a.force,
                 dry_run: a.dry_run,
             };
-            to_json(crate::docs::push(&confluence, &a.paths, &options).await?)
+            output(
+                name,
+                crate::docs::push(&confluence, &a.paths, &options).await?,
+            )
         }
         "confluence_page_copy_tree" => {
             let a: PageCopyTreeArgs = parse(name, args)?;
@@ -505,19 +526,26 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 exclude: a.exclude,
                 dry_run: a.dry_run,
             };
-            to_json(crate::docs::copy_tree(&confluence, &a.page, &a.target, &options).await?)
+            output(
+                name,
+                crate::docs::copy_tree(&confluence, &a.page, &a.target, &options).await?,
+            )
         }
         "confluence_page_labels" => {
             let a: PageArgs = parse(name, args)?;
-            to_json(confluence.labels(&a.page).await?)
+            output(name, confluence.labels(&a.page).await?)
         }
         "confluence_page_label" => {
             let a: PageLabelArgs = parse(name, args)?;
-            to_json(confluence.change_labels(&a.page, &a.add, &a.remove).await?)
+            output(
+                name,
+                confluence.change_labels(&a.page, &a.add, &a.remove).await?,
+            )
         }
         "confluence_page_move" => {
             let a: PageMoveArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 confluence
                     .move_page(&a.page, a.position.parse()?, &a.target)
                     .await?,
@@ -525,13 +553,14 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "confluence_page_history" => {
             let a: PageListArgs = parse(name, args)?;
-            to_json(confluence.versions(&a.page, a.limit).await?)
+            output(name, confluence.versions(&a.page, a.limit).await?)
         }
         "confluence_page_create" => {
             let a: PageCreateArgs = parse(name, args)?;
             let storage = body(a.markdown, a.storage)?
                 .ok_or_else(|| Error::Invalid("pass `markdown` or `storage`".into()))?;
-            to_json(
+            output(
+                name,
                 confluence
                     .create(&a.space, &a.title, a.parent.as_ref(), storage)
                     .await?,
@@ -540,7 +569,8 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "confluence_page_update" => {
             let a: PageUpdateArgs = parse(name, args)?;
             let storage = body(a.markdown, a.storage)?;
-            to_json(
+            output(
+                name,
                 confluence
                     .update(&a.page, a.title.as_deref(), storage)
                     .await?,
@@ -549,16 +579,17 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "confluence_page_delete" => {
             let a: PageArgs = parse(name, args)?;
             let id = confluence.delete(&a.page).await?;
-            Ok(json!({ "id": id, "deleted": true }))
+            output(name, Deleted { id, deleted: true })
         }
         "confluence_page_children" => {
             let a: PageChildrenArgs = parse(name, args)?;
             let depth = if a.recursive { a.max_depth } else { Some(1) };
-            to_json(confluence.tree(&a.page, depth).await?)
+            output(name, confluence.tree(&a.page, depth).await?)
         }
         "confluence_page_find" => {
             let a: PageFindArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 confluence
                     .find(&a.title, a.space.as_deref(), a.limit)
                     .await?,
@@ -567,10 +598,13 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         "confluence_page_attach" => {
             let a: PageAttachArgs = parse(name, args)?;
             let page = a.page;
-            to_json(match a.replace {
-                true => confluence.attach_replace(&page, &a.files).await?,
-                false => confluence.attach(&page, &a.files).await?,
-            })
+            output(
+                name,
+                match a.replace {
+                    true => confluence.attach_replace(&page, &a.files).await?,
+                    false => confluence.attach(&page, &a.files).await?,
+                },
+            )
         }
         "confluence_page_attachments" => {
             let a: PageAttachmentsArgs = parse(name, args)?;
@@ -579,15 +613,15 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 let glob = crate::docs::TitleGlobs::new(std::slice::from_ref(pattern));
                 found.retain(|att| glob.is_match(&att.title));
             }
-            to_json(found)
+            output(name, found)
         }
         "confluence_space_list" => {
             let a: SpaceListArgs = parse(name, args)?;
-            to_json(confluence.spaces(a.limit).await?)
+            output(name, confluence.spaces(a.limit).await?)
         }
         "confluence_space_pages" => {
             let a: SpacePagesArgs = parse(name, args)?;
-            to_json(confluence.root_pages(&a.space, a.limit).await?)
+            output(name, confluence.root_pages(&a.space, a.limit).await?)
         }
         "confluence_search" => {
             let a: SearchArgs = parse(name, args)?;
@@ -598,21 +632,23 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
                 }
                 (None, None) => return Err(Error::Invalid("pass `query` (words) or `cql`".into())),
             };
-            Ok(json!({ "cql": cql, "results": to_json(confluence.search(&cql, a.limit).await?)? }))
+            let results = confluence.search(&cql, a.limit).await?;
+            output(name, SearchResults { cql, results })
         }
         "confluence_blog_list" => {
             let a: BlogListArgs = parse(name, args)?;
-            to_json(confluence.blog_posts(&a.space, a.limit).await?)
+            output(name, confluence.blog_posts(&a.space, a.limit).await?)
         }
         "confluence_blog_get" => {
             let a: BlogGetArgs = parse(name, args)?;
-            to_json(confluence.blog_post(&a.id).await?)
+            output(name, confluence.blog_post(&a.id).await?)
         }
         "confluence_blog_create" => {
             let a: BlogCreateArgs = parse(name, args)?;
             let storage = body(a.markdown, a.storage)?
                 .ok_or_else(|| Error::Invalid("pass `markdown` or `storage`".into()))?;
-            to_json(
+            output(
+                name,
                 confluence
                     .create_blog_post(&a.space, &a.title, storage)
                     .await?,
@@ -620,7 +656,8 @@ pub(super) async fn run(client: &Client, name: &str, args: Value) -> Result<Valu
         }
         "confluence_space_create" => {
             let a: SpaceCreateArgs = parse(name, args)?;
-            to_json(
+            output(
+                name,
                 confluence
                     .create_space(&a.key, &a.name, a.description.as_deref())
                     .await?,
@@ -638,4 +675,31 @@ fn body(markdown: Option<String>, storage: Option<String>) -> Result<Option<Stri
         (Some(markdown), None) => Ok(Some(markup::markdown_to_storage(&markdown))),
         (None, storage) => Ok(storage),
     }
+}
+
+/// A page, with its storage-format body and its Markdown document (front
+/// matter and body) when asked for.
+#[derive(Serialize, JsonSchema)]
+struct PageView {
+    #[serde(flatten)]
+    page: crate::confluence::Page,
+    /// The page as a Markdown file with front matter (with `front_matter: true`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    document: Option<String>,
+    /// The body in storage format (with `storage: true`).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    storage: Option<String>,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct Deleted {
+    id: String,
+    deleted: bool,
+}
+
+#[derive(Serialize, JsonSchema)]
+struct SearchResults {
+    /// The CQL that ran.
+    cql: String,
+    results: Vec<crate::confluence::SearchHit>,
 }
