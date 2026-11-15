@@ -170,18 +170,18 @@ atl skill --install                             # writes them to .claude/skills/
 
 ## SDKs
 
-The CLI is built on a library, and you can use the same library in your own code. It is available for Python, TypeScript (Node.js, Bun, Deno and browsers) and Rust. A task such as "list issues" or "get a page" works the same way in every language and in the CLI.
+The CLI is built on a library, and you can use the same library in your own code. It is available for Python, TypeScript (Node.js, Bun, Deno and browsers) and Rust. A task has the same path in every language as in the CLI: `atl jira issue list` is `client.jira.issue.list(...)`. The arguments and results are typed, and Python has an asyncio client too.
 
 ```python
 import atl_sdk
 
-issues = atl_sdk.Client().jira_issue_list(project='ABC')['issues']
+issues = atl_sdk.Client().jira.issue.list(project='ABC').issues
 ```
 
 ```ts
 import { Client } from "atlassian-toolkit"
 
-const { issues } = await Client.fromEnv().jiraIssueList({ project: "ABC" })
+const { issues } = await Client.fromEnv().jira.issue.list({ project: "ABC" })
 ```
 
 [SDK guide](docs/sdk.md).

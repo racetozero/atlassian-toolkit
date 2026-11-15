@@ -2,7 +2,54 @@
 
 ## Unreleased
 
+### Breaking
+
+- The Python and TypeScript SDKs group tasks by product, on the same path as
+  the CLI: `client.jira_issue_list(...)` (Python) and `client.jiraIssueList(...)`
+  (TypeScript) are now `client.jira.issue.list(...)`; `jira_me` is
+  `client.jira.me()`. `task(name, args)` still runs any task by name.
+- Python task methods return pydantic models (`page.issues[0].key`) instead of
+  dicts. The package now depends on `pydantic>=2.11`. `task()` still returns
+  plain JSON.
+- TypeScript: the hand-written result types (`IssuePage`, `IssueDetail`,
+  `TaskResults`, ...) are replaced by generated ones named after the Rust
+  types (`IssueList`, `IssueDetail`, ...), one for every task.
+- Rust: `Jira::worklog` and `Jira::remote_link` return `WorklogAdded` and
+  `RemoteLink` instead of a JSON value.
+
+### Fixed
+
+- The npm package `atlassian-toolkit` 0.0.2 could not load its native addon
+  on any machine: the bundler had written the build machine's directory into
+  `dist/index.js`. The JavaScript is now compiled by `tsc`, and a test fails
+  if a build path is written in again.
+- `import { Client } from "atlassian-toolkit"` failed in an ES module project
+  ("Named export 'Client' not found"). The package now has an ES module entry
+  point and an `exports` map.
+
+### Added
+
+- `atl_sdk.AsyncClient`, the asyncio version of the Python client. Its
+  methods are coroutines that run on the SDK's own threads, so
+  `asyncio.gather` runs requests at the same time and the event loop never
+  blocks. Cancelling a call stops its request.
+- Every task has a JSON Schema for its result: `tasks()` in each SDK returns
+  it as `output_schema`. The Python and TypeScript result types are generated
+  from it.
+- In the Rust SDK, `client.jira()`, `confluence()`, `bitbucket()`, `jsm()`,
+  `trello()` and `admin()` return the typed product APIs.
+- A stub for the Python native module, so type checkers see its functions.
+- `just bench` (`scripts/benchmark_latency.py`) measures p50 and p99 latency
+  of common commands against a local mock server.
+
 ### Changed
+
+- npm installs only the native addon for its own platform, from a new
+  package per platform (`atlassian-toolkit-darwin-arm64` and five others), so
+  an install downloads one addon (17.75 MB on darwin-arm64) instead of all
+  six (110 MB). On a
+  platform without an addon, such as Alpine Linux, the error names the
+  platform and suggests the WebAssembly SDK.
 
 - `atl jira issue move` and `atl jira issue assign` with several keys send up
   to 8 requests at a time after the first key. Rows stay in the order of the
@@ -17,11 +64,6 @@
 - Building from source needs Rust 1.100 or later. The browser and the login
   form restore the terminal on every way out, through `std::mem::DropGuard`.
 - Cargo denies unused dependencies.
-
-### Added
-
-- `just bench` (`scripts/benchmark_latency.py`) measures p50 and p99 latency
-  of common commands against a local mock server.
 
 ## 0.0.2
 

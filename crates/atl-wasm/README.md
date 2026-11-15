@@ -13,8 +13,8 @@ const client = Client.withConnections({
     auth: { kind: "bearer", token },
   },
 })
-const { issues } = await client.jiraIssueList({ assignee: "me" })
-const page = await client.confluencePageGet({ page: "DOCS:Handbook" })
+const { issues } = await client.jira.issue.list({ assignee: "me" })
+const page = await client.confluence.page.get({ page: "DOCS:Handbook" })
 markup.markdownToAdf("**bold**")
 ```
 
