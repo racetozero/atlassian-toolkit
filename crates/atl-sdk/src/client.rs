@@ -1423,3 +1423,33 @@ pub fn gateway_url(family: Family, cloud_id: &str) -> String {
     };
     format!("{}/ex/{product}/{cloud_id}", crate::oauth::api_server())
 }
+
+/// The task-level API of each product, typed like the Python and TypeScript
+/// SDKs' `client.jira`, `client.confluence`, and so on: each hides the
+/// differences between Cloud and Data Center.
+impl Client {
+    pub fn jira(&self) -> crate::jira::Jira<'_> {
+        crate::jira::Jira::new(self)
+    }
+
+    pub fn confluence(&self) -> crate::confluence::Confluence<'_> {
+        crate::confluence::Confluence::new(self)
+    }
+
+    pub fn bitbucket(&self) -> crate::bitbucket::Bitbucket<'_> {
+        crate::bitbucket::Bitbucket::new(self)
+    }
+
+    /// Jira Service Management.
+    pub fn jsm(&self) -> crate::jsm::ServiceDesk<'_> {
+        crate::jsm::ServiceDesk::new(self)
+    }
+
+    pub fn trello(&self) -> crate::trello::Trello<'_> {
+        crate::trello::Trello::new(self)
+    }
+
+    pub fn admin(&self) -> crate::admin::Admin<'_> {
+        crate::admin::Admin::new(self)
+    }
+}

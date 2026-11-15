@@ -6,12 +6,31 @@
 //! an OpenAPI document, on Data Center. Operations come from Atlassian's
 //! OpenAPI documents, normalized at build time into [`catalog`]s.
 //!
+//! Each product has a typed API that works the same on Cloud and Data Center:
+//!
 //! ```no_run
 //! # async fn demo() -> atl_sdk::Result<()> {
-//! use atl_sdk::{CallArgs, Client};
+//! use atl_sdk::Client;
+//! use atl_sdk::confluence::PageRef;
 //!
 //! // Credentials come from `atl auth login` (or ATL_JIRA_URL / ATL_JIRA_TOKEN).
 //! let client = Client::from_env(None)?;
+//! let page = client.jira().search("assignee = currentUser()", 20, None).await?;
+//! for issue in &page.issues {
+//!     println!("{} {}", issue.key, issue.summary);
+//! }
+//! let handbook = client.confluence().page(&PageRef::parse("DOCS:Handbook")?).await?;
+//! println!("{}", handbook.markdown);
+//! # Ok(())
+//! # }
+//! ```
+//!
+//! Any other operation is one [`Client::call`] away:
+//!
+//! ```no_run
+//! # async fn demo(client: atl_sdk::Client) -> atl_sdk::Result<()> {
+//! use atl_sdk::CallArgs;
+//!
 //! let issue = client
 //!     .call("jira", "getIssue", &CallArgs::default().param("issueIdOrKey", "PROJ-1"))
 //!     .await?;
