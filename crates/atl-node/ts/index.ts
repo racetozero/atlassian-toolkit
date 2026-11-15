@@ -10,6 +10,7 @@
  * const raw = await client.call("jira", "getIssue", { params: { issueIdOrKey: "ABC-1" } })
  * ```
  */
+import { existsSync } from "node:fs"
 import path from "node:path"
 import {
   type Connections,
@@ -50,10 +51,51 @@ interface NativeBinding {
   wikiToMarkdown(wiki: string): string
 }
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const native = require(
-  path.join(__dirname, "..", "native", `${process.platform}-${process.arch}`, "atl.node"),
-) as NativeBinding
+/** The platforms with a native addon, each published as `atlassian-toolkit-<platform>`. */
+const PLATFORMS = [
+  "linux-x64",
+  "linux-arm64",
+  "darwin-x64",
+  "darwin-arm64",
+  "win32-x64",
+  "win32-arm64",
+]
+
+/**
+ * Loads the addon: from `native/<platform>/` in a source checkout, else from
+ * the platform package that npm installs as an optional dependency.
+ */
+function load(): NativeBinding {
+  const platform = `${process.platform}-${process.arch}`
+  const local = path.join(__dirname, "..", "native", platform, "atl.node")
+  if (existsSync(local)) return require(local) as NativeBinding
+  const name = `atlassian-toolkit-${platform}`
+  let why = PLATFORMS.includes(platform)
+    ? `the optional dependency ${name} is not installed`
+    : `there is no addon for ${platform}`
+  let cause: unknown
+  try {
+    return require(name) as NativeBinding
+  } catch (err) {
+    cause = err
+    // A glibc build fails to load on musl (Alpine); the report is slow, so
+    // ask for it only here.
+    const report = process.report?.getReport() as { header?: { glibcVersionRuntime?: string } }
+    if (process.platform === "linux" && !report?.header?.glibcVersionRuntime) {
+      why = "the Linux addons need glibc, and this system uses musl (for example Alpine)"
+    } else if ((err as { code?: string }).code !== "MODULE_NOT_FOUND") {
+      throw err
+    }
+  }
+  throw new Error(
+    `atlassian-toolkit cannot load its native addon: ${why}. It ships for ${PLATFORMS.join(", ")} (Linux with glibc). ` +
+      `On one of those, reinstall without --omit=optional or --no-optional so ${name} is installed; ` +
+      `elsewhere, use the WebAssembly SDK, atlassian-toolkit-wasm.`,
+    { cause },
+  )
+}
+
+const native = load()
 
 async function wrap<T>(promise: Promise<string>): Promise<T> {
   try {

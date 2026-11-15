@@ -24,3 +24,13 @@ test("errors from an ESM import are AtlError instances", async () => {
     return true
   })
 })
+
+test("the build keeps __dirname a run-time value", async () => {
+  // A bundler can inline the build machine's directory, and then the addon
+  // loader looks for native/ on that path on every user's machine.
+  const { readFile } = await import("node:fs/promises")
+  for (const file of ["index.js", "common.js", "tasks.js"]) {
+    const text = await readFile(new URL(`../dist/${file}`, import.meta.url), "utf8")
+    assert.doesNotMatch(text, /__dirname\s*=\s*["'`]/, file)
+  }
+})

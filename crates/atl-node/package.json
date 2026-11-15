@@ -23,7 +23,8 @@
     "README.md",
     "LICENSE"
   ],
-  "main": "dist/index.cjs",
+  "type": "commonjs",
+  "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
@@ -33,14 +34,14 @@
       },
       "require": {
         "types": "./dist/index.d.ts",
-        "default": "./dist/index.cjs"
+        "default": "./dist/index.js"
       }
     },
     "./package.json": "./package.json"
   },
   "scripts": {
     "build:native": "cargo build --release && bun scripts/copy-native.mjs",
-    "build:ts": "bun build ./ts/index.ts --outfile dist/index.cjs --target node --format cjs --packages external && tsc -p tsconfig.json --emitDeclarationOnly && bun scripts/esm-wrapper.mjs",
+    "build:ts": "tsc -p tsconfig.json && bun scripts/esm-wrapper.mjs",
     "build": "bun run build:native && bun run build:ts",
     "test": "node --test test/sdk.test.cjs test/esm.test.mjs",
     "test:bun": "bun test test/sdk.test.cjs test/esm.test.mjs",
