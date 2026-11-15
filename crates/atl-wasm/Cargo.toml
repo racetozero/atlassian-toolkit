@@ -3,7 +3,7 @@
 
 [package]
 name = "atl-wasm"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 license = "MIT"
 description = "WebAssembly build of atlassian-toolkit for browsers, workers and Deno"

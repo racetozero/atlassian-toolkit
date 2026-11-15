@@ -15,7 +15,7 @@ dependencies = [
 
 [[package]]
 name = "atl-wasm"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "atlassian-toolkit",
  "js-sys",
@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "atlassian-toolkit"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "async-lock",
  "futures-util",

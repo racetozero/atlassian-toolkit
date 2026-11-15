@@ -3,7 +3,7 @@ resolver = "2"
 members = ["crates/atl-sdk", "crates/atl-mcp", "crates/atl"]
 
 [workspace.package]
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 # DropGuard, str::trim_prefix and bool::toggle are stable since 1.100.
 rust-version = "1.100"
@@ -28,8 +28,8 @@ unimplemented = "warn"
 [workspace.dependencies]
 anyhow = "1"
 base64 = "0.22"
-atl-mcp = { package = "atlassian-toolkit-mcp", path = "crates/atl-mcp", version = "0.0.2" }
-atl-sdk = { package = "atlassian-toolkit", path = "crates/atl-sdk", version = "0.0.2" }
+atl-mcp = { package = "atlassian-toolkit-mcp", path = "crates/atl-mcp", version = "0.0.3" }
+atl-sdk = { package = "atlassian-toolkit", path = "crates/atl-sdk", version = "0.0.3" }
 clap = { version = "4", features = ["derive", "string", "wrap_help", "env"] }
 dirs = "7"
 dialoguer = { version = "0.12", default-features = false }
