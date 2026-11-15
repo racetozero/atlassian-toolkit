@@ -1955,7 +1955,7 @@ class IssueDetail(_Model):
     comment_count: int
     links: _list[IssueLink]
     """Links to other issues, as "relation key" (for example "blocks ABC-2")."""
-    fields: dict[str, Any]
+    fields: dict[str, Any] | None = None
     """Fields asked for by name (`issue view --field`), simplified: options
 become their value, users their name, rich text Markdown."""
 

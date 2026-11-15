@@ -42,18 +42,24 @@ impl TaskDef {
     }
 }
 
+/// The schema of what a task accepts (deserialize mode).
 fn schema<T: JsonSchema>() -> Value {
-    let mut value = output_schema::<T>();
+    let mut value = serde_json::to_value(schemars::schema_for!(T)).unwrap_or_default();
     if let Value::Object(map) = &mut value {
+        map.remove("$schema");
         map.remove("title");
     }
     value
 }
 
-/// Like [`schema`], but keeps the `title` (the Rust type name), which the SDK
-/// generator uses to name result models.
+/// The schema of what a task returns: serialize mode, so a field that serde
+/// skips when empty is optional, and the `title` (the Rust type name) stays
+/// for the SDK generator to name result models.
 fn output_schema<T: JsonSchema>() -> Value {
-    let mut value = serde_json::to_value(schemars::schema_for!(T)).unwrap_or_default();
+    let generator = schemars::generate::SchemaSettings::default()
+        .for_serialize()
+        .into_generator();
+    let mut value = serde_json::to_value(generator.into_root_schema_for::<T>()).unwrap_or_default();
     if let Value::Object(map) = &mut value {
         map.remove("$schema");
     }

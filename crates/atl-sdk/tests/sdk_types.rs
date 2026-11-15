@@ -489,7 +489,10 @@ fn py_model(out: &mut String, name: &str, schema: &Value) {
         } else {
             prop.name.clone()
         };
-        let default = match (prop.required, reserved) {
+        // A nullable field defaults to None even when the server always sends
+        // it, so a model is easy to build by hand.
+        let required = prop.required && !kind.ends_with("| None");
+        let default = match (required, reserved) {
             (true, false) => String::new(),
             (false, false) => " = None".to_owned(),
             (true, true) => format!(" = pydantic.Field(alias=\"{}\")", prop.name),

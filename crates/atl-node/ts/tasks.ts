@@ -1195,11 +1195,11 @@ export interface AdminEventListArgs {
 
 export interface AdminUser {
   account_id: string
-  name?: string | null
-  email?: string | null
+  name: string | null
+  email: string | null
   /** Account status, for example active or suspended. */
-  status?: string | null
-  membership?: string | null
+  status: string | null
+  membership: string | null
   directory: string
 }
 
@@ -1222,9 +1222,9 @@ export interface Attachment {
   id: string
   filename: string
   size: number
-  mime_type?: string | null
-  created?: string | null
-  author?: string | null
+  mime_type: string | null
+  created: string | null
+  author: string | null
   /** Download URL on the Jira server. */
   content: string
 }
@@ -1232,7 +1232,7 @@ export interface Attachment {
 export interface Board {
   id: number
   name: string
-  type?: string | null
+  type: string | null
 }
 
 export interface BoardSprints {
@@ -1242,7 +1242,7 @@ export interface BoardSprints {
 
 export interface Branch {
   name: string
-  commit?: string | null
+  commit: string | null
 }
 
 export interface BranchDeleted {
@@ -1253,28 +1253,28 @@ export interface BranchDeleted {
 
 export interface BuildStatus {
   name: string
-  key?: string | null
+  key: string | null
   /** SUCCESSFUL, FAILED, INPROGRESS, STOPPED (Cloud), CANCELLED or UNKNOWN (Data Center). */
   state: string
-  url?: string | null
-  description?: string | null
+  url: string | null
+  description: string | null
 }
 
 export interface Card {
   id: string
   name: string
   /** The list's name when known, else its ID. */
-  list?: string | null
-  due?: string | null
+  list: string | null
+  due: string | null
   labels: string[]
   closed: boolean
-  short_link?: string | null
-  url?: string | null
+  short_link: string | null
+  url: string | null
 }
 
 export interface CardComment {
-  author?: string | null
-  date?: string | null
+  author: string | null
+  date: string | null
   text: string
 }
 
@@ -1282,13 +1282,13 @@ export interface CardDetail {
   id: string
   name: string
   /** The list's name when known, else its ID. */
-  list?: string | null
-  due?: string | null
+  list: string | null
+  due: string | null
   labels: string[]
   closed: boolean
-  short_link?: string | null
-  url?: string | null
-  board?: string | null
+  short_link: string | null
+  url: string | null
+  board: string | null
   /** The card description (Trello stores Markdown). */
   description: string
   /** Latest comments first. */
@@ -1297,11 +1297,11 @@ export interface CardDetail {
 
 /** One changed field of one history entry. */
 export interface Change {
-  created?: string | null
-  author?: string | null
+  created: string | null
+  author: string | null
   field: string
-  from?: string | null
-  to?: string | null
+  from: string | null
+  to: string | null
 }
 
 export interface ChangesRequested {
@@ -1324,8 +1324,8 @@ export interface Checklist {
 
 export interface Comment {
   id: string
-  author?: string | null
-  created?: string | null
+  author: string | null
+  created: string | null
   /** The comment as Markdown (Cloud) or wiki markup (Data Center). */
   body: string
 }
@@ -1338,8 +1338,8 @@ export interface CommentDeleted {
 
 export interface Commit {
   hash: string
-  author?: string | null
-  date?: string | null
+  author: string | null
+  date: string | null
   /** The first line of the message. */
   message: string
 }
@@ -1347,8 +1347,8 @@ export interface Commit {
 export interface Component {
   id: string
   name: string
-  lead?: string | null
-  description?: string | null
+  lead: string | null
+  description: string | null
 }
 
 export interface Copied {
@@ -1385,21 +1385,21 @@ export interface Domain {
   id: string
   name: string
   /** Verification status of the domain claim. */
-  status?: string | null
+  status: string | null
 }
 
 export interface EpicIssues {
   /** The epic, or none after a remove. */
-  epic?: string | null
+  epic: string | null
   issues: string[]
 }
 
 export interface Event {
   id: string
-  time?: string | null
-  action?: string | null
-  actor?: string | null
-  message?: string | null
+  time: string | null
+  action: string | null
+  actor: string | null
+  message: string | null
 }
 
 export interface Exported {
@@ -1418,16 +1418,16 @@ export interface Field {
   name: string
   custom: boolean
   /** JSON type: string, number, date, datetime, option, array, user, ... */
-  type?: string | null
+  type: string | null
   /** Item type of an array field. */
-  items?: string | null
+  items: string | null
 }
 
 export interface Filter {
   id: string
   name: string
   jql: string
-  owner?: string | null
+  owner: string | null
   favourite: boolean
   url: string
 }
@@ -1435,8 +1435,8 @@ export interface Filter {
 export interface Group {
   id: string
   name: string
-  description?: string | null
-  users?: number | null
+  description: string | null
+  users: number | null
   directory: string
 }
 
@@ -1457,15 +1457,15 @@ export interface IssueDetail {
   /** `new`, `indeterminate` (in progress), or `done`. */
   status_category: string
   type: string
-  assignee?: string | null
-  priority?: string | null
-  updated?: string | null
+  assignee: string | null
+  priority: string | null
+  updated: string | null
   url: string
-  reporter?: string | null
-  created?: string | null
+  reporter: string | null
+  created: string | null
   labels: string[]
   components: string[]
-  parent?: string | null
+  parent: string | null
   subtasks: string[]
   /** The description as Markdown (Cloud) or wiki markup (Data Center). */
   description: string
@@ -1477,24 +1477,24 @@ export interface IssueDetail {
    * Fields asked for by name (`issue view --field`), simplified: options
    * become their value, users their name, rich text Markdown.
    */
-  fields: Record<string, unknown>
+  fields?: Record<string, unknown>
 }
 
 export interface IssueLink {
   /** The phrase from this issue's side, for example "blocks" or "is blocked by". */
   relation: string
   key: string
-  summary?: string | null
-  status?: string | null
+  summary: string | null
+  status: string | null
 }
 
 /** A page of issues and the JQL that found them. */
 export interface IssueList {
   issues: IssueSummary[]
   /** Pass back as `page_token` for the next page. */
-  next_page_token?: string | null
+  next_page_token: string | null
   /** Total matches when the server reports it (Data Center). */
-  total?: number | null
+  total: number | null
   jql: string
 }
 
@@ -1505,9 +1505,9 @@ export interface IssueSummary {
   /** `new`, `indeterminate` (in progress), or `done`. */
   status_category: string
   type: string
-  assignee?: string | null
-  priority?: string | null
-  updated?: string | null
+  assignee: string | null
+  priority: string | null
+  updated: string | null
   url: string
 }
 
@@ -1555,7 +1555,7 @@ export interface Membership {
   group: string
   group_id: string
   /** The user's email, or their name when the email is hidden. */
-  user?: string | null
+  user: string | null
   account_id: string
   /** True after an add, false after a remove. */
   member: boolean
@@ -1577,9 +1577,9 @@ export interface Org {
 export interface Page {
   id: string
   title: string
-  space?: string | null
+  space: string | null
   /** ID of the parent page (none for a page at the top of a space). */
-  parent?: string | null
+  parent: string | null
   version: number
   url: string
   /** The body as Markdown. */
@@ -1589,8 +1589,8 @@ export interface Page {
 export interface PageAttachment {
   id: string
   title: string
-  size?: number | null
-  media_type?: string | null
+  size: number | null
+  media_type: string | null
   /** Download URL on the Confluence server. */
   download: string
 }
@@ -1598,8 +1598,8 @@ export interface PageAttachment {
 export interface PageComment {
   id: string
   /** Display name (account ID on Cloud when the name lookup fails). */
-  author?: string | null
-  created?: string | null
+  author: string | null
+  created: string | null
   /** The comment as Markdown. */
   body: string
   /** The comment this one replies to. */
@@ -1616,9 +1616,9 @@ export interface PageSummary {
 
 export interface PageVersion {
   number: number
-  author?: string | null
-  created?: string | null
-  message?: string | null
+  author: string | null
+  created: string | null
+  message: string | null
   minor_edit: boolean
 }
 
@@ -1629,9 +1629,9 @@ export interface PageVersion {
 export interface PageView {
   id: string
   title: string
-  space?: string | null
+  space: string | null
   /** ID of the parent page (none for a page at the top of a space). */
-  parent?: string | null
+  parent: string | null
   version: number
   url: string
   /** The body as Markdown. */
@@ -1650,25 +1650,25 @@ export interface Participants {
 
 export interface Pipeline {
   build_number: number
-  uuid?: string | null
+  uuid: string | null
   /** PENDING, IN_PROGRESS or COMPLETED. */
   state: string
   /** SUCCESSFUL, FAILED, STOPPED or ERROR once completed. */
-  result?: string | null
-  branch?: string | null
-  created?: string | null
+  result: string | null
+  branch: string | null
+  created: string | null
   url: string
 }
 
 export interface PipelineDetail {
   build_number: number
-  uuid?: string | null
+  uuid: string | null
   /** PENDING, IN_PROGRESS or COMPLETED. */
   state: string
   /** SUCCESSFUL, FAILED, STOPPED or ERROR once completed. */
-  result?: string | null
-  branch?: string | null
-  created?: string | null
+  result: string | null
+  branch: string | null
+  created: string | null
   url: string
   steps: PipelineStep[]
 }
@@ -1685,8 +1685,8 @@ export interface PipelineStep {
   name: string
   /** PENDING, IN_PROGRESS or COMPLETED. */
   state: string
-  result?: string | null
-  seconds?: number | null
+  result: string | null
+  seconds: number | null
 }
 
 export interface PrApproval {
@@ -1708,16 +1708,16 @@ export interface PrChecks {
 
 export interface PrComment {
   id: string
-  author?: string | null
-  created?: string | null
+  author: string | null
+  created: string | null
   /** Markdown. */
   body: string
   /** File of an inline comment. */
-  path?: string | null
+  path: string | null
   /** Line of an inline comment (in the new version of the file when known). */
-  line?: number | null
+  line: number | null
   /** ID of the comment this one answers. */
-  parent?: string | null
+  parent: string | null
   resolved: boolean
 }
 
@@ -1738,7 +1738,7 @@ export interface Project {
   key: string
   name: string
   id: string
-  type?: string | null
+  type: string | null
 }
 
 export interface PullRequest {
@@ -1746,10 +1746,10 @@ export interface PullRequest {
   title: string
   /** OPEN, MERGED, DECLINED or SUPERSEDED. */
   state: string
-  author?: string | null
+  author: string | null
   source: string
   destination: string
-  updated?: string | null
+  updated: string | null
   description: string
   reviewers: string[]
   approved_by: string[]
@@ -1758,7 +1758,7 @@ export interface PullRequest {
    * `owner/slug` of the repository the source branch is in (differs
    * from the target repository for pull requests from forks).
    */
-  source_repo?: string | null
+  source_repo: string | null
   /** True for a draft (not yet ready for review). */
   draft: boolean
 }
@@ -1775,8 +1775,8 @@ export interface Pushed {
 export interface Queue {
   id: string
   name: string
-  jql?: string | null
-  issues?: number | null
+  jql: string | null
+  issues: number | null
 }
 
 /** A project version ("release"). */
@@ -1785,15 +1785,15 @@ export interface Release {
   name: string
   released: boolean
   archived: boolean
-  release_date?: string | null
-  description?: string | null
+  release_date: string | null
+  description: string | null
 }
 
 /** A web link that `Jira::remote_link` added to an issue. */
 export interface RemoteLink {
   key: string
   /** Jira's ID of the link. */
-  id?: number | null
+  id: number | null
   url: string
   title: string
 }
@@ -1802,9 +1802,9 @@ export interface Repo {
   /** `owner/slug`. */
   repo: string
   name: string
-  description?: string | null
-  default_branch?: string | null
-  private?: boolean | null
+  description: string | null
+  default_branch: string | null
+  private: boolean | null
   url: string
 }
 
@@ -1812,25 +1812,25 @@ export interface Request {
   key: string
   summary: string
   status: string
-  type?: string | null
-  reporter?: string | null
-  created?: string | null
+  type: string | null
+  reporter: string | null
+  created: string | null
   url: string
 }
 
 export interface RequestAttachment {
   filename: string
-  author?: string | null
-  created?: string | null
-  size?: number | null
-  mime_type?: string | null
-  url?: string | null
+  author: string | null
+  created: string | null
+  size: number | null
+  mime_type: string | null
+  url: string | null
 }
 
 export interface RequestComment {
   id: string
-  author?: string | null
-  created?: string | null
+  author: string | null
+  created: string | null
   /** False for internal notes that customers cannot see. */
   public: boolean
   body: string
@@ -1840,9 +1840,9 @@ export interface RequestDetail {
   key: string
   summary: string
   status: string
-  type?: string | null
-  reporter?: string | null
-  created?: string | null
+  type: string | null
+  reporter: string | null
+  created: string | null
   url: string
   description: string
   comments: RequestComment[]
@@ -1864,15 +1864,15 @@ export interface RequestTransition {
 export interface RequestType {
   id: string
   name: string
-  description?: string | null
+  description: string | null
 }
 
 export interface SearchHit {
   id: string
   type: string
   title: string
-  space?: string | null
-  excerpt?: string | null
+  space: string | null
+  excerpt: string | null
   url: string
 }
 
@@ -1888,15 +1888,15 @@ export interface Sla {
   state: string
   breached: boolean
   /** Time left (negative when breached), as Jira shows it. */
-  remaining?: string | null
-  goal?: string | null
+  remaining: string | null
+  goal: string | null
 }
 
 export interface Space {
   key: string
   name: string
-  id?: string | null
-  type?: string | null
+  id: string | null
+  type: string | null
   url: string
 }
 
@@ -1904,9 +1904,9 @@ export interface Sprint {
   id: number
   name: string
   state: string
-  start?: string | null
-  end?: string | null
-  goal?: string | null
+  start: string | null
+  end: string | null
+  goal: string | null
 }
 
 export interface SprintIssues {
@@ -1942,8 +1942,8 @@ export interface TreeNode {
 export interface TrelloBoard {
   id: string
   name: string
-  short_link?: string | null
-  url?: string | null
+  short_link: string | null
+  url: string | null
 }
 
 export interface TrelloList {
@@ -1962,7 +1962,7 @@ export interface User {
   /** Account ID (Cloud) or username (Data Center). */
   id: string
   name: string
-  email?: string | null
+  email: string | null
 }
 
 export interface Watchers {
@@ -1981,19 +1981,19 @@ export interface Watching {
 
 export interface Worklog {
   id: string
-  author?: string | null
+  author: string | null
   /** As Jira shows it, for example "2h 30m". */
-  time_spent?: string | null
-  seconds?: number | null
-  started?: string | null
+  time_spent: string | null
+  seconds: number | null
+  started: string | null
   /** Markdown. */
-  comment?: string | null
+  comment: string | null
 }
 
 /** A worklog that `Jira::worklog` added. */
 export interface WorklogAdded {
   key: string
-  worklog_id?: string | null
+  worklog_id: string | null
   time_spent: string
 }
 

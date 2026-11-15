@@ -135,6 +135,15 @@ def test_every_task_is_a_method_on_its_cli_path(client):
         assert task['output_schema']['type'] in ('object', 'array')
 
 
+def test_a_result_without_its_optional_fields_validates(client):
+    # The mock issue has no labels, links or extra fields; serde leaves some of
+    # them out, and the model must not require them.
+    issue = client.jira.issue.view(key='A-1')
+    assert isinstance(issue, atl_sdk.IssueDetail)
+    assert issue.key == 'A-1'
+    assert issue.summary == 'Fix login'
+
+
 def test_namespaced_results_match_the_task_by_name(client):
     typed = client.jira.issue.list(project='A')
     by_name = client.task(atl_sdk.TaskName.JIRA_ISSUE_LIST, {'project': 'A'})
