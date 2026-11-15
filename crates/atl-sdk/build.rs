@@ -1,5 +1,6 @@
 //! Normalizes the vendored Atlassian OpenAPI documents into one compact,
-//! uniform catalog file per service variant (`$OUT_DIR/<catalog>.json`).
+//! uniform catalog file per service variant (`$OUT_DIR/<catalog>.json`), plus
+//! its component schemas (`$OUT_DIR/<catalog>.schemas.json`).
 //!
 //! The runtime (`src/catalog.rs`) only understands the normalized format, so
 //! every quirk of the upstream documents is handled here: missing or duplicate
@@ -119,12 +120,20 @@ fn main() {
     // Operation counts, so listing services does not parse every catalog.
     let mut counts = String::from("const OPERATION_COUNTS: &[(&str, usize)] = &[\n");
     for (name, sources) in CATALOGS {
-        let catalog = build_catalog(Path::new(&manifest_dir), sources);
+        let (catalog, schemas) = build_catalog(Path::new(&manifest_dir), sources);
         let ops = catalog["ops"].as_array().map_or(0, Vec::len);
         counts.push_str(&format!("    ({name:?}, {ops}),\n"));
-        let text = serde_json::to_string(&catalog).expect("catalog serializes");
-        std::fs::write(Path::new(&out_dir).join(format!("{name}.json")), text)
-            .unwrap_or_else(|err| panic!("cannot write catalog {name}: {err}"));
+        // Component schemas go in their own file: they are about half of a
+        // catalog and only `$ref` lookups read them, so the runtime parses
+        // them on first use instead of on every catalog load.
+        for (file, value) in [
+            (format!("{name}.json"), catalog),
+            (format!("{name}.schemas.json"), schemas),
+        ] {
+            let text = serde_json::to_string(&value).expect("catalog serializes");
+            std::fs::write(Path::new(&out_dir).join(&file), text)
+                .unwrap_or_else(|err| panic!("cannot write catalog file {file}: {err}"));
+        }
     }
     counts.push_str("];\n");
     std::fs::write(Path::new(&out_dir).join("operation_counts.rs"), counts)
@@ -143,7 +152,8 @@ struct Builder {
     names: HashSet<(usize, String)>,
 }
 
-fn build_catalog(root: &Path, sources: &[Source]) -> Value {
+/// The catalog (tags, operations, parameters) and its component schemas.
+fn build_catalog(root: &Path, sources: &[Source]) -> (Value, Value) {
     let mut builder = Builder::default();
     for source in sources {
         let path = root.join("specs").join(source.file);
@@ -156,12 +166,12 @@ fn build_catalog(root: &Path, sources: &[Source]) -> Value {
         rename_colliding_schemas(&mut spec, &builder.schemas, stem);
         builder.add_spec(&spec, source);
     }
-    json!({
+    let catalog = json!({
         "tags": builder.tags,
         "ops": builder.ops,
         "params": builder.params,
-        "schemas": builder.schemas,
-    })
+    });
+    (catalog, Value::Object(builder.schemas))
 }
 
 /// When documents are merged, two of them may define a schema with the same

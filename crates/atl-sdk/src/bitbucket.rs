@@ -69,7 +69,7 @@ impl RepoRef {
             Some((_, rest)) => rest.split_once('/')?.1,
             None => url.split_once(':')?.1,
         };
-        let path = path.strip_prefix("scm/").unwrap_or(path);
+        let path = path.trim_prefix("scm/");
         let mut parts = path.trim_matches('/').rsplitn(3, '/');
         let slug = parts.next()?;
         let owner = parts.next()?;

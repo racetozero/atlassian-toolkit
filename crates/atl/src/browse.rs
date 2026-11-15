@@ -25,6 +25,7 @@ use ratatui::widgets::{
 use std::collections::HashMap;
 use std::future::Future;
 use std::io::Write;
+use std::mem::DropGuard;
 use std::time::{Duration, Instant};
 use tokio::sync::mpsc;
 
@@ -1806,7 +1807,7 @@ fn markdown_lines(text: &str) -> Vec<Line<'static>> {
     text.lines()
         .map(|line| {
             if line.trim_start().starts_with("```") {
-                in_code = !in_code;
+                in_code.toggle();
                 return Line::from(line.to_owned()).fg(MUTED);
             }
             if in_code {
@@ -1912,7 +1913,8 @@ fn copy(text: &str) {
 }
 
 async fn run(mut app: App, mut rx: mpsc::UnboundedReceiver<Msg>) -> Result<Exit> {
-    let mut terminal = ratatui::init();
+    // Restores the terminal on every way out, including a dropped future.
+    let mut terminal = DropGuard::new(ratatui::init(), |_| ratatui::restore());
     // crossterm reads block, so a thread forwards terminal events.
     let (events_tx, mut events) = mpsc::unbounded_channel();
     std::thread::spawn(move || {
@@ -1939,7 +1941,6 @@ async fn run(mut app: App, mut rx: mpsc::UnboundedReceiver<Msg>) -> Result<Exit>
         Ok(())
     }
     .await;
-    ratatui::restore();
     result.map(|()| Exit::Ok)
 }
 

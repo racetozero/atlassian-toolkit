@@ -54,6 +54,11 @@ sdk-test-wasm:
 # Every Rust test and every SDK test.
 sdk-test-all: test sdk-test-python sdk-test-node sdk-test-wasm
 
+# Build the release binary and measure p50/p99 latency of common commands.
+bench:
+    cargo build --release -p atl
+    @python3 scripts/benchmark_latency.py --bin atl=target/release/atl
+
 # Test the cross-platform PGO build and benchmark helpers.
 pgo-test:
     @python3 scripts/test_pgo.py

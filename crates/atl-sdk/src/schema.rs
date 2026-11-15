@@ -18,7 +18,7 @@ pub fn expand(catalog: &Catalog, schema: &RawValue, depth: usize) -> Value {
 
 /// Returns a named component schema, expanded `depth` levels.
 pub fn named(catalog: &Catalog, name: &str, depth: usize) -> Option<Value> {
-    let raw = catalog.schemas.get(name.trim_start_matches(REF_PREFIX))?;
+    let raw = catalog.schema(name.trim_start_matches(REF_PREFIX))?;
     Some(expand(catalog, raw, depth))
 }
 
@@ -30,7 +30,7 @@ fn expand_value(catalog: &Catalog, value: Value, depth: usize, stack: &mut Vec<S
                 if depth == 0 || stack.contains(&name) {
                     return Value::Object(map);
                 }
-                let Some(raw) = catalog.schemas.get(name.as_str()) else {
+                let Some(raw) = catalog.schema(&name) else {
                     return Value::Object(map);
                 };
                 let inner: Value = serde_json::from_str(raw.get()).unwrap_or(Value::Null);

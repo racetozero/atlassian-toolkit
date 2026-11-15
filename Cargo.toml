@@ -5,6 +5,8 @@ members = ["crates/atl-sdk", "crates/atl-mcp", "crates/atl"]
 [workspace.package]
 version = "0.0.2"
 edition = "2024"
+# DropGuard, str::trim_prefix and bool::toggle are stable since 1.100.
+rust-version = "1.100"
 license = "MIT"
 repository = "https://github.com/racetozero/atlassian-toolkit"
 homepage = "https://github.com/racetozero/atlassian-toolkit"
@@ -12,9 +14,11 @@ homepage = "https://github.com/racetozero/atlassian-toolkit"
 [workspace.lints.rust]
 unsafe_code = "forbid"
 
-# dist writes `homepage` into the Homebrew formula.
 [workspace.lints.cargo]
+# dist writes `homepage` into the Homebrew formula.
 redundant_homepage = "allow"
+# `-D warnings` does not cover Cargo lints, so deny this one for CI.
+unused_dependencies = "deny"
 
 [workspace.lints.clippy]
 dbg_macro = "warn"

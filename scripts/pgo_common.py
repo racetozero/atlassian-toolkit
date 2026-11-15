@@ -10,6 +10,7 @@ import re
 import statistics
 import subprocess
 import threading
+import time
 from collections.abc import Iterable
 from dataclasses import dataclass
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -118,6 +119,7 @@ def issue(number: int) -> dict[str, object]:
 
 class _MockAtlassianHandler(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
+    server: _DelayedServer
 
     def _reply(self) -> None:
         length = int(self.headers.get('content-length', '0'))
@@ -125,7 +127,13 @@ class _MockAtlassianHandler(BaseHTTPRequestHandler):
             self.rfile.read(length)
         path = self.path.split('?', 1)[0]
         body: object = {}
-        if path.endswith('/search/jql'):
+        if self.server.delay:
+            time.sleep(self.server.delay)
+        if path.endswith('/transitions'):
+            body = {
+                'transitions': [{'id': '31', 'name': 'Finish', 'to': {'name': 'Done'}}]
+            }
+        elif path.endswith('/search/jql'):
             body = {'issues': [issue(n) for n in range(1, 26)], 'isLast': True}
         elif match := re.fullmatch(r'/rest/api/3/issue/ABC-(\d+)', path):
             body = issue(int(match.group(1)))
@@ -161,11 +169,17 @@ class _MockAtlassianHandler(BaseHTTPRequestHandler):
         del format, args
 
 
+class _DelayedServer(ThreadingHTTPServer):
+    # Seconds each request waits before it is answered, like a remote server.
+    delay: float = 0.0
+
+
 class MockAtlassian:
     """A loopback-only server that answers like Jira and Confluence Cloud."""
 
-    def __init__(self) -> None:
-        self._server = ThreadingHTTPServer(('127.0.0.1', 0), _MockAtlassianHandler)
+    def __init__(self, delay: float = 0.0) -> None:
+        self._server = _DelayedServer(('127.0.0.1', 0), _MockAtlassianHandler)
+        self._server.delay = delay
         self._thread = threading.Thread(target=self._server.serve_forever, daemon=True)
 
     @property

@@ -610,10 +610,7 @@ pub fn markdown_to_storage(markdown: &str) -> String {
                         xml_escape(&lang)
                     )
                 };
-                let body = body
-                    .strip_suffix('\n')
-                    .unwrap_or(&body)
-                    .replace("]]>", "]]]]><![CDATA[>");
+                let body = body.trim_suffix('\n').replace("]]>", "]]]]><![CDATA[>");
                 events.push(Event::Html(CowStr::from(format!(
                     "<ac:structured-macro ac:name=\"code\">{language}<ac:plain-text-body><![CDATA[{body}]]></ac:plain-text-body></ac:structured-macro>\n"
                 ))));
@@ -967,7 +964,7 @@ pub fn wiki_to_markdown(wiki: &str) -> String {
             continue;
         }
         if trimmed == "{quote}" {
-            quote = !quote;
+            quote.toggle();
             continue;
         }
         let is_table = trimmed.starts_with('|');

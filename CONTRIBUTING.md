@@ -14,6 +14,7 @@ just sdk-test-python # Python SDK tests
 just sdk-test-node   # Node, Bun and Deno tests
 just sdk-test-wasm   # WebAssembly SDK tests
 just sdk-test-all    # every Rust and SDK test
+just bench           # p50/p99 latency of common commands (release build, local mock server)
 ```
 
 ## Making a change

@@ -44,7 +44,12 @@ fn main() -> ExitCode {
         .name("atl".into())
         .stack_size(8 << 20)
         .spawn(|| {
+            // `run` itself runs on this thread; one worker is enough for the
+            // spawned tasks (the update check, the browser's loaders) and
+            // starts much faster than one worker per core. A multi-thread
+            // runtime keeps `block_in_place` working in the login form.
             tokio::runtime::Builder::new_multi_thread()
+                .worker_threads(1)
                 .enable_all()
                 .build()
                 .expect("cannot start the tokio runtime")

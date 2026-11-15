@@ -383,7 +383,7 @@ pub fn markdown(text: &str, tty: bool) -> String {
     for line in text.lines() {
         let trimmed = line.trim_start();
         if trimmed.starts_with("```") || trimmed.starts_with("~~~") {
-            fenced = !fenced;
+            fenced.toggle();
             out.push(dim(line, true));
         } else if fenced {
             out.push(format!("\x1b[36m{line}\x1b[0m"));

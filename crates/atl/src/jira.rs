@@ -12,6 +12,7 @@ use atl_sdk::error::Choice;
 use atl_sdk::jira::{IssueQuery, Jira, is_issue_key};
 use atl_sdk::{Deployment, Error, Family};
 use clap::{Args, Subcommand};
+use futures_util::StreamExt;
 use serde_json::{Map, Value, json};
 use std::path::{Path, PathBuf};
 
@@ -785,6 +786,10 @@ fn keys_and_value(mut args: Vec<String>) -> Result<(Vec<String>, Option<String>)
     Ok((keys, value))
 }
 
+/// Requests a bulk command sends at the same time: fewer round trips in a
+/// row without flooding the server.
+const BULK_CONCURRENCY: usize = 8;
+
 /// Runs `task` for every key and prints one row per key. A missing value is
 /// asked for (or reported) on the first key and reused for the rest;
 /// `answer` is the result field that holds it, shown under `header`.
@@ -797,25 +802,35 @@ async fn bulk(
     header: &'static str,
     args: impl Fn(&str, &str) -> Value,
 ) -> Result<Exit> {
-    let mut rows = Vec::new();
+    let mut rows = Vec::with_capacity(keys.len());
+    let mut rest = keys;
+    // Without a value, the first issue settles it (a prompt can choose it)
+    // and its failure stops the command.
+    if value.is_none()
+        && let Some((first, others)) = keys.split_first()
+    {
+        let done = ctx.task(task, args(first, "")).await?;
+        value = done[answer].as_str().map(str::to_owned);
+        rows.push(json!({ "key": first, "ok": true, answer: done[answer] }));
+        rest = others;
+    }
+    // The other issues are independent: send several requests at a time,
+    // and keep the rows in the order of the keys.
+    let value = value.unwrap_or_default();
+    let results: Vec<_> = futures_util::stream::iter(rest)
+        .map(|key| ctx.task(task, args(key, &value)))
+        .buffered(BULK_CONCURRENCY)
+        .collect()
+        .await;
     let mut failed = false;
-    for key in keys {
-        let result = ctx
-            .task(task, args(key, value.as_deref().unwrap_or_default()))
-            .await;
-        match result {
-            Ok(done) => {
-                if value.is_none() {
-                    value = done[answer].as_str().map(str::to_owned);
-                }
-                rows.push(json!({ "key": key, "ok": true, answer: done[answer] }));
-            }
-            Err(err) if value.is_none() => return Err(err),
+    for (key, result) in rest.iter().zip(results) {
+        rows.push(match result {
+            Ok(done) => json!({ "key": key, "ok": true, answer: done[answer] }),
             Err(err) => {
                 failed = true;
-                rows.push(json!({ "key": key, "ok": false, "error": err.to_string() }));
+                json!({ "key": key, "ok": false, "error": err.to_string() })
             }
-        }
+        });
     }
     ctx.out
         .list(

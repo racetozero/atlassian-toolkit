@@ -10,6 +10,7 @@ use ratatui::style::{Color, Modifier, Style};
 use ratatui::text::{Line, Span};
 use ratatui::widgets::{Block, BorderType, Paragraph, Wrap};
 use serde_json::{Value, json};
+use std::mem::DropGuard;
 use std::path::PathBuf;
 
 /// What the user signs in to.
@@ -1041,8 +1042,9 @@ impl Form {
 /// cancels (returns `None`). Verification failures stay in the form.
 pub async fn run_form(profile: &str, config: &Config) -> Result<Option<LoginOutcome>> {
     let mut form = Form::new(profile, config);
-    let mut terminal = ratatui::init();
-    let result = async {
+    // Restores the terminal on every way out, including a dropped future.
+    let mut terminal = DropGuard::new(ratatui::init(), |_| ratatui::restore());
+    async {
         loop {
             terminal.draw(|frame| form.render(frame))?;
             let event = tokio::task::block_in_place(event::read)?;
@@ -1090,9 +1092,7 @@ pub async fn run_form(profile: &str, config: &Config) -> Result<Option<LoginOutc
             }
         }
     }
-    .await;
-    ratatui::restore();
-    result
+    .await
 }
 
 #[cfg(test)]

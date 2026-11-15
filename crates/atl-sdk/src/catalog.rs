@@ -126,9 +126,13 @@ pub fn service(name: &str) -> Option<&'static ServiceDef> {
 
 macro_rules! embedded {
     ($($key:literal),* $(,)?) => {
-        fn embedded(key: &str) -> Option<&'static str> {
+        /// The catalog and component schema documents for a key.
+        fn embedded(key: &str) -> Option<(&'static str, &'static str)> {
             match key {
-                $($key => Some(include_str!(concat!(env!("OUT_DIR"), "/", $key, ".json"))),)*
+                $($key => Some((
+                    include_str!(concat!(env!("OUT_DIR"), "/", $key, ".json")),
+                    include_str!(concat!(env!("OUT_DIR"), "/", $key, ".schemas.json")),
+                )),)*
                 _ => None,
             }
         }
@@ -178,9 +182,12 @@ pub fn catalog(key: &str) -> &'static Catalog {
         .position(|candidate| *candidate == key)
         .unwrap_or_else(|| panic!("unknown catalog key {key:?}"));
     CACHE[index].get_or_init(|| {
-        let text = embedded(key).expect("every key has an embedded catalog");
-        serde_json::from_str(text)
-            .unwrap_or_else(|err| panic!("embedded catalog {key} is malformed: {err}"))
+        let (text, schemas) = embedded(key).expect("every key has an embedded catalog");
+        let mut catalog: Catalog = serde_json::from_str(text)
+            .unwrap_or_else(|err| panic!("embedded catalog {key} is malformed: {err}"));
+        catalog.key = CATALOG_KEYS[index];
+        catalog.schema_text = schemas;
+        catalog
     })
 }
 
@@ -364,15 +371,42 @@ impl Operation {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(bound(deserialize = "'de: 'static"))]
 pub struct Catalog {
     pub tags: Vec<Tag>,
     pub ops: Vec<Operation>,
     pub params: Vec<Param>,
-    #[serde(borrow)]
-    pub schemas: HashMap<&'static str, &'static RawValue>,
+    #[serde(skip)]
+    key: &'static str,
+    /// The embedded component schemas document. Parsing it is most of the
+    /// cost of loading a catalog, and only `$ref` lookups need it, so
+    /// [`Catalog::schema`] parses it on first use.
+    #[serde(skip)]
+    schema_text: &'static str,
+    #[serde(skip)]
+    schemas: OnceLock<HashMap<&'static str, &'static RawValue>>,
 }
 
 impl Catalog {
+    /// A component schema by name (the part after `#/components/schemas/`).
+    ///
+    /// # Panics
+    ///
+    /// Panics when the embedded schemas document is malformed, a build defect.
+    pub fn schema(&self, name: &str) -> Option<&'static RawValue> {
+        self.schemas
+            .get_or_init(|| {
+                serde_json::from_str(self.schema_text).unwrap_or_else(|err| {
+                    panic!(
+                        "embedded schemas of catalog {} are malformed: {err}",
+                        self.key
+                    )
+                })
+            })
+            .get(name)
+            .copied()
+    }
+
     pub fn params_of(&self, op: &Operation) -> &[Param] {
         let [start, end] = op.params;
         &self.params[start as usize..end as usize]
@@ -435,6 +469,48 @@ mod tests {
                     catalog.ops.len() > 5,
                     "{key} has only {} operations",
                     catalog.ops.len()
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn every_schema_reference_resolves() {
+        fn refs(value: &serde_json::Value, out: &mut Vec<String>) {
+            match value {
+                serde_json::Value::Object(map) => {
+                    if let Some(serde_json::Value::String(target)) = map.get("$ref") {
+                        out.push(target.clone());
+                    }
+                    map.values().for_each(|child| refs(child, out));
+                }
+                serde_json::Value::Array(items) => items.iter().for_each(|child| refs(child, out)),
+                _ => {}
+            }
+        }
+        for key in CATALOG_KEYS {
+            let catalog = catalog(key);
+            let mut found = Vec::new();
+            let raws = catalog
+                .params
+                .iter()
+                .filter_map(|param| param.schema)
+                .chain(
+                    catalog
+                        .ops
+                        .iter()
+                        .filter_map(|op| op.body.as_ref().map(|body| body.schema)),
+                )
+                .chain(catalog.ops.iter().filter_map(|op| op.response));
+            for raw in raws {
+                refs(&serde_json::from_str(raw.get()).unwrap(), &mut found);
+            }
+            assert!(!found.is_empty(), "{key} has no $ref");
+            for target in found {
+                let name = target.trim_start_matches("#/components/schemas/");
+                assert!(
+                    catalog.schema(name).is_some(),
+                    "{key}: {target} does not resolve"
                 );
             }
         }

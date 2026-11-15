@@ -1,5 +1,29 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- `atl jira issue move` and `atl jira issue assign` with several keys send up
+  to 8 requests at a time after the first key. Rows stay in the order of the
+  keys. Moving 8 issues on a server that takes 100 ms per request now takes
+  235 ms instead of 1,688 ms.
+- Loading an API catalog no longer parses its component schemas, which are
+  about half of each catalog. They are parsed on the first `$ref` lookup.
+  `atl api` and the first MCP search use 18% less CPU. In the Rust SDK,
+  `Catalog::schema(name)` replaces the public `Catalog::schemas` map.
+- `atl` starts one runtime worker thread instead of one per CPU core. Every
+  command uses about 0.7 ms less CPU.
+- Building from source needs Rust 1.100 or later. The browser and the login
+  form restore the terminal on every way out, through `std::mem::DropGuard`.
+- Cargo denies unused dependencies, and `cargo update` skips crate versions
+  published less than 3 days ago (`.cargo/config.toml`).
+
+### Added
+
+- `just bench` (`scripts/benchmark_latency.py`) measures p50 and p99 latency
+  of common commands against a local mock server.
+
 ## 0.0.2
 
 ### Changed

@@ -187,6 +187,30 @@ const { issues } = await Client.fromEnv().jiraIssueList({ project: "ABC" })
 
 [SDK guide](docs/sdk.md).
 
+## Performance
+
+`atl` adds little time to a request. Against a real Jira Cloud site, `atl jira issue view` takes 222 ms at p50 and 307 ms at p99 (50 runs), and almost all of that time is the server's response.
+
+The table shows `atl`'s own cost. Each time is one `atl` process, from start to exit, against a mock server on the same machine that answers at once. The bulk move is different: each request waits 100 ms, as on a remote site, and `atl` sends up to 8 requests at a time, so moving 8 issues takes about as long as moving one.
+
+| Command                                                 |    p50 |    p99 |
+| ------------------------------------------------------- | -----: | -----: |
+| `atl --version`                                         |   9 ms |  18 ms |
+| `atl --help`                                            |   8 ms |  18 ms |
+| `atl convert --to adf` (Markdown to ADF)                |   9 ms |  23 ms |
+| `atl convert --from storage --to markdown`              |   9 ms |  22 ms |
+| `atl schema jira.getIssue`                              |  11 ms |  16 ms |
+| `atl api jira issues get-issue --dry-run`               |  11 ms |  25 ms |
+| `atl mcp`: start and list the tools                     |  11 ms |  27 ms |
+| `atl mcp`: start and search operations                  |  17 ms |  56 ms |
+| `atl jira issue list`                                   |  16 ms |  30 ms |
+| `atl jira issue view`                                   |  15 ms |  27 ms |
+| `atl api jira issues get-issue`                         |  18 ms |  82 ms |
+| `atl confluence page get`                               |  14 ms |  25 ms |
+| `atl jira issue move` with 8 issues, 100 ms per request | 225 ms | 267 ms |
+
+Measured with `just bench` on an Apple M4 (10 cores) with macOS 27, using the release build: 500 runs of each local command, 300 of each command that calls the server, and 100 of the bulk move. The median peak memory of each command is 21 MiB or less.
+
 ## Learn more
 
 - [Commands](docs/commands.md): every command, with examples

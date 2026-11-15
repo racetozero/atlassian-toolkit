@@ -211,7 +211,7 @@ fn current_version() -> Result<Version> {
 }
 
 fn parse_release_tag(tag: &str) -> Result<Version> {
-    let version = tag.strip_prefix('v').unwrap_or(tag);
+    let version = tag.trim_prefix('v');
     Version::parse(version)
         .with_context(|| format!("the latest GitHub release has an invalid tag `{tag}`"))
 }

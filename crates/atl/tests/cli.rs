@@ -1795,12 +1795,15 @@ async fn pr_checks_exit_1_when_a_build_failed() {
 #[tokio::test(flavor = "multi_thread")]
 async fn bulk_move_reports_each_key_and_exits_1_on_a_failure() {
     let server = MockServer::start().await;
+    // AB-1 answers last, but its row still comes first.
     Mock::given(method("GET"))
         .and(path("/rest/api/3/issue/AB-1/transitions"))
         .respond_with(
-            ResponseTemplate::new(200).set_body_json(json!({ "transitions": [
-            { "id": "31", "name": "Finish", "to": { "name": "Done" } }
-        ] })),
+            ResponseTemplate::new(200)
+                .set_body_json(json!({ "transitions": [
+                    { "id": "31", "name": "Finish", "to": { "name": "Done" } }
+                ] }))
+                .set_delay(std::time::Duration::from_millis(300)),
         )
         .mount(&server)
         .await;

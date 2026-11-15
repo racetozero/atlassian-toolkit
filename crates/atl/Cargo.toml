@@ -2,6 +2,7 @@
 name = "atl"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 license.workspace = true
 repository.workspace = true
 homepage.workspace = true
@@ -25,6 +26,7 @@ atl-sdk = { workspace = true, features = ["clap"] }
 clap.workspace = true
 clap_complete.workspace = true
 dialoguer.workspace = true
+futures-util = "0.3"
 tempfile.workspace = true
 ratatui.workspace = true
 reqwest.workspace = true
