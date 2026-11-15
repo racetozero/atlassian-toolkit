@@ -2,12 +2,14 @@
 //!
 //! The native module `atl_sdk._atl` is a thin adapter: JSON strings in, JSON
 //! strings out, and errors as `AtlError` carrying the SDK's JSON error object.
-//! `python/atl_sdk/__init__.py` turns that into an idiomatic Python API. Calls
-//! release the GIL and run on one shared tokio runtime.
+//! `python/atl_sdk/__init__.py` turns that into an idiomatic Python API. Sync
+//! calls release the GIL; the `*_async` methods return asyncio awaitables.
+//! Both run on one shared tokio runtime.
 
 use atl_sdk::{CallArgs, HttpMethod, markup, tasks};
 use pyo3::exceptions::PyException;
 use pyo3::prelude::*;
+use pyo3_async_runtimes::tokio::future_into_py;
 use serde_json::{Map, Value};
 use std::sync::LazyLock;
 
@@ -69,22 +71,53 @@ impl Client {
         py.detach(|| RUNTIME.block_on(tasks::run(client, name, args))).map(|v| v.to_string()).map_err(raise)
     }
 
+    /// `task` as an asyncio awaitable that resolves to the JSON result.
+    fn task_async<'py>(&self, py: Python<'py>, name: String, args: &str) -> PyResult<Bound<'py, PyAny>> {
+        let args = parse(args, "task arguments")?;
+        let client = self.inner.clone();
+        future_into_py(py, async move { tasks::run(&client, &name, args).await.map(|v| v.to_string()).map_err(raise) })
+    }
+
     /// Runs a generated operation: args is {"params": {...}, "body": ..., "files": [...]}.
     fn call(&self, py: Python<'_>, service: &str, operation: &str, args: &str) -> PyResult<String> {
-        let call: CallArgs = serde_json::from_str(args).map_err(|err| invalid(format!("call arguments must be an object with params, body and files: {err}")))?;
+        let call = call_args(args)?;
         let client = &self.inner;
         py.detach(|| RUNTIME.block_on(client.call(service, operation, &call))).map(|r| r.value().to_string()).map_err(raise)
+    }
+
+    /// `call` as an asyncio awaitable.
+    fn call_async<'py>(&self, py: Python<'py>, service: String, operation: String, args: &str) -> PyResult<Bound<'py, PyAny>> {
+        let call = call_args(args)?;
+        let client = self.inner.clone();
+        future_into_py(py, async move { client.call(&service, &operation, &call).await.map(|r| r.value().to_string()).map_err(raise) })
     }
 
     /// Sends any request to a service's server: query is a JSON object, body optional JSON.
     #[pyo3(signature = (service, method, path, query, body = None))]
     fn request(&self, py: Python<'_>, service: &str, method: &str, path: &str, query: &str, body: Option<&str>) -> PyResult<String> {
-        let method: HttpMethod = method.parse().map_err(raise)?;
-        let query: Map<String, Value> = serde_json::from_str(query).map_err(|err| invalid(format!("query must be a JSON object of parameter names to values: {err}")))?;
-        let body = body.map(|b| parse(b, "body")).transpose()?;
+        let (method, query, body) = request_args(method, query, body)?;
         let client = &self.inner;
         py.detach(|| RUNTIME.block_on(client.request(service, method, path, &query, body))).map(|r| r.value().to_string()).map_err(raise)
     }
+
+    /// `request` as an asyncio awaitable.
+    #[pyo3(signature = (service, method, path, query, body = None))]
+    fn request_async<'py>(&self, py: Python<'py>, service: String, method: &str, path: String, query: &str, body: Option<&str>) -> PyResult<Bound<'py, PyAny>> {
+        let (method, query, body) = request_args(method, query, body)?;
+        let client = self.inner.clone();
+        future_into_py(py, async move { client.request(&service, method, &path, &query, body).await.map(|r| r.value().to_string()).map_err(raise) })
+    }
+}
+
+fn call_args(args: &str) -> PyResult<CallArgs> {
+    serde_json::from_str(args).map_err(|err| invalid(format!("call arguments must be an object with params, body and files: {err}")))
+}
+
+fn request_args(method: &str, query: &str, body: Option<&str>) -> PyResult<(HttpMethod, Map<String, Value>, Option<Value>)> {
+    let method: HttpMethod = method.parse().map_err(raise)?;
+    let query = serde_json::from_str(query).map_err(|err| invalid(format!("query must be a JSON object of parameter names to values: {err}")))?;
+    let body = body.map(|b| parse(b, "body")).transpose()?;
+    Ok((method, query, body))
 }
 
 /// The task registry as JSON: [{"name", "description", "read_only", "schema"}].
@@ -125,6 +158,9 @@ fn wiki_to_markdown(wiki: &str) -> String {
 
 #[pymodule]
 fn _atl(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    // The async methods run on the same runtime as the sync ones. `set` fails
+    // only when the module is initialised twice, and then it is already set.
+    let _ = pyo3_async_runtimes::tokio::init_with_runtime(&RUNTIME);
     m.add_class::<Client>()?;
     m.add("NativeError", m.py().get_type::<NativeError>())?;
     for function in [

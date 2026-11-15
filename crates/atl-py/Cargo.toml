@@ -20,6 +20,7 @@ atl-sdk = { package = "atlassian-toolkit", path = "../atl-sdk" }
 # One wheel per interpreter, including free-threaded CPython 3.14t and 3.15t
 # (abi3 cannot target free-threaded builds).
 pyo3 = { version = "0.30", features = ["extension-module"] }
+pyo3-async-runtimes = { version = "0.30", features = ["tokio-runtime"] }
 serde_json = { version = "1", features = ["preserve_order"] }
 tokio = { version = "1", features = ["rt-multi-thread"] }
 

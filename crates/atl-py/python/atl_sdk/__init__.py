@@ -23,6 +23,7 @@ from . import _atl
 from ._tasks import ErrorCode, GeneratedTasks, TaskName
 
 __all__ = [
+    'AsyncClient',
     'AtlError',
     'Client',
     'ErrorCode',
@@ -75,18 +76,42 @@ class AtlError(Exception):
         self.input: InputRequired | None = input_required
 
 
+def _error(err: _atl.NativeError) -> AtlError:
+    data = json.loads(str(err))
+    return AtlError(
+        data['code'],
+        data['message'],
+        data.get('status'),
+        data.get('details'),
+        data.get('input'),
+    )
+
+
 def _native(fn, *args):
     try:
         return fn(*args)
     except _atl.NativeError as err:
-        data = json.loads(str(err))
-        raise AtlError(
-            data['code'],
-            data['message'],
-            data.get('status'),
-            data.get('details'),
-            data.get('input'),
-        ) from None
+        raise _error(err) from None
+
+
+async def _native_async(fn, *args):
+    try:
+        return await fn(*args)
+    except _atl.NativeError as err:
+        raise _error(err) from None
+
+
+def _connect(
+    profile: str | None,
+    connections: Mapping[str, Any] | None,
+    read_only: bool | None,
+    max_retries: int | None,
+):
+    if connections is not None:
+        native = _native(_atl.Client.from_connections, json.dumps(connections))
+    else:
+        native = _native(_atl.Client, profile)
+    return native.configured(read_only, max_retries)
 
 
 def tasks() -> list[dict[str, Any]]:
@@ -115,11 +140,7 @@ class Client(GeneratedTasks):
         read_only: bool | None = None,
         max_retries: int | None = None,
     ):
-        if connections is not None:
-            native = _native(_atl.Client.from_connections, json.dumps(connections))
-        else:
-            native = _native(_atl.Client, profile)
-        self._native = native.configured(read_only, max_retries)
+        self._native = _connect(profile, connections, read_only, max_retries)
 
     def task(
         self, name: str, args: Mapping[str, Any] | None = None, **kwargs: Any
@@ -155,6 +176,72 @@ class Client(GeneratedTasks):
         return json.loads(
             _native(
                 self._native.request,
+                service,
+                method,
+                path,
+                json.dumps(dict(query or {})),
+                encoded,
+            )
+        )
+
+
+class AsyncClient:
+    """The asyncio version of :class:`Client`: the same arguments, and every
+    method is a coroutine. Calls run on the SDK's own thread pool, so they do
+    not block the event loop, and ``asyncio.gather`` runs them at the same time.
+
+    >>> client = atl_sdk.AsyncClient()
+    >>> page = await client.task("jira_issue_list", project="ABC")
+    """
+
+    def __init__(
+        self,
+        profile: str | None = None,
+        *,
+        connections: Mapping[str, Any] | None = None,
+        read_only: bool | None = None,
+        max_retries: int | None = None,
+    ):
+        self._native = _connect(profile, connections, read_only, max_retries)
+
+    async def task(
+        self, name: str, args: Mapping[str, Any] | None = None, **kwargs: Any
+    ) -> Any:
+        """Runs a task such as ``jira_issue_list`` with keyword or dict arguments."""
+        merged = {**(args or {}), **kwargs}
+        return json.loads(
+            await _native_async(self._native.task_async, name, json.dumps(merged))
+        )
+
+    async def call(
+        self,
+        service: str,
+        operation: str,
+        params: Mapping[str, Any] | None = None,
+        body: Any = None,
+        files: list[str] | None = None,
+    ) -> Any:
+        """Runs any generated operation, for example ``await call("jira", "getIssue", {"issueIdOrKey": "A-1"})``."""
+        args = {'params': dict(params or {}), 'body': body, 'files': list(files or [])}
+        return json.loads(
+            await _native_async(
+                self._native.call_async, service, operation, json.dumps(args)
+            )
+        )
+
+    async def request(
+        self,
+        service: str,
+        method: str,
+        path: str,
+        query: Mapping[str, Any] | None = None,
+        body: Any = None,
+    ) -> Any:
+        """Sends a request to any path on a service's server."""
+        encoded = None if body is None else json.dumps(body)
+        return json.loads(
+            await _native_async(
+                self._native.request_async,
                 service,
                 method,
                 path,
