@@ -16,8 +16,7 @@
   command uses about 0.7 ms less CPU.
 - Building from source needs Rust 1.100 or later. The browser and the login
   form restore the terminal on every way out, through `std::mem::DropGuard`.
-- Cargo denies unused dependencies, and `cargo update` skips crate versions
-  published less than 3 days ago (`.cargo/config.toml`).
+- Cargo denies unused dependencies.
 
 ### Added
 
