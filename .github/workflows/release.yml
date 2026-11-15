@@ -152,6 +152,12 @@ jobs:
       - name: Install dependencies
         run: |
           ${{ matrix.packages_install }}
+      # rust-toolchain.toml says "stable", and rustup keeps a runner's
+      # preinstalled stable (older than the workspace rust-version) unless
+      # told to update it.
+      - name: Update the stable Rust toolchain
+        shell: bash
+        run: rustup update stable --no-self-update
       - name: Install PGO toolchain support
         if: ${{ !contains(matrix.targets, 'aarch64-pc-windows-msvc') }}
         run: |
@@ -449,7 +455,7 @@ jobs:
           set -euo pipefail
           abi="cp${PYTHON_VERSION/./}"
           compgen -G "dist/*-${abi%%t}-${abi}-*" > /dev/null
-          uv pip install --python "$(python -c 'import sys; print(sys.executable)')" --system --no-deps dist/*.whl
+          uv pip install --python "$(python -c 'import sys; print(sys.executable)')" --system dist/*.whl
           python -c 'import atl_sdk; atl_sdk.tasks()'
           if [[ "$PYTHON_VERSION" == *t ]]; then
             python -c 'import sys, atl_sdk._atl; assert not sys._is_gil_enabled()'
@@ -524,18 +530,12 @@ jobs:
           cp ../../LICENSE LICENSE
           bun install --frozen-lockfile
           bun run build:ts
-          # One package per platform (atlassian-toolkit-<platform>) as optional
-          # dependencies, so an install downloads only its own addon.
-          bun scripts/platform-packages.mjs
           npm install -g 'npm@^11.5.1'
-          for dir in npm/*/ .; do
-            name="$(bun -p "require('./$dir/package.json').name")"
-            if npm view "$name@$version" version > /dev/null 2>&1; then
-              echo "$name $version already published"
-            else
-              (cd "$dir" && npm publish --access public)
-            fi
-          done
+          if npm view "atlassian-toolkit@$version" version > /dev/null 2>&1; then
+            echo "atlassian-toolkit $version already published"
+          else
+            npm publish --access public
+          fi
 
   publish-npm-wasm:
     needs: [plan, host]

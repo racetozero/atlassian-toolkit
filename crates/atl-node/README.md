@@ -1,6 +1,6 @@
 # atlassian-toolkit (TypeScript for Node.js, Bun and Deno)
 
-Jira, Confluence, Bitbucket, Trello and Atlassian Admin, on Cloud and Data Center, from TypeScript. A Node-API addon built from the `atl` Rust core with napi-rs; Bun and Deno load the same addon. Works with `import` and `require`; npm installs only the addon for your platform (`atlassian-toolkit-<platform>`: macOS, Linux with glibc, and Windows, on x64 and arm64).
+Jira, Confluence, Bitbucket, Trello and Atlassian Admin, on Cloud and Data Center, from TypeScript. A Node-API addon built from the `atl` Rust core with napi-rs; Bun and Deno load the same addon. Works with `import` and `require`; the package includes the addon for macOS, Linux with glibc, and Windows, on x64 and arm64.
 
 ```ts
 import { Client, AtlError, markup } from "atlassian-toolkit"

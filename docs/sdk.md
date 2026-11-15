@@ -66,7 +66,7 @@ const client = Client.fromEnv()
 const { issues } = await client.jira.issue.list({ project: "ABC" })
 ```
 
-The package works with `import` and `require`. npm installs only the native addon for your platform (macOS, Linux with glibc, or Windows, on x64 and arm64). On another platform, use the WebAssembly SDK.
+The package works with `import` and `require`. It includes the native addon for macOS, Linux with glibc, and Windows, on x64 and arm64. On another platform, use the WebAssembly SDK.
 
 ## WebAssembly
 

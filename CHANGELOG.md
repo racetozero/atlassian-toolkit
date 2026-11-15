@@ -44,13 +44,9 @@
 
 ### Changed
 
-- npm installs only the native addon for its own platform, from a new
-  package per platform (`atlassian-toolkit-darwin-arm64` and five others), so
-  an install downloads one addon (17.75 MB on darwin-arm64) instead of all
-  six (110 MB). On a
-  platform without an addon, such as Alpine Linux, the error names the
-  platform and suggests the WebAssembly SDK.
-
+- On a platform without a native addon, such as Alpine Linux, the npm
+  package fails with an error that names the platform and suggests the
+  WebAssembly SDK.
 - `atl jira issue move` and `atl jira issue assign` with several keys send up
   to 8 requests at a time after the first key. Rows stay in the order of the
   keys. Moving 8 issues on a server that takes 100 ms per request now takes

@@ -51,7 +51,7 @@ interface NativeBinding {
   wikiToMarkdown(wiki: string): string
 }
 
-/** The platforms with a native addon, each published as `atlassian-toolkit-<platform>`. */
+/** The platforms with a native addon in `native/<platform>/atl.node`. */
 const PLATFORMS = [
   "linux-x64",
   "linux-arm64",
@@ -61,37 +61,24 @@ const PLATFORMS = [
   "win32-arm64",
 ]
 
-/**
- * Loads the addon: from `native/<platform>/` in a source checkout, else from
- * the platform package that npm installs as an optional dependency.
- */
 function load(): NativeBinding {
   const platform = `${process.platform}-${process.arch}`
-  const local = path.join(__dirname, "..", "native", platform, "atl.node")
-  if (existsSync(local)) return require(local) as NativeBinding
-  const name = `atlassian-toolkit-${platform}`
-  let why = PLATFORMS.includes(platform)
-    ? `the optional dependency ${name} is not installed`
-    : `there is no addon for ${platform}`
-  let cause: unknown
-  try {
-    return require(name) as NativeBinding
-  } catch (err) {
-    cause = err
-    // A glibc build fails to load on musl (Alpine); the report is slow, so
-    // ask for it only here.
-    const report = process.report?.getReport() as { header?: { glibcVersionRuntime?: string } }
-    if (process.platform === "linux" && !report?.header?.glibcVersionRuntime) {
+  const file = path.join(__dirname, "..", "native", platform, "atl.node")
+  let why = `there is no addon for ${platform}`
+  if (existsSync(file)) {
+    try {
+      return require(file) as NativeBinding
+    } catch (err) {
+      // A glibc build fails to load on musl (Alpine); the report is slow, so
+      // ask for it only here.
+      const report = process.report?.getReport() as { header?: { glibcVersionRuntime?: string } }
+      if (process.platform !== "linux" || report?.header?.glibcVersionRuntime) throw err
       why = "the Linux addons need glibc, and this system uses musl (for example Alpine)"
-    } else if ((err as { code?: string }).code !== "MODULE_NOT_FOUND") {
-      throw err
     }
   }
   throw new Error(
-    `atlassian-toolkit cannot load its native addon: ${why}. It ships for ${PLATFORMS.join(", ")} (Linux with glibc). ` +
-      `On one of those, reinstall without --omit=optional or --no-optional so ${name} is installed; ` +
+    `atlassian-toolkit cannot load its native addon: ${why}. It ships for ${PLATFORMS.join(", ")} (Linux with glibc); ` +
       `elsewhere, use the WebAssembly SDK, atlassian-toolkit-wasm.`,
-    { cause },
   )
 }
 
