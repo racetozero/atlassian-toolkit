@@ -3,7 +3,7 @@
  * WebAssembly SDK (`crates/atl-wasm/js/index.ts`). Each SDK only supplies
  * `task()`, `call()` and `request()` over its own transport.
  */
-import { type ErrorCode, GeneratedTasks, type JiraIssueListArgs } from "./tasks.ts"
+import { type ErrorCode, GeneratedTasks } from "./tasks.ts"
 export type { ErrorCode }
 
 export * from "./tasks.ts"
@@ -76,106 +76,15 @@ export function rethrow(err: unknown): never {
   throw err
 }
 
-/** Issue filters for jiraIssueList and jiraIssueCount; `~` excludes a value. */
-export type IssueQuery = JiraIssueListArgs
-export interface IssueSummary {
-  key: string
-  summary: string
-  status: string
-  status_category: string
-  type: string
-  assignee: string | null
-  priority: string | null
-  updated: string | null
-  url: string
-}
-export interface IssuePage {
-  issues: IssueSummary[]
-  next_page_token: string | null
-  total: number | null
-  jql: string
-}
-export interface Comment {
-  id: string
-  author: string | null
-  created: string | null
-  body: string
-}
-export interface IssueDetail extends IssueSummary {
-  reporter: string | null
-  created: string | null
-  labels: string[]
-  components: string[]
-  parent: string | null
-  subtasks: string[]
-  description: string
-  comments: Comment[]
-  comment_count: number
-}
-export interface Page {
-  id: string
-  title: string
-  space: string | null
-  version: number
-  url: string
-  markdown: string
-  storage?: string
-}
-export interface PageSummary {
-  id: string
-  title: string
-  url: string
-}
-export interface PullRequest {
-  id: number
-  title: string
-  state: "OPEN" | "MERGED" | "DECLINED" | "SUPERSEDED"
-  author: string | null
-  source: string
-  destination: string
-  updated: string | null
-  description: string
-  reviewers: string[]
-  approved_by: string[]
-  url: string
-}
-export interface ServiceRequest {
-  key: string
-  summary: string
-  status: string
-  type: string | null
-  reporter: string | null
-  created: string | null
-  url: string
-}
 export interface TaskDef {
   name: string
   description: string
   read_only: boolean
+  /** JSON Schema of the arguments. */
   schema: Record<string, unknown>
+  /** JSON Schema of the result. */
+  output_schema: Record<string, unknown>
 }
 
-/** Result types of the tasks whose results have a hand-written type; other tasks return `unknown`. */
-export interface TaskResults {
-  jira_issue_list: IssuePage
-  jira_issue_count: { count: number; jql: string }
-  jira_issue_view: IssueDetail
-  jira_issue_create: { key: string; url: string }
-  jira_issue_edit: { key: string; updated: boolean; url: string }
-  jira_issue_assign: { key: string; assignee: string }
-  jira_issue_move: { key: string; status: string; transition: string }
-  jira_issue_comment: Comment
-  jira_jql_check: { valid: boolean; errors: string[]; warnings: string[] }
-  jira_filter_run: IssuePage
-  confluence_page_get: Page
-  confluence_page_create: PageSummary
-  confluence_page_update: PageSummary
-  confluence_search: { cql: string; results: unknown[] }
-  bitbucket_pr_list: PullRequest[]
-  bitbucket_pr_create: PullRequest
-  jsm_request_list: ServiceRequest[]
-  jsm_request_create: ServiceRequest
-}
-
-/** A typed method for every task (generated in `tasks.ts`); `task()` runs any task by name. */
+/** The product namespaces (generated in `tasks.ts`); `task()` runs any task by name. */
 export { GeneratedTasks as Tasks }

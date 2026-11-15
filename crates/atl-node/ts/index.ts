@@ -5,13 +5,21 @@
  * ```ts
  * import { Client } from "atlassian-toolkit"
  * const client = Client.fromEnv()                      // credentials from `atl auth login`
- * const page = await client.jiraIssueList({ project: "ABC", status: ["In Progress"] })
- * const doc = await client.confluencePageGet({ page: "DOCS:Handbook" })
+ * const page = await client.jira.issue.list({ project: "ABC", status: ["In Progress"] })
+ * const doc = await client.confluence.page.get({ page: "DOCS:Handbook" })
  * const raw = await client.call("jira", "getIssue", { params: { issueIdOrKey: "ABC-1" } })
  * ```
  */
 import path from "node:path"
-import { Connections, rethrow, TaskDef, Tasks } from "./common"
+import {
+  type Connections,
+  rethrow,
+  type TaskArgs,
+  type TaskDef,
+  type TaskName,
+  type TaskResults,
+  Tasks,
+} from "./common"
 
 export * from "./common"
 
@@ -82,8 +90,9 @@ export class Client extends Tasks {
     return new Client(this.inner.configured(options.readOnly, options.maxRetries))
   }
 
-  task<T = unknown>(name: string, args: Record<string, unknown> = {}): Promise<T> {
-    return wrap<T>(this.inner.task(name, JSON.stringify(args)))
+  /** Runs any task by name, for example `task("jira_issue_view", { key: "A-1" })`. */
+  task<N extends TaskName>(name: N, args?: TaskArgs[N]): Promise<TaskResults[N]> {
+    return wrap<TaskResults[N]>(this.inner.task(name, JSON.stringify(args ?? {})))
   }
 
   /** Runs any generated operation, for example `call("jira", "getIssue", { params: { issueIdOrKey: "A-1" } })`. */

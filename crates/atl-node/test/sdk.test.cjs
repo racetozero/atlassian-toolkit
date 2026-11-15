@@ -2,7 +2,7 @@
 const test = require("node:test")
 const assert = require("node:assert/strict")
 const http = require("node:http")
-const { Client, AtlError, markup, tasks } = require("../dist/index.js")
+const { Client, AtlError, markup, tasks } = require("atlassian-toolkit")
 
 const requests = []
 const server = http.createServer((req, res) => {
@@ -51,7 +51,7 @@ test.before(async () => {
 test.after(() => server.close())
 
 test("tasks return small records and send credentials", async () => {
-  const page = await client.jiraIssueList({ project: "A" })
+  const page = await client.jira.issue.list({ project: "A" })
   assert.equal(page.issues[0].key, "A-1")
   assert.equal(page.jql, 'project = "A" ORDER BY updated DESC')
   assert.equal(requests.at(-1).auth, "Bearer t")
@@ -63,7 +63,7 @@ test("generated operations run by operationId", async () => {
 })
 
 test("errors become AtlError with code, status and details", async () => {
-  await assert.rejects(client.jiraIssueView({ key: "NOPE-1" }), (err) => {
+  await assert.rejects(client.jira.issue.view({ key: "NOPE-1" }), (err) => {
     assert.ok(err instanceof AtlError)
     assert.equal(err.code, "api")
     assert.equal(err.status, 404)
@@ -71,7 +71,7 @@ test("errors become AtlError with code, status and details", async () => {
     return true
   })
   await assert.rejects(
-    client.configured({ readOnly: true }).jiraIssueComment({ key: "A-1", body: "x" }),
+    client.configured({ readOnly: true }).jira.issue.comment({ key: "A-1", body: "x" }),
     (err) => err.code === "read_only",
   )
 })
@@ -84,24 +84,29 @@ test("markup and the task catalog", () => {
 
 const camel = (name) => name.replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase())
 
-test("every task has a typed method", () => {
+test("every task is a method on its CLI path", () => {
   for (const task of tasks()) {
-    assert.equal(typeof client[camel(task.name)], "function", task.name)
+    // `jira_me` is `client.jira.me`; `jira_issue_link_types` is `client.jira.issue.linkTypes`.
+    const [product, ...rest] = task.name.split("_")
+    const path = rest.length === 1 ? rest : [rest[0], camel(rest.slice(1).join("_"))]
+    const method = path.reduce((target, part) => target?.[part], client[product])
+    assert.equal(typeof method, "function", task.name)
     assert.equal(task.schema.type, "object", task.name)
+    assert.ok(["object", "array"].includes(task.output_schema.type), task.name)
     assert.ok(task.description, task.name)
   }
 })
 
-test("task() by name matches the typed method", async () => {
+test("task() by name matches the namespaced method", async () => {
   assert.deepEqual(
     await client.task("jira_issue_list", { project: "A" }),
-    await client.jiraIssueList({ project: "A" }),
+    await client.jira.issue.list({ project: "A" }),
   )
 })
 
 test("concurrent calls share one client", async () => {
   const pages = await Promise.all(
-    Array.from({ length: 64 }, () => client.jiraIssueList({ project: "A" })),
+    Array.from({ length: 64 }, () => client.jira.issue.list({ project: "A" })),
   )
   assert.deepEqual(new Set(pages.map((page) => page.issues[0].key)), new Set(["A-1"]))
 })

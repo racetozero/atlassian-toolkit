@@ -108,6 +108,9 @@ def test_tasks_return_the_same_result_as_the_sync_client(connections):
     expected = sync.task('jira_issue_list', project='A')
     assert asyncio.run(client.task('jira_issue_list', project='A')) == expected
     assert expected['issues'][0]['key'] == 'A-1'
+    page = asyncio.run(client.jira.issue.list(project='A'))
+    assert isinstance(page, atl_sdk.IssueList)
+    assert page == sync.jira.issue.list(project='A')
 
 
 def test_errors_are_atl_errors(connections):

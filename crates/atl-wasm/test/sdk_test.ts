@@ -37,7 +37,7 @@ function assertEquals(actual: unknown, expected: unknown) {
 }
 
 Deno.test("tasks run over fetch with credentials", async () => {
-  const page = await client.jiraIssueList({ project: "A" })
+  const page = await client.jira.issue.list({ project: "A" })
   assertEquals(page.issues[0].key, "A-1")
   assertEquals(seen.at(-1)?.auth, "Basic YWRhOnQ=")
 })
@@ -51,7 +51,7 @@ Deno.test("generated operations run by operationId", async () => {
 
 Deno.test("errors become AtlError", async () => {
   try {
-    await client.jiraIssueView({ key: "NOPE-1" })
+    await client.jira.issue.view({ key: "NOPE-1" })
     throw new Error("should fail")
   } catch (err) {
     if (!(err instanceof AtlError)) throw err

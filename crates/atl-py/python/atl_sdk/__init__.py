@@ -5,12 +5,14 @@ and the Atlassian Admin APIs, on Atlassian Cloud and Data Center.
 
 >>> import atl_sdk
 >>> client = atl_sdk.Client()                       # credentials from `atl auth login`
->>> client.jira_issue_list(project="ABC", status=["In Progress"])["issues"]
->>> client.confluence_page_get(page="DOCS:Handbook")["markdown"]
+>>> client.jira.issue.list(project="ABC", status=["In Progress"]).issues[0].key
+>>> client.confluence.page.get(page="DOCS:Handbook").markdown
 >>> client.call("jira", "getIssue", params={"issueIdOrKey": "ABC-1"})
 
-Every task in :func:`tasks` is also a typed method (``client.jira_issue_view(key="A-1")``),
-generated in ``_tasks.py`` with a ``TypedDict`` of its arguments.
+Every task in :func:`tasks` is a method on its product, on the same path as
+the CLI: ``atl jira issue view`` is ``client.jira.issue.view(key="A-1")``. The
+arguments are ``TypedDict``s and the results pydantic models, generated in
+``_tasks.py``. :class:`AsyncClient` has the same methods as coroutines.
 """
 
 from __future__ import annotations
@@ -19,15 +21,14 @@ import json
 from collections.abc import Mapping
 from typing import Any, TypedDict
 
-from . import _atl
-from ._tasks import ErrorCode, GeneratedTasks, TaskName
+from . import _atl, _tasks
+from ._tasks import *
+from ._tasks import GeneratedAsyncClient, GeneratedClient
 
 __all__ = [
     'AsyncClient',
     'AtlError',
     'Client',
-    'ErrorCode',
-    'TaskName',
     'adf_to_markdown',
     'markdown_to_adf',
     'markdown_to_storage',
@@ -36,6 +37,7 @@ __all__ = [
     'tasks',
     'wiki_to_markdown',
 ]
+__all__ += _tasks.__all__
 
 
 class Choice(TypedDict):
@@ -119,7 +121,7 @@ def tasks() -> list[dict[str, Any]]:
     return json.loads(_atl.task_list())
 
 
-class Client(GeneratedTasks):
+class Client(GeneratedClient):
     """A client for every Atlassian product the profile (or ``connections``) covers.
 
     ``connections`` maps a product family (``jira``, ``confluence``,
@@ -141,6 +143,7 @@ class Client(GeneratedTasks):
         max_retries: int | None = None,
     ):
         self._native = _connect(profile, connections, read_only, max_retries)
+        super().__init__()
 
     def task(
         self, name: str, args: Mapping[str, Any] | None = None, **kwargs: Any
@@ -185,13 +188,13 @@ class Client(GeneratedTasks):
         )
 
 
-class AsyncClient:
+class AsyncClient(GeneratedAsyncClient):
     """The asyncio version of :class:`Client`: the same arguments, and every
     method is a coroutine. Calls run on the SDK's own thread pool, so they do
     not block the event loop, and ``asyncio.gather`` runs them at the same time.
 
     >>> client = atl_sdk.AsyncClient()
-    >>> page = await client.task("jira_issue_list", project="ABC")
+    >>> page = await client.jira.issue.list(project="ABC")
     """
 
     def __init__(
@@ -203,6 +206,7 @@ class AsyncClient:
         max_retries: int | None = None,
     ):
         self._native = _connect(profile, connections, read_only, max_retries)
+        super().__init__()
 
     async def task(
         self, name: str, args: Mapping[str, Any] | None = None, **kwargs: Any

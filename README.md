@@ -13,7 +13,6 @@
 
 <img width="652" height="88" alt="image" src="https://github.com/user-attachments/assets/69960258-59d4-4ea5-8c37-055d86281021" />
 
-
 **Use Jira, Confluence and Bitbucket from your terminal, or let your AI agent use them for you.**
 
 `atl` is one command-line tool for Atlassian, and it is agent ready from the first command. Claude Code, Codex, Cursor and other agents can find issues, update pages and review pull requests with the same commands you type, through a JSON mode that never stops to ask a question, a built-in MCP server, and installable skills.

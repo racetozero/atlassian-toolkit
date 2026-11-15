@@ -1,10 +1,6 @@
-// Generated from the task registry (crates/atl-sdk/src/tasks.rs) by
+// Generated from the task registry (crates/atl-sdk/src/tasks/) by
 // crates/atl-sdk/tests/sdk_types.rs. Do not edit; run
 // `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.
-import type { TaskResults } from "./common.ts"
-
-/** The result type of a task: from `TaskResults` when known, else `unknown`. */
-export type TaskResult<N extends string> = N extends keyof TaskResults ? TaskResults[N] : unknown
 
 /** Arguments of `jira_issue_list`: Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues. */
 export interface JiraIssueListArgs {
@@ -1197,6 +1193,810 @@ export interface AdminEventListArgs {
   limit?: number
 }
 
+export interface AdminUser {
+  account_id: string
+  name?: string | null
+  email?: string | null
+  /** Account status, for example active or suspended. */
+  status?: string | null
+  membership?: string | null
+  directory: string
+}
+
+export interface Approval {
+  id: string
+  name: string
+  /** pending, approved or declined. */
+  decision: string
+  /** True when you are an approver who has not answered yet. */
+  can_answer: boolean
+  approvers: string[]
+}
+
+export interface Assigned {
+  key: string
+  assignee: string
+}
+
+export interface Attachment {
+  id: string
+  filename: string
+  size: number
+  mime_type?: string | null
+  created?: string | null
+  author?: string | null
+  /** Download URL on the Jira server. */
+  content: string
+}
+
+export interface Board {
+  id: number
+  name: string
+  type?: string | null
+}
+
+export interface BoardSprints {
+  board: number
+  sprints: Sprint[]
+}
+
+export interface Branch {
+  name: string
+  commit?: string | null
+}
+
+export interface BranchDeleted {
+  repo: string
+  name: string
+  deleted: boolean
+}
+
+export interface BuildStatus {
+  name: string
+  key?: string | null
+  /** SUCCESSFUL, FAILED, INPROGRESS, STOPPED (Cloud), CANCELLED or UNKNOWN (Data Center). */
+  state: string
+  url?: string | null
+  description?: string | null
+}
+
+export interface Card {
+  id: string
+  name: string
+  /** The list's name when known, else its ID. */
+  list?: string | null
+  due?: string | null
+  labels: string[]
+  closed: boolean
+  short_link?: string | null
+  url?: string | null
+}
+
+export interface CardComment {
+  author?: string | null
+  date?: string | null
+  text: string
+}
+
+export interface CardDetail {
+  id: string
+  name: string
+  /** The list's name when known, else its ID. */
+  list?: string | null
+  due?: string | null
+  labels: string[]
+  closed: boolean
+  short_link?: string | null
+  url?: string | null
+  board?: string | null
+  /** The card description (Trello stores Markdown). */
+  description: string
+  /** Latest comments first. */
+  comments: CardComment[]
+}
+
+/** One changed field of one history entry. */
+export interface Change {
+  created?: string | null
+  author?: string | null
+  field: string
+  from?: string | null
+  to?: string | null
+}
+
+export interface ChangesRequested {
+  repo: string
+  id: number
+  changes_requested: boolean
+}
+
+export interface CheckItem {
+  id: string
+  name: string
+  done: boolean
+}
+
+export interface Checklist {
+  id: string
+  name: string
+  items: CheckItem[]
+}
+
+export interface Comment {
+  id: string
+  author?: string | null
+  created?: string | null
+  /** The comment as Markdown (Cloud) or wiki markup (Data Center). */
+  body: string
+}
+
+export interface CommentDeleted {
+  key: string
+  id: string
+  deleted: boolean
+}
+
+export interface Commit {
+  hash: string
+  author?: string | null
+  date?: string | null
+  /** The first line of the message. */
+  message: string
+}
+
+export interface Component {
+  id: string
+  name: string
+  lead?: string | null
+  description?: string | null
+}
+
+export interface Copied {
+  source: string
+  /** The new page (empty in a dry run). */
+  id: string
+  title: string
+  parent: string
+  url: string
+}
+
+export interface Created {
+  key: string
+  url: string
+}
+
+export interface Deleted {
+  id: string
+  deleted: boolean
+}
+
+export interface Desk {
+  id: string
+  project: string
+  name: string
+}
+
+export interface Directory {
+  id: string
+  name: string
+}
+
+export interface Domain {
+  id: string
+  name: string
+  /** Verification status of the domain claim. */
+  status?: string | null
+}
+
+export interface EpicIssues {
+  /** The epic, or none after a remove. */
+  epic?: string | null
+  issues: string[]
+}
+
+export interface Event {
+  id: string
+  time?: string | null
+  action?: string | null
+  actor?: string | null
+  message?: string | null
+}
+
+export interface Exported {
+  id: string
+  title: string
+  type: string
+  /** The written `index.md` (or the folder, for a Cloud folder). */
+  path: string
+  attachments: number
+}
+
+/** A system or custom field, from `GET /rest/api/{2|3}/field`. */
+export interface Field {
+  /** For example `customfield_10016` or `duedate`. */
+  id: string
+  name: string
+  custom: boolean
+  /** JSON type: string, number, date, datetime, option, array, user, ... */
+  type?: string | null
+  /** Item type of an array field. */
+  items?: string | null
+}
+
+export interface Filter {
+  id: string
+  name: string
+  jql: string
+  owner?: string | null
+  favourite: boolean
+  url: string
+}
+
+export interface Group {
+  id: string
+  name: string
+  description?: string | null
+  users?: number | null
+  directory: string
+}
+
+export interface IssueCount {
+  count: number
+  jql: string
+}
+
+export interface IssueDeleted {
+  key: string
+  deleted: boolean
+}
+
+export interface IssueDetail {
+  key: string
+  summary: string
+  status: string
+  /** `new`, `indeterminate` (in progress), or `done`. */
+  status_category: string
+  type: string
+  assignee?: string | null
+  priority?: string | null
+  updated?: string | null
+  url: string
+  reporter?: string | null
+  created?: string | null
+  labels: string[]
+  components: string[]
+  parent?: string | null
+  subtasks: string[]
+  /** The description as Markdown (Cloud) or wiki markup (Data Center). */
+  description: string
+  comments: Comment[]
+  comment_count: number
+  /** Links to other issues, as "relation key" (for example "blocks ABC-2"). */
+  links: IssueLink[]
+  /**
+   * Fields asked for by name (`issue view --field`), simplified: options
+   * become their value, users their name, rich text Markdown.
+   */
+  fields: Record<string, unknown>
+}
+
+export interface IssueLink {
+  /** The phrase from this issue's side, for example "blocks" or "is blocked by". */
+  relation: string
+  key: string
+  summary?: string | null
+  status?: string | null
+}
+
+/** A page of issues and the JQL that found them. */
+export interface IssueList {
+  issues: IssueSummary[]
+  /** Pass back as `page_token` for the next page. */
+  next_page_token?: string | null
+  /** Total matches when the server reports it (Data Center). */
+  total?: number | null
+  jql: string
+}
+
+export interface IssueSummary {
+  key: string
+  summary: string
+  status: string
+  /** `new`, `indeterminate` (in progress), or `done`. */
+  status_category: string
+  type: string
+  assignee?: string | null
+  priority?: string | null
+  updated?: string | null
+  url: string
+}
+
+export interface IssueUpdated {
+  key: string
+  updated: boolean
+  url: string
+}
+
+export interface JqlCheck {
+  valid: boolean
+  errors: string[]
+  warnings: string[]
+}
+
+export interface JqlField {
+  /** The name to use in JQL. */
+  name: string
+  display: string
+  operators: string[]
+}
+
+export interface JqlReference {
+  fields: JqlField[]
+  functions: string[]
+}
+
+export interface LinkType {
+  name: string
+  /** Phrase from the first issue to the second ("blocks"). */
+  outward: string
+  /** Phrase from the second issue to the first ("is blocked by"). */
+  inward: string
+}
+
+export interface Linked {
+  from: string
+  to: string
+  /** The link type name. */
+  type: string
+}
+
+/** A user's membership of a group after an add or a remove. */
+export interface Membership {
+  group: string
+  group_id: string
+  /** The user's email, or their name when the email is hidden. */
+  user?: string | null
+  account_id: string
+  /** True after an add, false after a remove. */
+  member: boolean
+}
+
+export interface Moved {
+  key: string
+  /** The status the issue is in now. */
+  status: string
+  /** The transition that moved it. */
+  transition: string
+}
+
+export interface Org {
+  id: string
+  name: string
+}
+
+export interface Page {
+  id: string
+  title: string
+  space?: string | null
+  /** ID of the parent page (none for a page at the top of a space). */
+  parent?: string | null
+  version: number
+  url: string
+  /** The body as Markdown. */
+  markdown: string
+}
+
+export interface PageAttachment {
+  id: string
+  title: string
+  size?: number | null
+  media_type?: string | null
+  /** Download URL on the Confluence server. */
+  download: string
+}
+
+export interface PageComment {
+  id: string
+  /** Display name (account ID on Cloud when the name lookup fails). */
+  author?: string | null
+  created?: string | null
+  /** The comment as Markdown. */
+  body: string
+  /** The comment this one replies to. */
+  parent?: string | null
+  /** For inline comments, the page text they are attached to. */
+  selection?: string | null
+}
+
+export interface PageSummary {
+  id: string
+  title: string
+  url: string
+}
+
+export interface PageVersion {
+  number: number
+  author?: string | null
+  created?: string | null
+  message?: string | null
+  minor_edit: boolean
+}
+
+/**
+ * A page, with its storage-format body and its Markdown document (front
+ * matter and body) when asked for.
+ */
+export interface PageView {
+  id: string
+  title: string
+  space?: string | null
+  /** ID of the parent page (none for a page at the top of a space). */
+  parent?: string | null
+  version: number
+  url: string
+  /** The body as Markdown. */
+  markdown: string
+  /** The page as a Markdown file with front matter (with `front_matter: true`). */
+  document?: string | null
+  /** The body in storage format (with `storage: true`). */
+  storage?: string | null
+}
+
+export interface Participants {
+  key: string
+  /** Every participant after the change. */
+  participants: string[]
+}
+
+export interface Pipeline {
+  build_number: number
+  uuid?: string | null
+  /** PENDING, IN_PROGRESS or COMPLETED. */
+  state: string
+  /** SUCCESSFUL, FAILED, STOPPED or ERROR once completed. */
+  result?: string | null
+  branch?: string | null
+  created?: string | null
+  url: string
+}
+
+export interface PipelineDetail {
+  build_number: number
+  uuid?: string | null
+  /** PENDING, IN_PROGRESS or COMPLETED. */
+  state: string
+  /** SUCCESSFUL, FAILED, STOPPED or ERROR once completed. */
+  result?: string | null
+  branch?: string | null
+  created?: string | null
+  url: string
+  steps: PipelineStep[]
+}
+
+export interface PipelineLog {
+  repo: string
+  id: string
+  /** The step logs as text. */
+  log: string
+}
+
+export interface PipelineStep {
+  uuid: string
+  name: string
+  /** PENDING, IN_PROGRESS or COMPLETED. */
+  state: string
+  result?: string | null
+  seconds?: number | null
+}
+
+export interface PrApproval {
+  repo: string
+  id: number
+  /** True after an approve, false after an unapprove. */
+  approved: boolean
+}
+
+export interface PrChecks {
+  repo: string
+  id: number
+  /** No check failed. */
+  passed: boolean
+  /** At least one check is still running. */
+  pending: boolean
+  checks: BuildStatus[]
+}
+
+export interface PrComment {
+  id: string
+  author?: string | null
+  created?: string | null
+  /** Markdown. */
+  body: string
+  /** File of an inline comment. */
+  path?: string | null
+  /** Line of an inline comment (in the new version of the file when known). */
+  line?: number | null
+  /** ID of the comment this one answers. */
+  parent?: string | null
+  resolved: boolean
+}
+
+export interface PrCommented {
+  repo: string
+  id: number
+  comment_id: string
+}
+
+export interface PrDiff {
+  repo: string
+  id: number
+  /** The unified diff. */
+  diff: string
+}
+
+export interface Project {
+  key: string
+  name: string
+  id: string
+  type?: string | null
+}
+
+export interface PullRequest {
+  id: number
+  title: string
+  /** OPEN, MERGED, DECLINED or SUPERSEDED. */
+  state: string
+  author?: string | null
+  source: string
+  destination: string
+  updated?: string | null
+  description: string
+  reviewers: string[]
+  approved_by: string[]
+  url: string
+  /**
+   * `owner/slug` of the repository the source branch is in (differs
+   * from the target repository for pull requests from forks).
+   */
+  source_repo?: string | null
+  /** True for a draft (not yet ready for review). */
+  draft: boolean
+}
+
+export interface Pushed {
+  file: string
+  id: string
+  title: string
+  version: number
+  /** created, updated, unchanged, or planned (dry run). */
+  action: string
+}
+
+export interface Queue {
+  id: string
+  name: string
+  jql?: string | null
+  issues?: number | null
+}
+
+/** A project version ("release"). */
+export interface Release {
+  id: string
+  name: string
+  released: boolean
+  archived: boolean
+  release_date?: string | null
+  description?: string | null
+}
+
+/** A web link that `Jira::remote_link` added to an issue. */
+export interface RemoteLink {
+  key: string
+  /** Jira's ID of the link. */
+  id?: number | null
+  url: string
+  title: string
+}
+
+export interface Repo {
+  /** `owner/slug`. */
+  repo: string
+  name: string
+  description?: string | null
+  default_branch?: string | null
+  private?: boolean | null
+  url: string
+}
+
+export interface Request {
+  key: string
+  summary: string
+  status: string
+  type?: string | null
+  reporter?: string | null
+  created?: string | null
+  url: string
+}
+
+export interface RequestAttachment {
+  filename: string
+  author?: string | null
+  created?: string | null
+  size?: number | null
+  mime_type?: string | null
+  url?: string | null
+}
+
+export interface RequestComment {
+  id: string
+  author?: string | null
+  created?: string | null
+  /** False for internal notes that customers cannot see. */
+  public: boolean
+  body: string
+}
+
+export interface RequestDetail {
+  key: string
+  summary: string
+  status: string
+  type?: string | null
+  reporter?: string | null
+  created?: string | null
+  url: string
+  description: string
+  comments: RequestComment[]
+}
+
+export interface RequestMoved {
+  key: string
+  /** The transition that ran. */
+  transition: string
+  /** Its ID. */
+  id: string
+}
+
+export interface RequestTransition {
+  id: string
+  name: string
+}
+
+export interface RequestType {
+  id: string
+  name: string
+  description?: string | null
+}
+
+export interface SearchHit {
+  id: string
+  type: string
+  title: string
+  space?: string | null
+  excerpt?: string | null
+  url: string
+}
+
+export interface SearchResults {
+  /** The CQL that ran. */
+  cql: string
+  results: SearchHit[]
+}
+
+export interface Sla {
+  name: string
+  /** ongoing, paused, met or breached. */
+  state: string
+  breached: boolean
+  /** Time left (negative when breached), as Jira shows it. */
+  remaining?: string | null
+  goal?: string | null
+}
+
+export interface Space {
+  key: string
+  name: string
+  id?: string | null
+  type?: string | null
+  url: string
+}
+
+export interface Sprint {
+  id: number
+  name: string
+  state: string
+  start?: string | null
+  end?: string | null
+  goal?: string | null
+}
+
+export interface SprintIssues {
+  sprint: number
+  issues: string[]
+}
+
+export interface Suggestion {
+  value: string
+  display: string
+}
+
+export interface Transition {
+  id: string
+  name: string
+  /** The status the transition leads to. */
+  to: string
+}
+
+/** One node of a page tree (see [`Confluence::tree`]). */
+export interface TreeNode {
+  id: string
+  title: string
+  /** page, folder, whiteboard, database or embed (Data Center: page). */
+  type: string
+  /** 1 for direct children of the root. */
+  depth: number
+  /** ID of the parent node. */
+  parent: string
+  url: string
+}
+
+export interface TrelloBoard {
+  id: string
+  name: string
+  short_link?: string | null
+  url?: string | null
+}
+
+export interface TrelloList {
+  id: string
+  name: string
+}
+
+export interface Unlinked {
+  from: string
+  to: string
+  /** The link types that were removed. */
+  removed: string[]
+}
+
+export interface User {
+  /** Account ID (Cloud) or username (Data Center). */
+  id: string
+  name: string
+  email?: string | null
+}
+
+export interface Watchers {
+  /** True when the signed-in user watches the issue. */
+  watching: boolean
+  count: number
+  watchers: User[]
+}
+
+export interface Watching {
+  key: string
+  user: string
+  /** True after a watch, false after an unwatch. */
+  watching: boolean
+}
+
+export interface Worklog {
+  id: string
+  author?: string | null
+  /** As Jira shows it, for example "2h 30m". */
+  time_spent?: string | null
+  seconds?: number | null
+  started?: string | null
+  /** Markdown. */
+  comment?: string | null
+}
+
+/** A worklog that `Jira::worklog` added. */
+export interface WorklogAdded {
+  key: string
+  worklog_id?: string | null
+  time_spent: string
+}
+
 /** The arguments of every task, by task name. */
 export interface TaskArgs {
   jira_issue_list: JiraIssueListArgs
@@ -1336,693 +2136,555 @@ export interface TaskArgs {
   admin_domain_list: AdminDomainListArgs
   admin_event_list: AdminEventListArgs
 }
+
+/** The result of every task, by task name. */
+export interface TaskResults {
+  jira_issue_list: IssueList
+  jira_issue_count: IssueCount
+  jira_issue_view: IssueDetail
+  jira_issue_delete: IssueDeleted
+  jira_issue_watchers: Watchers
+  jira_issue_watch: Watching
+  jira_issue_unwatch: Watching
+  jira_field_list: Field[]
+  jira_issue_create: Created
+  jira_issue_edit: IssueUpdated
+  jira_issue_assign: Assigned
+  jira_issue_transitions: Transition[]
+  jira_issue_move: Moved
+  jira_issue_comment: Comment
+  jira_issue_link: Linked
+  jira_issue_unlink: Unlinked
+  jira_issue_remote_link: RemoteLink
+  jira_comment_list: Comment[]
+  jira_comment_edit: Comment
+  jira_comment_delete: CommentDeleted
+  jira_worklog_list: Worklog[]
+  jira_issue_history: Change[]
+  jira_component_list: Component[]
+  jira_sprint_create: Sprint
+  jira_sprint_start: Sprint
+  jira_sprint_close: Sprint
+  jira_release_list: Release[]
+  jira_issue_link_types: LinkType[]
+  jira_issue_clone: Created
+  jira_issue_worklog: WorklogAdded
+  jira_issue_attach: Attachment[]
+  jira_issue_attachments: Attachment[]
+  jira_jql_check: JqlCheck
+  jira_jql_fields: JqlReference
+  jira_jql_suggest: Suggestion[]
+  jira_filter_list: Filter[]
+  jira_filter_run: IssueList
+  jira_epic_list: IssueSummary[]
+  jira_epic_add: EpicIssues
+  jira_epic_remove: EpicIssues
+  jira_board_list: Board[]
+  jira_sprint_list: BoardSprints
+  jira_sprint_add: SprintIssues
+  jira_project_list: Project[]
+  jira_issue_types: string[]
+  jira_me: User
+  confluence_page_get: PageView
+  confluence_page_create: PageSummary
+  confluence_blog_list: PageSummary[]
+  confluence_blog_get: Page
+  confluence_blog_create: PageSummary
+  confluence_space_create: Space
+  confluence_page_update: PageSummary
+  confluence_page_delete: Deleted
+  confluence_page_children: TreeNode[]
+  confluence_page_find: SearchHit[]
+  confluence_page_attach: PageAttachment[]
+  confluence_page_attachments: PageAttachment[]
+  confluence_page_comments: PageComment[]
+  confluence_page_comment: PageComment
+  confluence_comment_delete: Deleted
+  confluence_attachment_delete: Deleted
+  confluence_page_export: Exported[]
+  confluence_page_push: Pushed[]
+  confluence_page_copy_tree: Copied[]
+  confluence_page_labels: string[]
+  confluence_page_label: string[]
+  confluence_page_move: PageSummary
+  confluence_page_history: PageVersion[]
+  confluence_space_list: Space[]
+  confluence_space_pages: PageSummary[]
+  confluence_search: SearchResults
+  bitbucket_repo_list: Repo[]
+  bitbucket_repo_view: Repo
+  bitbucket_branch_list: Branch[]
+  bitbucket_pr_list: PullRequest[]
+  bitbucket_pr_view: PullRequest
+  bitbucket_pr_create: PullRequest
+  bitbucket_pr_merge: PullRequest
+  bitbucket_pr_approve: PrApproval
+  bitbucket_pr_comment: PrCommented
+  bitbucket_pr_diff: PrDiff
+  bitbucket_pr_comments: PrComment[]
+  bitbucket_pr_checks: PrChecks
+  bitbucket_pr_unapprove: PrApproval
+  bitbucket_pr_ready: PullRequest
+  bitbucket_branch_create: Branch
+  bitbucket_branch_delete: BranchDeleted
+  bitbucket_commit_list: Commit[]
+  bitbucket_pipeline_list: Pipeline[]
+  bitbucket_pipeline_run: Pipeline
+  bitbucket_pr_decline: PullRequest
+  bitbucket_pr_request_changes: ChangesRequested
+  bitbucket_pr_edit: PullRequest
+  bitbucket_pr_reviewers: PullRequest
+  bitbucket_pipeline_stop: Pipeline
+  bitbucket_pipeline_view: PipelineDetail
+  bitbucket_pipeline_logs: PipelineLog
+  jsm_desk_list: Desk[]
+  jsm_request_types: RequestType[]
+  jsm_queue_list: Queue[]
+  jsm_queue_issues: IssueSummary[]
+  jsm_request_list: Request[]
+  jsm_request_view: RequestDetail
+  jsm_request_create: Request
+  jsm_request_comment: RequestComment
+  jsm_request_transitions: RequestTransition[]
+  jsm_request_move: RequestMoved
+  jsm_request_approvals: Approval[]
+  jsm_request_approve: Approval
+  jsm_request_participants: Participants
+  jsm_request_sla: Sla[]
+  jsm_request_attach: RequestAttachment[]
+  jsm_request_attachments: RequestAttachment[]
+  trello_board_list: TrelloBoard[]
+  trello_list_list: TrelloList[]
+  trello_card_list: Card[]
+  trello_card_view: CardDetail
+  trello_card_create: Card
+  trello_card_move: Card
+  trello_card_comment: CardComment
+  trello_card_archive: Card
+  trello_card_edit: Card
+  trello_checklist_list: Checklist[]
+  trello_checklist_create: Checklist
+  trello_checklist_check: CheckItem
+  admin_org_list: Org[]
+  admin_directory_list: Directory[]
+  admin_user_list: AdminUser[]
+  admin_user_suspend: AdminUser
+  admin_user_restore: AdminUser
+  admin_group_add_member: Membership
+  admin_group_remove_member: Membership
+  admin_group_list: Group[]
+  admin_domain_list: Domain[]
+  admin_event_list: Event[]
+}
+
 export type TaskName = keyof TaskArgs
 
 /** Every value of `AtlError.code`. */
 export type ErrorCode = "auth" | "api" | "invalid" | "unknown" | "read_only" | "dry_run" | "input_required" | "internal"
 
-/** One typed method per task; each SDK supplies `task()` over its own transport. */
+/** The product namespaces; each SDK supplies `task()` over its own transport. */
 export abstract class GeneratedTasks {
-  /** Runs any task from `tasks()`, for example `task("jira_issue_view", { key: "A-1" })`. */
-  abstract task<T = unknown>(name: string, args?: Record<string, unknown>): Promise<T>
-
-  /** Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues. */
-  jiraIssueList(args: JiraIssueListArgs = {}): Promise<TaskResult<"jira_issue_list">> {
-    return this.task("jira_issue_list", { ...args })
-  }
-
-  /** Count Jira issues matching the same filters as issue_list. */
-  jiraIssueCount(args: JiraIssueCountArgs = {}): Promise<TaskResult<"jira_issue_count">> {
-    return this.task("jira_issue_count", { ...args })
-  }
-
-  /** One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name. */
-  jiraIssueView(args: JiraIssueViewArgs): Promise<TaskResult<"jira_issue_view">> {
-    return this.task("jira_issue_view", { ...args })
-  }
-
-  /** Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone. */
-  jiraIssueDelete(args: JiraIssueDeleteArgs): Promise<TaskResult<"jira_issue_delete">> {
-    return this.task("jira_issue_delete", { ...args })
-  }
-
-  /** Who watches a Jira issue, and whether you do. */
-  jiraIssueWatchers(args: JiraIssueWatchersArgs): Promise<TaskResult<"jira_issue_watchers">> {
-    return this.task("jira_issue_watchers", { ...args })
-  }
-
-  /** Add a watcher to a Jira issue (default: you). */
-  jiraIssueWatch(args: JiraIssueWatchArgs): Promise<TaskResult<"jira_issue_watch">> {
-    return this.task("jira_issue_watch", { ...args })
-  }
-
-  /** Remove a watcher from a Jira issue (default: you). */
-  jiraIssueUnwatch(args: JiraIssueUnwatchArgs): Promise<TaskResult<"jira_issue_unwatch">> {
-    return this.task("jira_issue_unwatch", { ...args })
-  }
-
-  /** Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view. */
-  jiraFieldList(args: JiraFieldListArgs = {}): Promise<TaskResult<"jira_field_list">> {
-    return this.task("jira_field_list", { ...args })
-  }
-
-  /** Create a Jira issue; the description is Markdown. */
-  jiraIssueCreate(args: JiraIssueCreateArgs): Promise<TaskResult<"jira_issue_create">> {
-    return this.task("jira_issue_create", { ...args })
-  }
-
-  /** Change a Jira issue's summary, description (Markdown), priority or labels. */
-  jiraIssueEdit(args: JiraIssueEditArgs): Promise<TaskResult<"jira_issue_edit">> {
-    return this.task("jira_issue_edit", { ...args })
-  }
-
-  /** Assign a Jira issue to me, nobody (x), or a user. */
-  jiraIssueAssign(args: JiraIssueAssignArgs): Promise<TaskResult<"jira_issue_assign">> {
-    return this.task("jira_issue_assign", { ...args })
-  }
-
-  /** Statuses a Jira issue can move to. */
-  jiraIssueTransitions(args: JiraIssueTransitionsArgs): Promise<TaskResult<"jira_issue_transitions">> {
-    return this.task("jira_issue_transitions", { ...args })
-  }
-
-  /** Move a Jira issue to another status (by status or transition name). */
-  jiraIssueMove(args: JiraIssueMoveArgs): Promise<TaskResult<"jira_issue_move">> {
-    return this.task("jira_issue_move", { ...args })
-  }
-
-  /** Add a Markdown comment to a Jira issue. */
-  jiraIssueComment(args: JiraIssueCommentArgs): Promise<TaskResult<"jira_issue_comment">> {
-    return this.task("jira_issue_comment", { ...args })
-  }
-
-  /** Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2. */
-  jiraIssueLink(args: JiraIssueLinkArgs): Promise<TaskResult<"jira_issue_link">> {
-    return this.task("jira_issue_link", { ...args })
-  }
-
-  /** Remove the links between two Jira issues (optionally only one link type). */
-  jiraIssueUnlink(args: JiraIssueUnlinkArgs): Promise<TaskResult<"jira_issue_unlink">> {
-    return this.task("jira_issue_unlink", { ...args })
-  }
-
-  /** Add a web link (URL and title) to a Jira issue. */
-  jiraIssueRemoteLink(args: JiraIssueRemoteLinkArgs): Promise<TaskResult<"jira_issue_remote_link">> {
-    return this.task("jira_issue_remote_link", { ...args })
-  }
-
-  /** Every comment of a Jira issue, oldest first, with IDs, as Markdown. */
-  jiraCommentList(args: JiraCommentListArgs): Promise<TaskResult<"jira_comment_list">> {
-    return this.task("jira_comment_list", { ...args })
-  }
-
-  /** Replace the text of a Jira comment (Markdown). */
-  jiraCommentEdit(args: JiraCommentEditArgs): Promise<TaskResult<"jira_comment_edit">> {
-    return this.task("jira_comment_edit", { ...args })
-  }
-
-  /** Delete a Jira comment. Cannot be undone. */
-  jiraCommentDelete(args: JiraCommentDeleteArgs): Promise<TaskResult<"jira_comment_delete">> {
-    return this.task("jira_comment_delete", { ...args })
-  }
-
-  /** Time logged on a Jira issue: author, time spent, start, comment. */
-  jiraWorklogList(args: JiraWorklogListArgs): Promise<TaskResult<"jira_worklog_list">> {
-    return this.task("jira_worklog_list", { ...args })
-  }
-
-  /** Field changes of a Jira issue, newest first: when, who, field, from, to. */
-  jiraIssueHistory(args: JiraIssueHistoryArgs): Promise<TaskResult<"jira_issue_history">> {
-    return this.task("jira_issue_history", { ...args })
-  }
-
-  /** Components of a Jira project with their leads. */
-  jiraComponentList(args: JiraComponentListArgs): Promise<TaskResult<"jira_component_list">> {
-    return this.task("jira_component_list", { ...args })
-  }
-
-  /** Create a future sprint on a board (default: the project's first board). */
-  jiraSprintCreate(args: JiraSprintCreateArgs): Promise<TaskResult<"jira_sprint_create">> {
-    return this.task("jira_sprint_create", { ...args })
-  }
-
-  /** Start a future sprint; Jira needs a start and an end date. */
-  jiraSprintStart(args: JiraSprintStartArgs): Promise<TaskResult<"jira_sprint_start">> {
-    return this.task("jira_sprint_start", { ...args })
-  }
-
-  /** Complete an active sprint. */
-  jiraSprintClose(args: JiraSprintCloseArgs): Promise<TaskResult<"jira_sprint_close">> {
-    return this.task("jira_sprint_close", { ...args })
-  }
-
-  /** Versions (releases) of a Jira project: name, released, archived, release date. */
-  jiraReleaseList(args: JiraReleaseListArgs): Promise<TaskResult<"jira_release_list">> {
-    return this.task("jira_release_list", { ...args })
-  }
-
-  /** Jira issue link types with their outward and inward phrases. */
-  jiraIssueLinkTypes(args: JiraIssueLinkTypesArgs = {}): Promise<TaskResult<"jira_issue_link_types">> {
-    return this.task("jira_issue_link_types", { ...args })
-  }
-
-  /** Copy a Jira issue (summary, description, type, labels, priority, components, parent). */
-  jiraIssueClone(args: JiraIssueCloneArgs): Promise<TaskResult<"jira_issue_clone">> {
-    return this.task("jira_issue_clone", { ...args })
-  }
-
-  /** Log time on a Jira issue. */
-  jiraIssueWorklog(args: JiraIssueWorklogArgs): Promise<TaskResult<"jira_issue_worklog">> {
-    return this.task("jira_issue_worklog", { ...args })
-  }
-
-  /** Upload local files to a Jira issue. */
-  jiraIssueAttach(args: JiraIssueAttachArgs): Promise<TaskResult<"jira_issue_attach">> {
-    return this.task("jira_issue_attach", { ...args })
-  }
-
-  /** List a Jira issue's attachments. */
-  jiraIssueAttachments(args: JiraIssueAttachmentsArgs): Promise<TaskResult<"jira_issue_attachments">> {
-    return this.task("jira_issue_attachments", { ...args })
-  }
-
-  /** Validate JQL with Jira's parser; returns valid, errors, warnings. */
-  jiraJqlCheck(args: JiraJqlCheckArgs): Promise<TaskResult<"jira_jql_check">> {
-    return this.task("jira_jql_check", { ...args })
-  }
-
-  /** Fields (with operators) and functions usable in JQL on this site. */
-  jiraJqlFields(args: JiraJqlFieldsArgs = {}): Promise<TaskResult<"jira_jql_fields">> {
-    return this.task("jira_jql_fields", { ...args })
-  }
-
-  /** Value suggestions for a JQL field, for example field=status prefix=In. */
-  jiraJqlSuggest(args: JiraJqlSuggestArgs): Promise<TaskResult<"jira_jql_suggest">> {
-    return this.task("jira_jql_suggest", { ...args })
-  }
-
-  /** Saved Jira filters (Cloud: all visible, Data Center: favourites). */
-  jiraFilterList(args: JiraFilterListArgs = {}): Promise<TaskResult<"jira_filter_list">> {
-    return this.task("jira_filter_list", { ...args })
-  }
-
-  /** Run a saved Jira filter by ID or exact name; returns issue records. */
-  jiraFilterRun(args: JiraFilterRunArgs): Promise<TaskResult<"jira_filter_run">> {
-    return this.task("jira_filter_run", { ...args })
-  }
-
-  /** Open epics, optionally of one project. */
-  jiraEpicList(args: JiraEpicListArgs = {}): Promise<TaskResult<"jira_epic_list">> {
-    return this.task("jira_epic_list", { ...args })
-  }
-
-  /** Move issues into an epic. */
-  jiraEpicAdd(args: JiraEpicAddArgs): Promise<TaskResult<"jira_epic_add">> {
-    return this.task("jira_epic_add", { ...args })
-  }
-
-  /** Remove issues from their epic. */
-  jiraEpicRemove(args: JiraEpicRemoveArgs): Promise<TaskResult<"jira_epic_remove">> {
-    return this.task("jira_epic_remove", { ...args })
-  }
-
-  /** Jira Software boards, optionally of one project. */
-  jiraBoardList(args: JiraBoardListArgs = {}): Promise<TaskResult<"jira_board_list">> {
-    return this.task("jira_board_list", { ...args })
-  }
-
-  /** Sprints of a board. */
-  jiraSprintList(args: JiraSprintListArgs = {}): Promise<TaskResult<"jira_sprint_list">> {
-    return this.task("jira_sprint_list", { ...args })
-  }
-
-  /** Move issues into a sprint. */
-  jiraSprintAdd(args: JiraSprintAddArgs): Promise<TaskResult<"jira_sprint_add">> {
-    return this.task("jira_sprint_add", { ...args })
-  }
-
-  /** Jira projects. */
-  jiraProjectList(args: JiraProjectListArgs = {}): Promise<TaskResult<"jira_project_list">> {
-    return this.task("jira_project_list", { ...args })
-  }
-
-  /** Issue type names of a Jira project (without sub-task types), for the `type` argument of jira_issue_create. */
-  jiraIssueTypes(args: JiraIssueTypesArgs): Promise<TaskResult<"jira_issue_types">> {
-    return this.task("jira_issue_types", { ...args })
-  }
-
-  /** The signed-in Jira user. */
-  jiraMe(args: JiraMeArgs = {}): Promise<TaskResult<"jira_me">> {
-    return this.task("jira_me", { ...args })
-  }
-
-  /** A Confluence page as Markdown (with title, space, version, url). */
-  confluencePageGet(args: ConfluencePageGetArgs): Promise<TaskResult<"confluence_page_get">> {
-    return this.task("confluence_page_get", { ...args })
-  }
-
-  /** Create a Confluence page from Markdown (or storage format). */
-  confluencePageCreate(args: ConfluencePageCreateArgs): Promise<TaskResult<"confluence_page_create">> {
-    return this.task("confluence_page_create", { ...args })
-  }
-
-  /** Blog posts of a Confluence space, newest first. */
-  confluenceBlogList(args: ConfluenceBlogListArgs): Promise<TaskResult<"confluence_blog_list">> {
-    return this.task("confluence_blog_list", { ...args })
-  }
-
-  /** One Confluence blog post with its body as Markdown. */
-  confluenceBlogGet(args: ConfluenceBlogGetArgs): Promise<TaskResult<"confluence_blog_get">> {
-    return this.task("confluence_blog_get", { ...args })
-  }
-
-  /** Publish a Confluence blog post from Markdown. */
-  confluenceBlogCreate(args: ConfluenceBlogCreateArgs): Promise<TaskResult<"confluence_blog_create">> {
-    return this.task("confluence_blog_create", { ...args })
-  }
-
-  /** Create a Confluence space with a key, a name and an optional plain-text description. */
-  confluenceSpaceCreate(args: ConfluenceSpaceCreateArgs): Promise<TaskResult<"confluence_space_create">> {
-    return this.task("confluence_space_create", { ...args })
-  }
-
-  /** Replace a Confluence page's title and/or body; the version is bumped automatically. */
-  confluencePageUpdate(args: ConfluencePageUpdateArgs): Promise<TaskResult<"confluence_page_update">> {
-    return this.task("confluence_page_update", { ...args })
-  }
-
-  /** Delete a Confluence page. */
-  confluencePageDelete(args: ConfluencePageDeleteArgs): Promise<TaskResult<"confluence_page_delete">> {
-    return this.task("confluence_page_delete", { ...args })
-  }
-
-  /** Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent. */
-  confluencePageChildren(args: ConfluencePageChildrenArgs): Promise<TaskResult<"confluence_page_children">> {
-    return this.task("confluence_page_children", { ...args })
-  }
-
-  /** Confluence pages whose title contains the words, optionally in one space. */
-  confluencePageFind(args: ConfluencePageFindArgs): Promise<TaskResult<"confluence_page_find">> {
-    return this.task("confluence_page_find", { ...args })
-  }
-
-  /** Upload local files to a Confluence page. */
-  confluencePageAttach(args: ConfluencePageAttachArgs): Promise<TaskResult<"confluence_page_attach">> {
-    return this.task("confluence_page_attach", { ...args })
-  }
-
-  /** Attachments of a Confluence page with download URLs. */
-  confluencePageAttachments(args: ConfluencePageAttachmentsArgs): Promise<TaskResult<"confluence_page_attachments">> {
-    return this.task("confluence_page_attachments", { ...args })
-  }
-
-  /** Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`. */
-  confluencePageComments(args: ConfluencePageCommentsArgs): Promise<TaskResult<"confluence_page_comments">> {
-    return this.task("confluence_page_comments", { ...args })
-  }
-
-  /** Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`. */
-  confluencePageComment(args: ConfluencePageCommentArgs): Promise<TaskResult<"confluence_page_comment">> {
-    return this.task("confluence_page_comment", { ...args })
-  }
-
-  /** Delete a Confluence comment by ID. */
-  confluenceCommentDelete(args: ConfluenceCommentDeleteArgs): Promise<TaskResult<"confluence_comment_delete">> {
-    return this.task("confluence_comment_delete", { ...args })
-  }
-
-  /** Delete a Confluence attachment by ID. */
-  confluenceAttachmentDelete(args: ConfluenceAttachmentDeleteArgs): Promise<TaskResult<"confluence_attachment_delete">> {
-    return this.task("confluence_attachment_delete", { ...args })
-  }
-
-  /** Export a Confluence page (and with `recursive` its tree) to local Markdown folders: <title>/index.md with front matter and _attachments/. Changes nothing on the server. */
-  confluencePageExport(args: ConfluencePageExportArgs): Promise<TaskResult<"confluence_page_export">> {
-    return this.task("confluence_page_export", { ...args })
-  }
-
-  /** Publish local Markdown files: update the page in each file's front matter (refusing pages changed on the server unless `force`, skipping unchanged ones), create pages for new files under their folder's index.md, upload referenced images, and write ids and versions back. */
-  confluencePagePush(args: ConfluencePagePushArgs): Promise<TaskResult<"confluence_page_push">> {
-    return this.task("confluence_page_push", { ...args })
-  }
-
-  /** Copy a Confluence page and the pages below it under another page (titles, bodies, labels). */
-  confluencePageCopyTree(args: ConfluencePageCopyTreeArgs): Promise<TaskResult<"confluence_page_copy_tree">> {
-    return this.task("confluence_page_copy_tree", { ...args })
-  }
-
-  /** Labels of a Confluence page. */
-  confluencePageLabels(args: ConfluencePageLabelsArgs): Promise<TaskResult<"confluence_page_labels">> {
-    return this.task("confluence_page_labels", { ...args })
-  }
-
-  /** Add and remove labels on a Confluence page; returns the resulting labels. */
-  confluencePageLabel(args: ConfluencePageLabelArgs): Promise<TaskResult<"confluence_page_label">> {
-    return this.task("confluence_page_label", { ...args })
-  }
-
-  /** Move a Confluence page under another page (position append) or next to it (before/after, Cloud only). */
-  confluencePageMove(args: ConfluencePageMoveArgs): Promise<TaskResult<"confluence_page_move">> {
-    return this.task("confluence_page_move", { ...args })
-  }
-
-  /** Versions of a Confluence page, newest first: number, author, date, message. Read one with confluence_page_get and `version`. */
-  confluencePageHistory(args: ConfluencePageHistoryArgs): Promise<TaskResult<"confluence_page_history">> {
-    return this.task("confluence_page_history", { ...args })
-  }
-
-  /** Confluence spaces. */
-  confluenceSpaceList(args: ConfluenceSpaceListArgs = {}): Promise<TaskResult<"confluence_space_list">> {
-    return this.task("confluence_space_list", { ...args })
-  }
-
-  /** Top-level pages of a Confluence space. */
-  confluenceSpacePages(args: ConfluenceSpacePagesArgs): Promise<TaskResult<"confluence_space_pages">> {
-    return this.task("confluence_space_pages", { ...args })
-  }
-
-  /** Search Confluence by words or CQL; returns id, type, title, space, excerpt, url. */
-  confluenceSearch(args: ConfluenceSearchArgs = {}): Promise<TaskResult<"confluence_search">> {
-    return this.task("confluence_search", { ...args })
-  }
-
-  /** Bitbucket repositories of a workspace (Cloud) or project (Data Center), or the ones you belong to. */
-  bitbucketRepoList(args: BitbucketRepoListArgs = {}): Promise<TaskResult<"bitbucket_repo_list">> {
-    return this.task("bitbucket_repo_list", { ...args })
-  }
-
-  /** One Bitbucket repository with its default branch and URL. */
-  bitbucketRepoView(args: BitbucketRepoViewArgs): Promise<TaskResult<"bitbucket_repo_view">> {
-    return this.task("bitbucket_repo_view", { ...args })
-  }
-
-  /** Branches of a Bitbucket repository, most recently changed first. */
-  bitbucketBranchList(args: BitbucketBranchListArgs): Promise<TaskResult<"bitbucket_branch_list">> {
-    return this.task("bitbucket_branch_list", { ...args })
-  }
-
-  /** Pull requests of a Bitbucket repository by state. */
-  bitbucketPrList(args: BitbucketPrListArgs): Promise<TaskResult<"bitbucket_pr_list">> {
-    return this.task("bitbucket_pr_list", { ...args })
-  }
-
-  /** One pull request with description, reviewers and approvals. */
-  bitbucketPrView(args: BitbucketPrViewArgs): Promise<TaskResult<"bitbucket_pr_view">> {
-    return this.task("bitbucket_pr_view", { ...args })
-  }
-
-  /** Open a pull request from a source branch. */
-  bitbucketPrCreate(args: BitbucketPrCreateArgs): Promise<TaskResult<"bitbucket_pr_create">> {
-    return this.task("bitbucket_pr_create", { ...args })
-  }
-
-  /** Merge a pull request. */
-  bitbucketPrMerge(args: BitbucketPrMergeArgs): Promise<TaskResult<"bitbucket_pr_merge">> {
-    return this.task("bitbucket_pr_merge", { ...args })
-  }
-
-  /** Approve a pull request as the signed-in user. */
-  bitbucketPrApprove(args: BitbucketPrApproveArgs): Promise<TaskResult<"bitbucket_pr_approve">> {
-    return this.task("bitbucket_pr_approve", { ...args })
-  }
-
-  /** Add a Markdown comment to a pull request. */
-  bitbucketPrComment(args: BitbucketPrCommentArgs): Promise<TaskResult<"bitbucket_pr_comment">> {
-    return this.task("bitbucket_pr_comment", { ...args })
-  }
-
-  /** The unified diff of a pull request. */
-  bitbucketPrDiff(args: BitbucketPrDiffArgs): Promise<TaskResult<"bitbucket_pr_diff">> {
-    return this.task("bitbucket_pr_diff", { ...args })
-  }
-
-  /** Comments of a pull request, oldest first, as Markdown: general and inline (path, line), replies flattened with `parent`. */
-  bitbucketPrComments(args: BitbucketPrCommentsArgs): Promise<TaskResult<"bitbucket_pr_comments">> {
-    return this.task("bitbucket_pr_comments", { ...args })
-  }
-
-  /** Build statuses of a pull request's latest commit, with `passed` (none failed) and `pending` (some still running). */
-  bitbucketPrChecks(args: BitbucketPrChecksArgs): Promise<TaskResult<"bitbucket_pr_checks">> {
-    return this.task("bitbucket_pr_checks", { ...args })
-  }
-
-  /** Remove your approval from a pull request. */
-  bitbucketPrUnapprove(args: BitbucketPrUnapproveArgs): Promise<TaskResult<"bitbucket_pr_unapprove">> {
-    return this.task("bitbucket_pr_unapprove", { ...args })
-  }
-
-  /** Mark a draft pull request as ready for review (or, with `draft: true`, as a draft again). */
-  bitbucketPrReady(args: BitbucketPrReadyArgs): Promise<TaskResult<"bitbucket_pr_ready">> {
-    return this.task("bitbucket_pr_ready", { ...args })
-  }
-
-  /** Create a branch from another branch, a tag or a commit (default: the main branch). */
-  bitbucketBranchCreate(args: BitbucketBranchCreateArgs): Promise<TaskResult<"bitbucket_branch_create">> {
-    return this.task("bitbucket_branch_create", { ...args })
-  }
-
-  /** Delete a branch. Unmerged commits on it can be lost. */
-  bitbucketBranchDelete(args: BitbucketBranchDeleteArgs): Promise<TaskResult<"bitbucket_branch_delete">> {
-    return this.task("bitbucket_branch_delete", { ...args })
-  }
-
-  /** Recent commits of a branch, newest first: hash, author, date, first line of the message. */
-  bitbucketCommitList(args: BitbucketCommitListArgs): Promise<TaskResult<"bitbucket_commit_list">> {
-    return this.task("bitbucket_commit_list", { ...args })
-  }
-
-  /** Latest Bitbucket Pipelines runs, newest first (Cloud only). */
-  bitbucketPipelineList(args: BitbucketPipelineListArgs): Promise<TaskResult<"bitbucket_pipeline_list">> {
-    return this.task("bitbucket_pipeline_list", { ...args })
-  }
-
-  /** Start the pipeline of a branch, or a custom pipeline (Cloud only). */
-  bitbucketPipelineRun(args: BitbucketPipelineRunArgs): Promise<TaskResult<"bitbucket_pipeline_run">> {
-    return this.task("bitbucket_pipeline_run", { ...args })
-  }
-
-  /** Decline a Bitbucket pull request (Cloud cannot reopen it). */
-  bitbucketPrDecline(args: BitbucketPrDeclineArgs): Promise<TaskResult<"bitbucket_pr_decline">> {
-    return this.task("bitbucket_pr_decline", { ...args })
-  }
-
-  /** Mark a Bitbucket pull request as needing changes by you (Cloud: request changes; Data Center: needs work). */
-  bitbucketPrRequestChanges(args: BitbucketPrRequestChangesArgs): Promise<TaskResult<"bitbucket_pr_request_changes">> {
-    return this.task("bitbucket_pr_request_changes", { ...args })
-  }
-
-  /** Change a Bitbucket pull request's title, description (Markdown) or destination branch. */
-  bitbucketPrEdit(args: BitbucketPrEditArgs): Promise<TaskResult<"bitbucket_pr_edit">> {
-    return this.task("bitbucket_pr_edit", { ...args })
-  }
-
-  /** Add and remove reviewers of a Bitbucket pull request; other reviewers are kept. */
-  bitbucketPrReviewers(args: BitbucketPrReviewersArgs): Promise<TaskResult<"bitbucket_pr_reviewers">> {
-    return this.task("bitbucket_pr_reviewers", { ...args })
-  }
-
-  /** Stop a running Bitbucket pipeline by build number or UUID (Cloud only). */
-  bitbucketPipelineStop(args: BitbucketPipelineStopArgs): Promise<TaskResult<"bitbucket_pipeline_stop">> {
-    return this.task("bitbucket_pipeline_stop", { ...args })
-  }
-
-  /** One Bitbucket pipeline by build number or UUID, with each step's state and result (Cloud only). */
-  bitbucketPipelineView(args: BitbucketPipelineViewArgs): Promise<TaskResult<"bitbucket_pipeline_view">> {
-    return this.task("bitbucket_pipeline_view", { ...args })
-  }
-
-  /** Log text of one pipeline step (by name or UUID) or of every step (Cloud only). */
-  bitbucketPipelineLogs(args: BitbucketPipelineLogsArgs): Promise<TaskResult<"bitbucket_pipeline_logs">> {
-    return this.task("bitbucket_pipeline_logs", { ...args })
-  }
-
-  /** Jira Service Management service desks (id, project key, name). */
-  jsmDeskList(args: JsmDeskListArgs = {}): Promise<TaskResult<"jsm_desk_list">> {
-    return this.task("jsm_desk_list", { ...args })
-  }
-
-  /** Request types of a service desk. */
-  jsmRequestTypes(args: JsmRequestTypesArgs): Promise<TaskResult<"jsm_request_types">> {
-    return this.task("jsm_request_types", { ...args })
-  }
-
-  /** Queues of a service desk with issue counts. */
-  jsmQueueList(args: JsmQueueListArgs): Promise<TaskResult<"jsm_queue_list">> {
-    return this.task("jsm_queue_list", { ...args })
-  }
-
-  /** Issues in a service desk queue (by queue ID or name). */
-  jsmQueueIssues(args: JsmQueueIssuesArgs): Promise<TaskResult<"jsm_queue_issues">> {
-    return this.task("jsm_queue_issues", { ...args })
-  }
-
-  /** Customer requests by status, optionally of one service desk. */
-  jsmRequestList(args: JsmRequestListArgs = {}): Promise<TaskResult<"jsm_request_list">> {
-    return this.task("jsm_request_list", { ...args })
-  }
-
-  /** One customer request with its description and latest comments. */
-  jsmRequestView(args: JsmRequestViewArgs): Promise<TaskResult<"jsm_request_view">> {
-    return this.task("jsm_request_view", { ...args })
-  }
-
-  /** Raise a customer request, optionally for a customer. */
-  jsmRequestCreate(args: JsmRequestCreateArgs): Promise<TaskResult<"jsm_request_create">> {
-    return this.task("jsm_request_create", { ...args })
-  }
-
-  /** Reply to a customer request, or add an internal note. */
-  jsmRequestComment(args: JsmRequestCommentArgs): Promise<TaskResult<"jsm_request_comment">> {
-    return this.task("jsm_request_comment", { ...args })
-  }
-
-  /** Transitions available on a customer request. */
-  jsmRequestTransitions(args: JsmRequestTransitionsArgs): Promise<TaskResult<"jsm_request_transitions">> {
-    return this.task("jsm_request_transitions", { ...args })
-  }
-
-  /** Run a customer request transition by name or ID. */
-  jsmRequestMove(args: JsmRequestMoveArgs): Promise<TaskResult<"jsm_request_move">> {
-    return this.task("jsm_request_move", { ...args })
-  }
-
-  /** Approvals of a JSM request: name, decision (pending, approved, declined), approvers, and whether you can answer. */
-  jsmRequestApprovals(args: JsmRequestApprovalsArgs): Promise<TaskResult<"jsm_request_approvals">> {
-    return this.task("jsm_request_approvals", { ...args })
-  }
-
-  /** Approve or decline (decision: decline) a JSM request's approval; without an ID, the one pending approval you can answer. */
-  jsmRequestApprove(args: JsmRequestApproveArgs): Promise<TaskResult<"jsm_request_approve">> {
-    return this.task("jsm_request_approve", { ...args })
-  }
-
-  /** List a JSM request's participants, after adding and removing any (me, an email or a name). */
-  jsmRequestParticipants(args: JsmRequestParticipantsArgs): Promise<TaskResult<"jsm_request_participants">> {
-    return this.task("jsm_request_participants", { ...args })
-  }
-
-  /** SLAs of a JSM request: state (ongoing, paused, met, breached), time remaining and goal. */
-  jsmRequestSla(args: JsmRequestSlaArgs): Promise<TaskResult<"jsm_request_sla">> {
-    return this.task("jsm_request_sla", { ...args })
-  }
-
-  /** Attach local files to a JSM request (public unless internal). */
-  jsmRequestAttach(args: JsmRequestAttachArgs): Promise<TaskResult<"jsm_request_attach">> {
-    return this.task("jsm_request_attach", { ...args })
-  }
-
-  /** Attachments of a JSM request with download URLs. */
-  jsmRequestAttachments(args: JsmRequestAttachmentsArgs): Promise<TaskResult<"jsm_request_attachments">> {
-    return this.task("jsm_request_attachments", { ...args })
-  }
-
-  /** Your open Trello boards. */
-  trelloBoardList(args: TrelloBoardListArgs = {}): Promise<TaskResult<"trello_board_list">> {
-    return this.task("trello_board_list", { ...args })
-  }
-
-  /** Open lists of a Trello board (board by name, URL, short link or ID). */
-  trelloListList(args: TrelloListListArgs): Promise<TaskResult<"trello_list_list">> {
-    return this.task("trello_list_list", { ...args })
-  }
-
-  /** Cards of a Trello board or one of its lists, or your cards on every board (`mine`). */
-  trelloCardList(args: TrelloCardListArgs = {}): Promise<TaskResult<"trello_card_list">> {
-    return this.task("trello_card_list", { ...args })
-  }
-
-  /** One Trello card with list, board, description and latest comments. */
-  trelloCardView(args: TrelloCardViewArgs): Promise<TaskResult<"trello_card_view">> {
-    return this.task("trello_card_view", { ...args })
-  }
-
-  /** Create a Trello card in a list (by name with `board`, or by list ID). */
-  trelloCardCreate(args: TrelloCardCreateArgs): Promise<TaskResult<"trello_card_create">> {
-    return this.task("trello_card_create", { ...args })
-  }
-
-  /** Move a Trello card to another list (by default on the card's own board). */
-  trelloCardMove(args: TrelloCardMoveArgs): Promise<TaskResult<"trello_card_move">> {
-    return this.task("trello_card_move", { ...args })
-  }
-
-  /** Add a comment to a Trello card. */
-  trelloCardComment(args: TrelloCardCommentArgs): Promise<TaskResult<"trello_card_comment">> {
-    return this.task("trello_card_comment", { ...args })
-  }
-
-  /** Archive (close) a Trello card. */
-  trelloCardArchive(args: TrelloCardArchiveArgs): Promise<TaskResult<"trello_card_archive">> {
-    return this.task("trello_card_archive", { ...args })
-  }
-
-  /** Change a Trello card: name, description, due date, done, labels (by name or color) and members (username, name or me). */
-  trelloCardEdit(args: TrelloCardEditArgs): Promise<TaskResult<"trello_card_edit">> {
-    return this.task("trello_card_edit", { ...args })
-  }
-
-  /** Checklists of a Trello card with their items and whether each is done. */
-  trelloChecklistList(args: TrelloChecklistListArgs): Promise<TaskResult<"trello_checklist_list">> {
-    return this.task("trello_checklist_list", { ...args })
-  }
-
-  /** Add a checklist with items to a Trello card. */
-  trelloChecklistCreate(args: TrelloChecklistCreateArgs): Promise<TaskResult<"trello_checklist_create">> {
-    return this.task("trello_checklist_create", { ...args })
-  }
-
-  /** Tick (or with done: false, untick) a Trello checklist item by name or ID. */
-  trelloChecklistCheck(args: TrelloChecklistCheckArgs): Promise<TaskResult<"trello_checklist_check">> {
-    return this.task("trello_checklist_check", { ...args })
-  }
-
-  /** Organizations the Atlassian Admin API key can see. */
-  adminOrgList(args: AdminOrgListArgs = {}): Promise<TaskResult<"admin_org_list">> {
-    return this.task("admin_org_list", { ...args })
-  }
-
-  /** User directories of an Atlassian organization. */
-  adminDirectoryList(args: AdminDirectoryListArgs = {}): Promise<TaskResult<"admin_directory_list">> {
-    return this.task("admin_directory_list", { ...args })
-  }
-
-  /** Managed users of an Atlassian organization (every directory), optionally matching `search`. */
-  adminUserList(args: AdminUserListArgs = {}): Promise<TaskResult<"admin_user_list">> {
-    return this.task("admin_user_list", { ...args })
-  }
-
-  /** Suspend a managed user's access to every product (by account ID or email). */
-  adminUserSuspend(args: AdminUserSuspendArgs): Promise<TaskResult<"admin_user_suspend">> {
-    return this.task("admin_user_suspend", { ...args })
-  }
-
-  /** Restore a suspended managed user's access (by account ID or email). */
-  adminUserRestore(args: AdminUserRestoreArgs): Promise<TaskResult<"admin_user_restore">> {
-    return this.task("admin_user_restore", { ...args })
-  }
-
-  /** Add a managed user (email or account ID) to a group (name or ID) of an Atlassian organization. */
-  adminGroupAddMember(args: AdminGroupAddMemberArgs): Promise<TaskResult<"admin_group_add_member">> {
-    return this.task("admin_group_add_member", { ...args })
-  }
-
-  /** Remove a managed user from a group of an Atlassian organization. */
-  adminGroupRemoveMember(args: AdminGroupRemoveMemberArgs): Promise<TaskResult<"admin_group_remove_member">> {
-    return this.task("admin_group_remove_member", { ...args })
-  }
-
-  /** Groups of an Atlassian organization (every directory), optionally matching `search`. */
-  adminGroupList(args: AdminGroupListArgs = {}): Promise<TaskResult<"admin_group_list">> {
-    return this.task("admin_group_list", { ...args })
-  }
-
-  /** Domains of an Atlassian organization with their verification status. */
-  adminDomainList(args: AdminDomainListArgs = {}): Promise<TaskResult<"admin_domain_list">> {
-    return this.task("admin_domain_list", { ...args })
-  }
-
-  /** Audit log events of an Atlassian organization, newest first, filtered by words, dates and action. */
-  adminEventList(args: AdminEventListArgs = {}): Promise<TaskResult<"admin_event_list">> {
-    return this.task("admin_event_list", { ...args })
+  /** Runs any task by name, for example `task("jira_issue_view", { key: "A-1" })`. */
+  abstract task<N extends TaskName>(name: N, args?: TaskArgs[N]): Promise<TaskResults[N]>
+
+  /** Jira and Jira Software: issues, comments, sprints, boards, filters and JQL. */
+  readonly jira = {
+    /** The signed-in Jira user. */
+    me: (args: JiraMeArgs = {}): Promise<User> => this.task("jira_me", args),
+    /** `atl jira board` */
+    board: {
+      /** Jira Software boards, optionally of one project. */
+      list: (args: JiraBoardListArgs = {}): Promise<Board[]> => this.task("jira_board_list", args),
+    },
+    /** `atl jira comment` */
+    comment: {
+      /** Every comment of a Jira issue, oldest first, with IDs, as Markdown. */
+      list: (args: JiraCommentListArgs): Promise<Comment[]> => this.task("jira_comment_list", args),
+      /** Replace the text of a Jira comment (Markdown). */
+      edit: (args: JiraCommentEditArgs): Promise<Comment> => this.task("jira_comment_edit", args),
+      /** Delete a Jira comment. Cannot be undone. */
+      delete: (args: JiraCommentDeleteArgs): Promise<CommentDeleted> => this.task("jira_comment_delete", args),
+    },
+    /** `atl jira component` */
+    component: {
+      /** Components of a Jira project with their leads. */
+      list: (args: JiraComponentListArgs): Promise<Component[]> => this.task("jira_component_list", args),
+    },
+    /** `atl jira epic` */
+    epic: {
+      /** Open epics, optionally of one project. */
+      list: (args: JiraEpicListArgs = {}): Promise<IssueSummary[]> => this.task("jira_epic_list", args),
+      /** Move issues into an epic. */
+      add: (args: JiraEpicAddArgs): Promise<EpicIssues> => this.task("jira_epic_add", args),
+      /** Remove issues from their epic. */
+      remove: (args: JiraEpicRemoveArgs): Promise<EpicIssues> => this.task("jira_epic_remove", args),
+    },
+    /** `atl jira field` */
+    field: {
+      /** Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view. */
+      list: (args: JiraFieldListArgs = {}): Promise<Field[]> => this.task("jira_field_list", args),
+    },
+    /** `atl jira filter` */
+    filter: {
+      /** Saved Jira filters (Cloud: all visible, Data Center: favourites). */
+      list: (args: JiraFilterListArgs = {}): Promise<Filter[]> => this.task("jira_filter_list", args),
+      /** Run a saved Jira filter by ID or exact name; returns issue records. */
+      run: (args: JiraFilterRunArgs): Promise<IssueList> => this.task("jira_filter_run", args),
+    },
+    /** `atl jira issue` */
+    issue: {
+      /** Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues. */
+      list: (args: JiraIssueListArgs = {}): Promise<IssueList> => this.task("jira_issue_list", args),
+      /** Count Jira issues matching the same filters as issue_list. */
+      count: (args: JiraIssueCountArgs = {}): Promise<IssueCount> => this.task("jira_issue_count", args),
+      /** One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name. */
+      view: (args: JiraIssueViewArgs): Promise<IssueDetail> => this.task("jira_issue_view", args),
+      /** Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone. */
+      delete: (args: JiraIssueDeleteArgs): Promise<IssueDeleted> => this.task("jira_issue_delete", args),
+      /** Who watches a Jira issue, and whether you do. */
+      watchers: (args: JiraIssueWatchersArgs): Promise<Watchers> => this.task("jira_issue_watchers", args),
+      /** Add a watcher to a Jira issue (default: you). */
+      watch: (args: JiraIssueWatchArgs): Promise<Watching> => this.task("jira_issue_watch", args),
+      /** Remove a watcher from a Jira issue (default: you). */
+      unwatch: (args: JiraIssueUnwatchArgs): Promise<Watching> => this.task("jira_issue_unwatch", args),
+      /** Create a Jira issue; the description is Markdown. */
+      create: (args: JiraIssueCreateArgs): Promise<Created> => this.task("jira_issue_create", args),
+      /** Change a Jira issue's summary, description (Markdown), priority or labels. */
+      edit: (args: JiraIssueEditArgs): Promise<IssueUpdated> => this.task("jira_issue_edit", args),
+      /** Assign a Jira issue to me, nobody (x), or a user. */
+      assign: (args: JiraIssueAssignArgs): Promise<Assigned> => this.task("jira_issue_assign", args),
+      /** Statuses a Jira issue can move to. */
+      transitions: (args: JiraIssueTransitionsArgs): Promise<Transition[]> => this.task("jira_issue_transitions", args),
+      /** Move a Jira issue to another status (by status or transition name). */
+      move: (args: JiraIssueMoveArgs): Promise<Moved> => this.task("jira_issue_move", args),
+      /** Add a Markdown comment to a Jira issue. */
+      comment: (args: JiraIssueCommentArgs): Promise<Comment> => this.task("jira_issue_comment", args),
+      /** Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2. */
+      link: (args: JiraIssueLinkArgs): Promise<Linked> => this.task("jira_issue_link", args),
+      /** Remove the links between two Jira issues (optionally only one link type). */
+      unlink: (args: JiraIssueUnlinkArgs): Promise<Unlinked> => this.task("jira_issue_unlink", args),
+      /** Add a web link (URL and title) to a Jira issue. */
+      remoteLink: (args: JiraIssueRemoteLinkArgs): Promise<RemoteLink> => this.task("jira_issue_remote_link", args),
+      /** Field changes of a Jira issue, newest first: when, who, field, from, to. */
+      history: (args: JiraIssueHistoryArgs): Promise<Change[]> => this.task("jira_issue_history", args),
+      /** Jira issue link types with their outward and inward phrases. */
+      linkTypes: (args: JiraIssueLinkTypesArgs = {}): Promise<LinkType[]> => this.task("jira_issue_link_types", args),
+      /** Copy a Jira issue (summary, description, type, labels, priority, components, parent). */
+      clone: (args: JiraIssueCloneArgs): Promise<Created> => this.task("jira_issue_clone", args),
+      /** Log time on a Jira issue. */
+      worklog: (args: JiraIssueWorklogArgs): Promise<WorklogAdded> => this.task("jira_issue_worklog", args),
+      /** Upload local files to a Jira issue. */
+      attach: (args: JiraIssueAttachArgs): Promise<Attachment[]> => this.task("jira_issue_attach", args),
+      /** List a Jira issue's attachments. */
+      attachments: (args: JiraIssueAttachmentsArgs): Promise<Attachment[]> => this.task("jira_issue_attachments", args),
+      /** Issue type names of a Jira project (without sub-task types), for the `type` argument of jira_issue_create. */
+      types: (args: JiraIssueTypesArgs): Promise<string[]> => this.task("jira_issue_types", args),
+    },
+    /** `atl jira jql` */
+    jql: {
+      /** Validate JQL with Jira's parser; returns valid, errors, warnings. */
+      check: (args: JiraJqlCheckArgs): Promise<JqlCheck> => this.task("jira_jql_check", args),
+      /** Fields (with operators) and functions usable in JQL on this site. */
+      fields: (args: JiraJqlFieldsArgs = {}): Promise<JqlReference> => this.task("jira_jql_fields", args),
+      /** Value suggestions for a JQL field, for example field=status prefix=In. */
+      suggest: (args: JiraJqlSuggestArgs): Promise<Suggestion[]> => this.task("jira_jql_suggest", args),
+    },
+    /** `atl jira project` */
+    project: {
+      /** Jira projects. */
+      list: (args: JiraProjectListArgs = {}): Promise<Project[]> => this.task("jira_project_list", args),
+    },
+    /** `atl jira release` */
+    release: {
+      /** Versions (releases) of a Jira project: name, released, archived, release date. */
+      list: (args: JiraReleaseListArgs): Promise<Release[]> => this.task("jira_release_list", args),
+    },
+    /** `atl jira sprint` */
+    sprint: {
+      /** Create a future sprint on a board (default: the project's first board). */
+      create: (args: JiraSprintCreateArgs): Promise<Sprint> => this.task("jira_sprint_create", args),
+      /** Start a future sprint; Jira needs a start and an end date. */
+      start: (args: JiraSprintStartArgs): Promise<Sprint> => this.task("jira_sprint_start", args),
+      /** Complete an active sprint. */
+      close: (args: JiraSprintCloseArgs): Promise<Sprint> => this.task("jira_sprint_close", args),
+      /** Sprints of a board. */
+      list: (args: JiraSprintListArgs = {}): Promise<BoardSprints> => this.task("jira_sprint_list", args),
+      /** Move issues into a sprint. */
+      add: (args: JiraSprintAddArgs): Promise<SprintIssues> => this.task("jira_sprint_add", args),
+    },
+    /** `atl jira worklog` */
+    worklog: {
+      /** Time logged on a Jira issue: author, time spent, start, comment. */
+      list: (args: JiraWorklogListArgs): Promise<Worklog[]> => this.task("jira_worklog_list", args),
+    },
+  }
+
+  /** Confluence pages, blogs, spaces, comments, labels and attachments. */
+  readonly confluence = {
+    /** Search Confluence by words or CQL; returns id, type, title, space, excerpt, url. */
+    search: (args: ConfluenceSearchArgs = {}): Promise<SearchResults> => this.task("confluence_search", args),
+    /** `atl confluence attachment` */
+    attachment: {
+      /** Delete a Confluence attachment by ID. */
+      delete: (args: ConfluenceAttachmentDeleteArgs): Promise<Deleted> => this.task("confluence_attachment_delete", args),
+    },
+    /** `atl confluence blog` */
+    blog: {
+      /** Blog posts of a Confluence space, newest first. */
+      list: (args: ConfluenceBlogListArgs): Promise<PageSummary[]> => this.task("confluence_blog_list", args),
+      /** One Confluence blog post with its body as Markdown. */
+      get: (args: ConfluenceBlogGetArgs): Promise<Page> => this.task("confluence_blog_get", args),
+      /** Publish a Confluence blog post from Markdown. */
+      create: (args: ConfluenceBlogCreateArgs): Promise<PageSummary> => this.task("confluence_blog_create", args),
+    },
+    /** `atl confluence comment` */
+    comment: {
+      /** Delete a Confluence comment by ID. */
+      delete: (args: ConfluenceCommentDeleteArgs): Promise<Deleted> => this.task("confluence_comment_delete", args),
+    },
+    /** `atl confluence page` */
+    page: {
+      /** A Confluence page as Markdown (with title, space, version, url). */
+      get: (args: ConfluencePageGetArgs): Promise<PageView> => this.task("confluence_page_get", args),
+      /** Create a Confluence page from Markdown (or storage format). */
+      create: (args: ConfluencePageCreateArgs): Promise<PageSummary> => this.task("confluence_page_create", args),
+      /** Replace a Confluence page's title and/or body; the version is bumped automatically. */
+      update: (args: ConfluencePageUpdateArgs): Promise<PageSummary> => this.task("confluence_page_update", args),
+      /** Delete a Confluence page. */
+      delete: (args: ConfluencePageDeleteArgs): Promise<Deleted> => this.task("confluence_page_delete", args),
+      /** Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent. */
+      children: (args: ConfluencePageChildrenArgs): Promise<TreeNode[]> => this.task("confluence_page_children", args),
+      /** Confluence pages whose title contains the words, optionally in one space. */
+      find: (args: ConfluencePageFindArgs): Promise<SearchHit[]> => this.task("confluence_page_find", args),
+      /** Upload local files to a Confluence page. */
+      attach: (args: ConfluencePageAttachArgs): Promise<PageAttachment[]> => this.task("confluence_page_attach", args),
+      /** Attachments of a Confluence page with download URLs. */
+      attachments: (args: ConfluencePageAttachmentsArgs): Promise<PageAttachment[]> => this.task("confluence_page_attachments", args),
+      /** Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`. */
+      comments: (args: ConfluencePageCommentsArgs): Promise<PageComment[]> => this.task("confluence_page_comments", args),
+      /** Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`. */
+      comment: (args: ConfluencePageCommentArgs): Promise<PageComment> => this.task("confluence_page_comment", args),
+      /** Export a Confluence page (and with `recursive` its tree) to local Markdown folders: <title>/index.md with front matter and _attachments/. Changes nothing on the server. */
+      export: (args: ConfluencePageExportArgs): Promise<Exported[]> => this.task("confluence_page_export", args),
+      /** Publish local Markdown files: update the page in each file's front matter (refusing pages changed on the server unless `force`, skipping unchanged ones), create pages for new files under their folder's index.md, upload referenced images, and write ids and versions back. */
+      push: (args: ConfluencePagePushArgs): Promise<Pushed[]> => this.task("confluence_page_push", args),
+      /** Copy a Confluence page and the pages below it under another page (titles, bodies, labels). */
+      copyTree: (args: ConfluencePageCopyTreeArgs): Promise<Copied[]> => this.task("confluence_page_copy_tree", args),
+      /** Labels of a Confluence page. */
+      labels: (args: ConfluencePageLabelsArgs): Promise<string[]> => this.task("confluence_page_labels", args),
+      /** Add and remove labels on a Confluence page; returns the resulting labels. */
+      label: (args: ConfluencePageLabelArgs): Promise<string[]> => this.task("confluence_page_label", args),
+      /** Move a Confluence page under another page (position append) or next to it (before/after, Cloud only). */
+      move: (args: ConfluencePageMoveArgs): Promise<PageSummary> => this.task("confluence_page_move", args),
+      /** Versions of a Confluence page, newest first: number, author, date, message. Read one with confluence_page_get and `version`. */
+      history: (args: ConfluencePageHistoryArgs): Promise<PageVersion[]> => this.task("confluence_page_history", args),
+    },
+    /** `atl confluence space` */
+    space: {
+      /** Create a Confluence space with a key, a name and an optional plain-text description. */
+      create: (args: ConfluenceSpaceCreateArgs): Promise<Space> => this.task("confluence_space_create", args),
+      /** Confluence spaces. */
+      list: (args: ConfluenceSpaceListArgs = {}): Promise<Space[]> => this.task("confluence_space_list", args),
+      /** Top-level pages of a Confluence space. */
+      pages: (args: ConfluenceSpacePagesArgs): Promise<PageSummary[]> => this.task("confluence_space_pages", args),
+    },
+  }
+
+  /** Bitbucket repositories, branches, pull requests and pipelines. */
+  readonly bitbucket = {
+    /** `atl bitbucket branch` */
+    branch: {
+      /** Branches of a Bitbucket repository, most recently changed first. */
+      list: (args: BitbucketBranchListArgs): Promise<Branch[]> => this.task("bitbucket_branch_list", args),
+      /** Create a branch from another branch, a tag or a commit (default: the main branch). */
+      create: (args: BitbucketBranchCreateArgs): Promise<Branch> => this.task("bitbucket_branch_create", args),
+      /** Delete a branch. Unmerged commits on it can be lost. */
+      delete: (args: BitbucketBranchDeleteArgs): Promise<BranchDeleted> => this.task("bitbucket_branch_delete", args),
+    },
+    /** `atl bitbucket commit` */
+    commit: {
+      /** Recent commits of a branch, newest first: hash, author, date, first line of the message. */
+      list: (args: BitbucketCommitListArgs): Promise<Commit[]> => this.task("bitbucket_commit_list", args),
+    },
+    /** `atl bitbucket pipeline` */
+    pipeline: {
+      /** Latest Bitbucket Pipelines runs, newest first (Cloud only). */
+      list: (args: BitbucketPipelineListArgs): Promise<Pipeline[]> => this.task("bitbucket_pipeline_list", args),
+      /** Start the pipeline of a branch, or a custom pipeline (Cloud only). */
+      run: (args: BitbucketPipelineRunArgs): Promise<Pipeline> => this.task("bitbucket_pipeline_run", args),
+      /** Stop a running Bitbucket pipeline by build number or UUID (Cloud only). */
+      stop: (args: BitbucketPipelineStopArgs): Promise<Pipeline> => this.task("bitbucket_pipeline_stop", args),
+      /** One Bitbucket pipeline by build number or UUID, with each step's state and result (Cloud only). */
+      view: (args: BitbucketPipelineViewArgs): Promise<PipelineDetail> => this.task("bitbucket_pipeline_view", args),
+      /** Log text of one pipeline step (by name or UUID) or of every step (Cloud only). */
+      logs: (args: BitbucketPipelineLogsArgs): Promise<PipelineLog> => this.task("bitbucket_pipeline_logs", args),
+    },
+    /** `atl bitbucket pr` */
+    pr: {
+      /** Pull requests of a Bitbucket repository by state. */
+      list: (args: BitbucketPrListArgs): Promise<PullRequest[]> => this.task("bitbucket_pr_list", args),
+      /** One pull request with description, reviewers and approvals. */
+      view: (args: BitbucketPrViewArgs): Promise<PullRequest> => this.task("bitbucket_pr_view", args),
+      /** Open a pull request from a source branch. */
+      create: (args: BitbucketPrCreateArgs): Promise<PullRequest> => this.task("bitbucket_pr_create", args),
+      /** Merge a pull request. */
+      merge: (args: BitbucketPrMergeArgs): Promise<PullRequest> => this.task("bitbucket_pr_merge", args),
+      /** Approve a pull request as the signed-in user. */
+      approve: (args: BitbucketPrApproveArgs): Promise<PrApproval> => this.task("bitbucket_pr_approve", args),
+      /** Add a Markdown comment to a pull request. */
+      comment: (args: BitbucketPrCommentArgs): Promise<PrCommented> => this.task("bitbucket_pr_comment", args),
+      /** The unified diff of a pull request. */
+      diff: (args: BitbucketPrDiffArgs): Promise<PrDiff> => this.task("bitbucket_pr_diff", args),
+      /** Comments of a pull request, oldest first, as Markdown: general and inline (path, line), replies flattened with `parent`. */
+      comments: (args: BitbucketPrCommentsArgs): Promise<PrComment[]> => this.task("bitbucket_pr_comments", args),
+      /** Build statuses of a pull request's latest commit, with `passed` (none failed) and `pending` (some still running). */
+      checks: (args: BitbucketPrChecksArgs): Promise<PrChecks> => this.task("bitbucket_pr_checks", args),
+      /** Remove your approval from a pull request. */
+      unapprove: (args: BitbucketPrUnapproveArgs): Promise<PrApproval> => this.task("bitbucket_pr_unapprove", args),
+      /** Mark a draft pull request as ready for review (or, with `draft: true`, as a draft again). */
+      ready: (args: BitbucketPrReadyArgs): Promise<PullRequest> => this.task("bitbucket_pr_ready", args),
+      /** Decline a Bitbucket pull request (Cloud cannot reopen it). */
+      decline: (args: BitbucketPrDeclineArgs): Promise<PullRequest> => this.task("bitbucket_pr_decline", args),
+      /** Mark a Bitbucket pull request as needing changes by you (Cloud: request changes; Data Center: needs work). */
+      requestChanges: (args: BitbucketPrRequestChangesArgs): Promise<ChangesRequested> => this.task("bitbucket_pr_request_changes", args),
+      /** Change a Bitbucket pull request's title, description (Markdown) or destination branch. */
+      edit: (args: BitbucketPrEditArgs): Promise<PullRequest> => this.task("bitbucket_pr_edit", args),
+      /** Add and remove reviewers of a Bitbucket pull request; other reviewers are kept. */
+      reviewers: (args: BitbucketPrReviewersArgs): Promise<PullRequest> => this.task("bitbucket_pr_reviewers", args),
+    },
+    /** `atl bitbucket repo` */
+    repo: {
+      /** Bitbucket repositories of a workspace (Cloud) or project (Data Center), or the ones you belong to. */
+      list: (args: BitbucketRepoListArgs = {}): Promise<Repo[]> => this.task("bitbucket_repo_list", args),
+      /** One Bitbucket repository with its default branch and URL. */
+      view: (args: BitbucketRepoViewArgs): Promise<Repo> => this.task("bitbucket_repo_view", args),
+    },
+  }
+
+  /** Jira Service Management desks, queues, requests and approvals. */
+  readonly jsm = {
+    /** `atl jsm desk` */
+    desk: {
+      /** Jira Service Management service desks (id, project key, name). */
+      list: (args: JsmDeskListArgs = {}): Promise<Desk[]> => this.task("jsm_desk_list", args),
+    },
+    /** `atl jsm queue` */
+    queue: {
+      /** Queues of a service desk with issue counts. */
+      list: (args: JsmQueueListArgs): Promise<Queue[]> => this.task("jsm_queue_list", args),
+      /** Issues in a service desk queue (by queue ID or name). */
+      issues: (args: JsmQueueIssuesArgs): Promise<IssueSummary[]> => this.task("jsm_queue_issues", args),
+    },
+    /** `atl jsm request` */
+    request: {
+      /** Request types of a service desk. */
+      types: (args: JsmRequestTypesArgs): Promise<RequestType[]> => this.task("jsm_request_types", args),
+      /** Customer requests by status, optionally of one service desk. */
+      list: (args: JsmRequestListArgs = {}): Promise<Request[]> => this.task("jsm_request_list", args),
+      /** One customer request with its description and latest comments. */
+      view: (args: JsmRequestViewArgs): Promise<RequestDetail> => this.task("jsm_request_view", args),
+      /** Raise a customer request, optionally for a customer. */
+      create: (args: JsmRequestCreateArgs): Promise<Request> => this.task("jsm_request_create", args),
+      /** Reply to a customer request, or add an internal note. */
+      comment: (args: JsmRequestCommentArgs): Promise<RequestComment> => this.task("jsm_request_comment", args),
+      /** Transitions available on a customer request. */
+      transitions: (args: JsmRequestTransitionsArgs): Promise<RequestTransition[]> => this.task("jsm_request_transitions", args),
+      /** Run a customer request transition by name or ID. */
+      move: (args: JsmRequestMoveArgs): Promise<RequestMoved> => this.task("jsm_request_move", args),
+      /** Approvals of a JSM request: name, decision (pending, approved, declined), approvers, and whether you can answer. */
+      approvals: (args: JsmRequestApprovalsArgs): Promise<Approval[]> => this.task("jsm_request_approvals", args),
+      /** Approve or decline (decision: decline) a JSM request's approval; without an ID, the one pending approval you can answer. */
+      approve: (args: JsmRequestApproveArgs): Promise<Approval> => this.task("jsm_request_approve", args),
+      /** List a JSM request's participants, after adding and removing any (me, an email or a name). */
+      participants: (args: JsmRequestParticipantsArgs): Promise<Participants> => this.task("jsm_request_participants", args),
+      /** SLAs of a JSM request: state (ongoing, paused, met, breached), time remaining and goal. */
+      sla: (args: JsmRequestSlaArgs): Promise<Sla[]> => this.task("jsm_request_sla", args),
+      /** Attach local files to a JSM request (public unless internal). */
+      attach: (args: JsmRequestAttachArgs): Promise<RequestAttachment[]> => this.task("jsm_request_attach", args),
+      /** Attachments of a JSM request with download URLs. */
+      attachments: (args: JsmRequestAttachmentsArgs): Promise<RequestAttachment[]> => this.task("jsm_request_attachments", args),
+    },
+  }
+
+  /** Trello boards, lists, cards and checklists. */
+  readonly trello = {
+    /** `atl trello board` */
+    board: {
+      /** Your open Trello boards. */
+      list: (args: TrelloBoardListArgs = {}): Promise<TrelloBoard[]> => this.task("trello_board_list", args),
+    },
+    /** `atl trello card` */
+    card: {
+      /** Cards of a Trello board or one of its lists, or your cards on every board (`mine`). */
+      list: (args: TrelloCardListArgs = {}): Promise<Card[]> => this.task("trello_card_list", args),
+      /** One Trello card with list, board, description and latest comments. */
+      view: (args: TrelloCardViewArgs): Promise<CardDetail> => this.task("trello_card_view", args),
+      /** Create a Trello card in a list (by name with `board`, or by list ID). */
+      create: (args: TrelloCardCreateArgs): Promise<Card> => this.task("trello_card_create", args),
+      /** Move a Trello card to another list (by default on the card's own board). */
+      move: (args: TrelloCardMoveArgs): Promise<Card> => this.task("trello_card_move", args),
+      /** Add a comment to a Trello card. */
+      comment: (args: TrelloCardCommentArgs): Promise<CardComment> => this.task("trello_card_comment", args),
+      /** Archive (close) a Trello card. */
+      archive: (args: TrelloCardArchiveArgs): Promise<Card> => this.task("trello_card_archive", args),
+      /** Change a Trello card: name, description, due date, done, labels (by name or color) and members (username, name or me). */
+      edit: (args: TrelloCardEditArgs): Promise<Card> => this.task("trello_card_edit", args),
+    },
+    /** `atl trello checklist` */
+    checklist: {
+      /** Checklists of a Trello card with their items and whether each is done. */
+      list: (args: TrelloChecklistListArgs): Promise<Checklist[]> => this.task("trello_checklist_list", args),
+      /** Add a checklist with items to a Trello card. */
+      create: (args: TrelloChecklistCreateArgs): Promise<Checklist> => this.task("trello_checklist_create", args),
+      /** Tick (or with done: false, untick) a Trello checklist item by name or ID. */
+      check: (args: TrelloChecklistCheckArgs): Promise<CheckItem> => this.task("trello_checklist_check", args),
+    },
+    /** `atl trello list` */
+    list: {
+      /** Open lists of a Trello board (board by name, URL, short link or ID). */
+      list: (args: TrelloListListArgs): Promise<TrelloList[]> => this.task("trello_list_list", args),
+    },
+  }
+
+  /** Atlassian Admin organizations, users, groups and audit events. */
+  readonly admin = {
+    /** `atl admin directory` */
+    directory: {
+      /** User directories of an Atlassian organization. */
+      list: (args: AdminDirectoryListArgs = {}): Promise<Directory[]> => this.task("admin_directory_list", args),
+    },
+    /** `atl admin domain` */
+    domain: {
+      /** Domains of an Atlassian organization with their verification status. */
+      list: (args: AdminDomainListArgs = {}): Promise<Domain[]> => this.task("admin_domain_list", args),
+    },
+    /** `atl admin event` */
+    event: {
+      /** Audit log events of an Atlassian organization, newest first, filtered by words, dates and action. */
+      list: (args: AdminEventListArgs = {}): Promise<Event[]> => this.task("admin_event_list", args),
+    },
+    /** `atl admin group` */
+    group: {
+      /** Add a managed user (email or account ID) to a group (name or ID) of an Atlassian organization. */
+      addMember: (args: AdminGroupAddMemberArgs): Promise<Membership> => this.task("admin_group_add_member", args),
+      /** Remove a managed user from a group of an Atlassian organization. */
+      removeMember: (args: AdminGroupRemoveMemberArgs): Promise<Membership> => this.task("admin_group_remove_member", args),
+      /** Groups of an Atlassian organization (every directory), optionally matching `search`. */
+      list: (args: AdminGroupListArgs = {}): Promise<Group[]> => this.task("admin_group_list", args),
+    },
+    /** `atl admin org` */
+    org: {
+      /** Organizations the Atlassian Admin API key can see. */
+      list: (args: AdminOrgListArgs = {}): Promise<Org[]> => this.task("admin_org_list", args),
+    },
+    /** `atl admin user` */
+    user: {
+      /** Managed users of an Atlassian organization (every directory), optionally matching `search`. */
+      list: (args: AdminUserListArgs = {}): Promise<AdminUser[]> => this.task("admin_user_list", args),
+      /** Suspend a managed user's access to every product (by account ID or email). */
+      suspend: (args: AdminUserSuspendArgs): Promise<AdminUser> => this.task("admin_user_suspend", args),
+      /** Restore a suspended managed user's access (by account ID or email). */
+      restore: (args: AdminUserRestoreArgs): Promise<AdminUser> => this.task("admin_user_restore", args),
+    },
   }
 }

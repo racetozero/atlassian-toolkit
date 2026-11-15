@@ -1,4 +1,4 @@
-"""Generated from the task registry (crates/atl-sdk/src/tasks.rs) by
+"""Generated from the task registry (crates/atl-sdk/src/tasks/) by
 crates/atl-sdk/tests/sdk_types.rs. Do not edit; run
 `ATL_UPDATE_SDK_TYPES=1 cargo test -p atlassian-toolkit --test sdk_types`.
 """
@@ -7,9 +7,14 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from enum import StrEnum
-from typing import Any, NotRequired, Required, TypedDict, Unpack
+from typing import Any, NotRequired, Protocol, Required, TypedDict, Unpack
 
-__all__ = ["AdminDirectoryListArgs", "AdminDomainListArgs", "AdminEventListArgs", "AdminGroupAddMemberArgs", "AdminGroupListArgs", "AdminGroupRemoveMemberArgs", "AdminOrgListArgs", "AdminUserListArgs", "AdminUserRestoreArgs", "AdminUserSuspendArgs", "BitbucketBranchCreateArgs", "BitbucketBranchDeleteArgs", "BitbucketBranchListArgs", "BitbucketCommitListArgs", "BitbucketPipelineListArgs", "BitbucketPipelineLogsArgs", "BitbucketPipelineRunArgs", "BitbucketPipelineStopArgs", "BitbucketPipelineViewArgs", "BitbucketPrApproveArgs", "BitbucketPrChecksArgs", "BitbucketPrCommentArgs", "BitbucketPrCommentsArgs", "BitbucketPrCreateArgs", "BitbucketPrDeclineArgs", "BitbucketPrDiffArgs", "BitbucketPrEditArgs", "BitbucketPrListArgs", "BitbucketPrMergeArgs", "BitbucketPrReadyArgs", "BitbucketPrRequestChangesArgs", "BitbucketPrReviewersArgs", "BitbucketPrUnapproveArgs", "BitbucketPrViewArgs", "BitbucketRepoListArgs", "BitbucketRepoViewArgs", "ConfluenceAttachmentDeleteArgs", "ConfluenceBlogCreateArgs", "ConfluenceBlogGetArgs", "ConfluenceBlogListArgs", "ConfluenceCommentDeleteArgs", "ConfluencePageAttachArgs", "ConfluencePageAttachmentsArgs", "ConfluencePageChildrenArgs", "ConfluencePageCommentArgs", "ConfluencePageCommentsArgs", "ConfluencePageCopyTreeArgs", "ConfluencePageCreateArgs", "ConfluencePageDeleteArgs", "ConfluencePageExportArgs", "ConfluencePageFindArgs", "ConfluencePageGetArgs", "ConfluencePageHistoryArgs", "ConfluencePageLabelArgs", "ConfluencePageLabelsArgs", "ConfluencePageMoveArgs", "ConfluencePagePushArgs", "ConfluencePageUpdateArgs", "ConfluenceSearchArgs", "ConfluenceSpaceCreateArgs", "ConfluenceSpaceListArgs", "ConfluenceSpacePagesArgs", "ErrorCode", "GeneratedTasks", "JiraBoardListArgs", "JiraCommentDeleteArgs", "JiraCommentEditArgs", "JiraCommentListArgs", "JiraComponentListArgs", "JiraEpicAddArgs", "JiraEpicListArgs", "JiraEpicRemoveArgs", "JiraFieldListArgs", "JiraFilterListArgs", "JiraFilterRunArgs", "JiraIssueAssignArgs", "JiraIssueAttachArgs", "JiraIssueAttachmentsArgs", "JiraIssueCloneArgs", "JiraIssueCommentArgs", "JiraIssueCountArgs", "JiraIssueCreateArgs", "JiraIssueDeleteArgs", "JiraIssueEditArgs", "JiraIssueHistoryArgs", "JiraIssueLinkArgs", "JiraIssueLinkTypesArgs", "JiraIssueListArgs", "JiraIssueMoveArgs", "JiraIssueRemoteLinkArgs", "JiraIssueTransitionsArgs", "JiraIssueTypesArgs", "JiraIssueUnlinkArgs", "JiraIssueUnwatchArgs", "JiraIssueViewArgs", "JiraIssueWatchArgs", "JiraIssueWatchersArgs", "JiraIssueWorklogArgs", "JiraJqlCheckArgs", "JiraJqlFieldsArgs", "JiraJqlSuggestArgs", "JiraMeArgs", "JiraProjectListArgs", "JiraReleaseListArgs", "JiraSprintAddArgs", "JiraSprintCloseArgs", "JiraSprintCreateArgs", "JiraSprintListArgs", "JiraSprintStartArgs", "JiraWorklogListArgs", "JsmDeskListArgs", "JsmQueueIssuesArgs", "JsmQueueListArgs", "JsmRequestApprovalsArgs", "JsmRequestApproveArgs", "JsmRequestAttachArgs", "JsmRequestAttachmentsArgs", "JsmRequestCommentArgs", "JsmRequestCreateArgs", "JsmRequestListArgs", "JsmRequestMoveArgs", "JsmRequestParticipantsArgs", "JsmRequestSlaArgs", "JsmRequestTransitionsArgs", "JsmRequestTypesArgs", "JsmRequestViewArgs", "TaskName", "TrelloBoardListArgs", "TrelloCardArchiveArgs", "TrelloCardCommentArgs", "TrelloCardCreateArgs", "TrelloCardEditArgs", "TrelloCardListArgs", "TrelloCardMoveArgs", "TrelloCardViewArgs", "TrelloChecklistCheckArgs", "TrelloChecklistCreateArgs", "TrelloChecklistListArgs", "TrelloListListArgs"]
+import pydantic
+
+__all__ = ["AdminApi", "AdminDirectoryApi", "AdminDirectoryListArgs", "AdminDomainApi", "AdminDomainListArgs", "AdminEventApi", "AdminEventListArgs", "AdminGroupAddMemberArgs", "AdminGroupApi", "AdminGroupListArgs", "AdminGroupRemoveMemberArgs", "AdminOrgApi", "AdminOrgListArgs", "AdminUser", "AdminUserApi", "AdminUserListArgs", "AdminUserRestoreArgs", "AdminUserSuspendArgs", "Approval", "Assigned", "AsyncAdminApi", "AsyncAdminDirectoryApi", "AsyncAdminDomainApi", "AsyncAdminEventApi", "AsyncAdminGroupApi", "AsyncAdminOrgApi", "AsyncAdminUserApi", "AsyncBitbucketApi", "AsyncBitbucketBranchApi", "AsyncBitbucketCommitApi", "AsyncBitbucketPipelineApi", "AsyncBitbucketPrApi", "AsyncBitbucketRepoApi", "AsyncConfluenceApi", "AsyncConfluenceAttachmentApi", "AsyncConfluenceBlogApi", "AsyncConfluenceCommentApi", "AsyncConfluencePageApi", "AsyncConfluenceSpaceApi", "AsyncJiraApi", "AsyncJiraBoardApi", "AsyncJiraCommentApi", "AsyncJiraComponentApi", "AsyncJiraEpicApi", "AsyncJiraFieldApi", "AsyncJiraFilterApi", "AsyncJiraIssueApi", "AsyncJiraJqlApi", "AsyncJiraProjectApi", "AsyncJiraReleaseApi", "AsyncJiraSprintApi", "AsyncJiraWorklogApi", "AsyncJsmApi", "AsyncJsmDeskApi", "AsyncJsmQueueApi", "AsyncJsmRequestApi", "AsyncTrelloApi", "AsyncTrelloBoardApi", "AsyncTrelloCardApi", "AsyncTrelloChecklistApi", "AsyncTrelloListApi", "Attachment", "BitbucketApi", "BitbucketBranchApi", "BitbucketBranchCreateArgs", "BitbucketBranchDeleteArgs", "BitbucketBranchListArgs", "BitbucketCommitApi", "BitbucketCommitListArgs", "BitbucketPipelineApi", "BitbucketPipelineListArgs", "BitbucketPipelineLogsArgs", "BitbucketPipelineRunArgs", "BitbucketPipelineStopArgs", "BitbucketPipelineViewArgs", "BitbucketPrApi", "BitbucketPrApproveArgs", "BitbucketPrChecksArgs", "BitbucketPrCommentArgs", "BitbucketPrCommentsArgs", "BitbucketPrCreateArgs", "BitbucketPrDeclineArgs", "BitbucketPrDiffArgs", "BitbucketPrEditArgs", "BitbucketPrListArgs", "BitbucketPrMergeArgs", "BitbucketPrReadyArgs", "BitbucketPrRequestChangesArgs", "BitbucketPrReviewersArgs", "BitbucketPrUnapproveArgs", "BitbucketPrViewArgs", "BitbucketRepoApi", "BitbucketRepoListArgs", "BitbucketRepoViewArgs", "Board", "BoardSprints", "Branch", "BranchDeleted", "BuildStatus", "Card", "CardComment", "CardDetail", "Change", "ChangesRequested", "CheckItem", "Checklist", "Comment", "CommentDeleted", "Commit", "Component", "ConfluenceApi", "ConfluenceAttachmentApi", "ConfluenceAttachmentDeleteArgs", "ConfluenceBlogApi", "ConfluenceBlogCreateArgs", "ConfluenceBlogGetArgs", "ConfluenceBlogListArgs", "ConfluenceCommentApi", "ConfluenceCommentDeleteArgs", "ConfluencePageApi", "ConfluencePageAttachArgs", "ConfluencePageAttachmentsArgs", "ConfluencePageChildrenArgs", "ConfluencePageCommentArgs", "ConfluencePageCommentsArgs", "ConfluencePageCopyTreeArgs", "ConfluencePageCreateArgs", "ConfluencePageDeleteArgs", "ConfluencePageExportArgs", "ConfluencePageFindArgs", "ConfluencePageGetArgs", "ConfluencePageHistoryArgs", "ConfluencePageLabelArgs", "ConfluencePageLabelsArgs", "ConfluencePageMoveArgs", "ConfluencePagePushArgs", "ConfluencePageUpdateArgs", "ConfluenceSearchArgs", "ConfluenceSpaceApi", "ConfluenceSpaceCreateArgs", "ConfluenceSpaceListArgs", "ConfluenceSpacePagesArgs", "Copied", "Created", "Deleted", "Desk", "Directory", "Domain", "EpicIssues", "ErrorCode", "Event", "Exported", "Field", "Filter", "Group", "IssueCount", "IssueDeleted", "IssueDetail", "IssueLink", "IssueList", "IssueSummary", "IssueUpdated", "JiraApi", "JiraBoardApi", "JiraBoardListArgs", "JiraCommentApi", "JiraCommentDeleteArgs", "JiraCommentEditArgs", "JiraCommentListArgs", "JiraComponentApi", "JiraComponentListArgs", "JiraEpicAddArgs", "JiraEpicApi", "JiraEpicListArgs", "JiraEpicRemoveArgs", "JiraFieldApi", "JiraFieldListArgs", "JiraFilterApi", "JiraFilterListArgs", "JiraFilterRunArgs", "JiraIssueApi", "JiraIssueAssignArgs", "JiraIssueAttachArgs", "JiraIssueAttachmentsArgs", "JiraIssueCloneArgs", "JiraIssueCommentArgs", "JiraIssueCountArgs", "JiraIssueCreateArgs", "JiraIssueDeleteArgs", "JiraIssueEditArgs", "JiraIssueHistoryArgs", "JiraIssueLinkArgs", "JiraIssueLinkTypesArgs", "JiraIssueListArgs", "JiraIssueMoveArgs", "JiraIssueRemoteLinkArgs", "JiraIssueTransitionsArgs", "JiraIssueTypesArgs", "JiraIssueUnlinkArgs", "JiraIssueUnwatchArgs", "JiraIssueViewArgs", "JiraIssueWatchArgs", "JiraIssueWatchersArgs", "JiraIssueWorklogArgs", "JiraJqlApi", "JiraJqlCheckArgs", "JiraJqlFieldsArgs", "JiraJqlSuggestArgs", "JiraMeArgs", "JiraProjectApi", "JiraProjectListArgs", "JiraReleaseApi", "JiraReleaseListArgs", "JiraSprintAddArgs", "JiraSprintApi", "JiraSprintCloseArgs", "JiraSprintCreateArgs", "JiraSprintListArgs", "JiraSprintStartArgs", "JiraWorklogApi", "JiraWorklogListArgs", "JqlCheck", "JqlField", "JqlReference", "JsmApi", "JsmDeskApi", "JsmDeskListArgs", "JsmQueueApi", "JsmQueueIssuesArgs", "JsmQueueListArgs", "JsmRequestApi", "JsmRequestApprovalsArgs", "JsmRequestApproveArgs", "JsmRequestAttachArgs", "JsmRequestAttachmentsArgs", "JsmRequestCommentArgs", "JsmRequestCreateArgs", "JsmRequestListArgs", "JsmRequestMoveArgs", "JsmRequestParticipantsArgs", "JsmRequestSlaArgs", "JsmRequestTransitionsArgs", "JsmRequestTypesArgs", "JsmRequestViewArgs", "LinkType", "Linked", "Membership", "Moved", "Org", "Page", "PageAttachment", "PageComment", "PageSummary", "PageVersion", "PageView", "Participants", "Pipeline", "PipelineDetail", "PipelineLog", "PipelineStep", "PrApproval", "PrChecks", "PrComment", "PrCommented", "PrDiff", "Project", "PullRequest", "Pushed", "Queue", "Release", "RemoteLink", "Repo", "Request", "RequestAttachment", "RequestComment", "RequestDetail", "RequestMoved", "RequestTransition", "RequestType", "SearchHit", "SearchResults", "Sla", "Space", "Sprint", "SprintIssues", "Suggestion", "TaskName", "Transition", "TreeNode", "TrelloApi", "TrelloBoard", "TrelloBoardApi", "TrelloBoardListArgs", "TrelloCardApi", "TrelloCardArchiveArgs", "TrelloCardCommentArgs", "TrelloCardCreateArgs", "TrelloCardEditArgs", "TrelloCardListArgs", "TrelloCardMoveArgs", "TrelloCardViewArgs", "TrelloChecklistApi", "TrelloChecklistCheckArgs", "TrelloChecklistCreateArgs", "TrelloChecklistListArgs", "TrelloList", "TrelloListApi", "TrelloListListArgs", "Unlinked", "User", "Watchers", "Watching", "Worklog", "WorklogAdded"]
+
+# Methods and fields can be named `list`, so annotations use this alias.
+_list = list
 
 
 class ErrorCode(StrEnum):
@@ -23,6 +28,7 @@ class ErrorCode(StrEnum):
     DRY_RUN = "dry_run"
     INPUT_REQUIRED = "input_required"
     INTERNAL = "internal"
+
 
 class TaskName(StrEnum):
     """Every task name."""
@@ -1659,552 +1665,2668 @@ AdminEventListArgs = TypedDict(
 AdminEventListArgs.__doc__ = """Arguments of ``admin_event_list``: Audit log events of an Atlassian organization, newest first, filtered by words, dates and action."""
 
 
-class GeneratedTasks:
-    """One typed method per task; the client supplies ``task()``."""
+class _Model(pydantic.BaseModel):
+    """A task result. Unknown fields are kept, so a newer server never breaks parsing."""
 
-    def task(self, name: str, args: Mapping[str, Any] | None = None, **kwargs: Any) -> Any:
+    model_config = pydantic.ConfigDict(
+        extra="allow", defer_build=True, validate_by_name=True, serialize_by_alias=True
+    )
+
+
+class AdminUser(_Model):
+    account_id: str
+    name: str | None = None
+    email: str | None = None
+    status: str | None = None
+    """Account status, for example active or suspended."""
+    membership: str | None = None
+    directory: str
+
+
+class Approval(_Model):
+    id: str
+    name: str
+    decision: str
+    """pending, approved or declined."""
+    can_answer: bool
+    """True when you are an approver who has not answered yet."""
+    approvers: _list[str]
+
+
+class Assigned(_Model):
+    key: str
+    assignee: str
+
+
+class Attachment(_Model):
+    id: str
+    filename: str
+    size: int
+    mime_type: str | None = None
+    created: str | None = None
+    author: str | None = None
+    content: str
+    """Download URL on the Jira server."""
+
+
+class Board(_Model):
+    id: int
+    name: str
+    type: str | None = None
+
+
+class BoardSprints(_Model):
+    board: int
+    sprints: _list[Sprint]
+
+
+class Branch(_Model):
+    name: str
+    commit: str | None = None
+
+
+class BranchDeleted(_Model):
+    repo: str
+    name: str
+    deleted: bool
+
+
+class BuildStatus(_Model):
+    name: str
+    key: str | None = None
+    state: str
+    """SUCCESSFUL, FAILED, INPROGRESS, STOPPED (Cloud), CANCELLED or UNKNOWN (Data Center)."""
+    url: str | None = None
+    description: str | None = None
+
+
+class Card(_Model):
+    id: str
+    name: str
+    list: str | None = None
+    """The list's name when known, else its ID."""
+    due: str | None = None
+    labels: _list[str]
+    closed: bool
+    short_link: str | None = None
+    url: str | None = None
+
+
+class CardComment(_Model):
+    author: str | None = None
+    date: str | None = None
+    text: str
+
+
+class CardDetail(_Model):
+    id: str
+    name: str
+    list: str | None = None
+    """The list's name when known, else its ID."""
+    due: str | None = None
+    labels: _list[str]
+    closed: bool
+    short_link: str | None = None
+    url: str | None = None
+    board: str | None = None
+    description: str
+    """The card description (Trello stores Markdown)."""
+    comments: _list[CardComment]
+    """Latest comments first."""
+
+
+class Change(_Model):
+    """One changed field of one history entry."""
+
+    created: str | None = None
+    author: str | None = None
+    field: str
+    from_: str | None = pydantic.Field(None, alias="from")
+    to: str | None = None
+
+
+class ChangesRequested(_Model):
+    repo: str
+    id: int
+    changes_requested: bool
+
+
+class CheckItem(_Model):
+    id: str
+    name: str
+    done: bool
+
+
+class Checklist(_Model):
+    id: str
+    name: str
+    items: _list[CheckItem]
+
+
+class Comment(_Model):
+    id: str
+    author: str | None = None
+    created: str | None = None
+    body: str
+    """The comment as Markdown (Cloud) or wiki markup (Data Center)."""
+
+
+class CommentDeleted(_Model):
+    key: str
+    id: str
+    deleted: bool
+
+
+class Commit(_Model):
+    hash: str
+    author: str | None = None
+    date: str | None = None
+    message: str
+    """The first line of the message."""
+
+
+class Component(_Model):
+    id: str
+    name: str
+    lead: str | None = None
+    description: str | None = None
+
+
+class Copied(_Model):
+    source: str
+    id: str
+    """The new page (empty in a dry run)."""
+    title: str
+    parent: str
+    url: str
+
+
+class Created(_Model):
+    key: str
+    url: str
+
+
+class Deleted(_Model):
+    id: str
+    deleted: bool
+
+
+class Desk(_Model):
+    id: str
+    project: str
+    name: str
+
+
+class Directory(_Model):
+    id: str
+    name: str
+
+
+class Domain(_Model):
+    id: str
+    name: str
+    status: str | None = None
+    """Verification status of the domain claim."""
+
+
+class EpicIssues(_Model):
+    epic: str | None = None
+    """The epic, or none after a remove."""
+    issues: _list[str]
+
+
+class Event(_Model):
+    id: str
+    time: str | None = None
+    action: str | None = None
+    actor: str | None = None
+    message: str | None = None
+
+
+class Exported(_Model):
+    id: str
+    title: str
+    type: str
+    path: str
+    """The written `index.md` (or the folder, for a Cloud folder)."""
+    attachments: int
+
+
+class Field(_Model):
+    """A system or custom field, from `GET /rest/api/{2|3}/field`."""
+
+    id: str
+    """For example `customfield_10016` or `duedate`."""
+    name: str
+    custom: bool
+    type: str | None = None
+    """JSON type: string, number, date, datetime, option, array, user, ..."""
+    items: str | None = None
+    """Item type of an array field."""
+
+
+class Filter(_Model):
+    id: str
+    name: str
+    jql: str
+    owner: str | None = None
+    favourite: bool
+    url: str
+
+
+class Group(_Model):
+    id: str
+    name: str
+    description: str | None = None
+    users: int | None = None
+    directory: str
+
+
+class IssueCount(_Model):
+    count: int
+    jql: str
+
+
+class IssueDeleted(_Model):
+    key: str
+    deleted: bool
+
+
+class IssueDetail(_Model):
+    key: str
+    summary: str
+    status: str
+    status_category: str
+    """`new`, `indeterminate` (in progress), or `done`."""
+    type: str
+    assignee: str | None = None
+    priority: str | None = None
+    updated: str | None = None
+    url: str
+    reporter: str | None = None
+    created: str | None = None
+    labels: _list[str]
+    components: _list[str]
+    parent: str | None = None
+    subtasks: _list[str]
+    description: str
+    """The description as Markdown (Cloud) or wiki markup (Data Center)."""
+    comments: _list[Comment]
+    comment_count: int
+    links: _list[IssueLink]
+    """Links to other issues, as "relation key" (for example "blocks ABC-2")."""
+    fields: dict[str, Any]
+    """Fields asked for by name (`issue view --field`), simplified: options
+become their value, users their name, rich text Markdown."""
+
+
+class IssueLink(_Model):
+    relation: str
+    """The phrase from this issue's side, for example "blocks" or "is blocked by"."""
+    key: str
+    summary: str | None = None
+    status: str | None = None
+
+
+class IssueList(_Model):
+    """A page of issues and the JQL that found them."""
+
+    issues: _list[IssueSummary]
+    next_page_token: str | None = None
+    """Pass back as `page_token` for the next page."""
+    total: int | None = None
+    """Total matches when the server reports it (Data Center)."""
+    jql: str
+
+
+class IssueSummary(_Model):
+    key: str
+    summary: str
+    status: str
+    status_category: str
+    """`new`, `indeterminate` (in progress), or `done`."""
+    type: str
+    assignee: str | None = None
+    priority: str | None = None
+    updated: str | None = None
+    url: str
+
+
+class IssueUpdated(_Model):
+    key: str
+    updated: bool
+    url: str
+
+
+class JqlCheck(_Model):
+    valid: bool
+    errors: _list[str]
+    warnings: _list[str]
+
+
+class JqlField(_Model):
+    name: str
+    """The name to use in JQL."""
+    display: str
+    operators: _list[str]
+
+
+class JqlReference(_Model):
+    fields: _list[JqlField]
+    functions: _list[str]
+
+
+class LinkType(_Model):
+    name: str
+    outward: str
+    """Phrase from the first issue to the second ("blocks")."""
+    inward: str
+    """Phrase from the second issue to the first ("is blocked by")."""
+
+
+class Linked(_Model):
+    from_: str = pydantic.Field(alias="from")
+    to: str
+    type: str
+    """The link type name."""
+
+
+class Membership(_Model):
+    """A user's membership of a group after an add or a remove."""
+
+    group: str
+    group_id: str
+    user: str | None = None
+    """The user's email, or their name when the email is hidden."""
+    account_id: str
+    member: bool
+    """True after an add, false after a remove."""
+
+
+class Moved(_Model):
+    key: str
+    status: str
+    """The status the issue is in now."""
+    transition: str
+    """The transition that moved it."""
+
+
+class Org(_Model):
+    id: str
+    name: str
+
+
+class Page(_Model):
+    id: str
+    title: str
+    space: str | None = None
+    parent: str | None = None
+    """ID of the parent page (none for a page at the top of a space)."""
+    version: int
+    url: str
+    markdown: str
+    """The body as Markdown."""
+
+
+class PageAttachment(_Model):
+    id: str
+    title: str
+    size: int | None = None
+    media_type: str | None = None
+    download: str
+    """Download URL on the Confluence server."""
+
+
+class PageComment(_Model):
+    id: str
+    author: str | None = None
+    """Display name (account ID on Cloud when the name lookup fails)."""
+    created: str | None = None
+    body: str
+    """The comment as Markdown."""
+    parent: str | None = None
+    """The comment this one replies to."""
+    selection: str | None = None
+    """For inline comments, the page text they are attached to."""
+
+
+class PageSummary(_Model):
+    id: str
+    title: str
+    url: str
+
+
+class PageVersion(_Model):
+    number: int
+    author: str | None = None
+    created: str | None = None
+    message: str | None = None
+    minor_edit: bool
+
+
+class PageView(_Model):
+    """A page, with its storage-format body and its Markdown document (front
+matter and body) when asked for."""
+
+    id: str
+    title: str
+    space: str | None = None
+    parent: str | None = None
+    """ID of the parent page (none for a page at the top of a space)."""
+    version: int
+    url: str
+    markdown: str
+    """The body as Markdown."""
+    document: str | None = None
+    """The page as a Markdown file with front matter (with `front_matter: true`)."""
+    storage: str | None = None
+    """The body in storage format (with `storage: true`)."""
+
+
+class Participants(_Model):
+    key: str
+    participants: _list[str]
+    """Every participant after the change."""
+
+
+class Pipeline(_Model):
+    build_number: int
+    uuid: str | None = None
+    state: str
+    """PENDING, IN_PROGRESS or COMPLETED."""
+    result: str | None = None
+    """SUCCESSFUL, FAILED, STOPPED or ERROR once completed."""
+    branch: str | None = None
+    created: str | None = None
+    url: str
+
+
+class PipelineDetail(_Model):
+    build_number: int
+    uuid: str | None = None
+    state: str
+    """PENDING, IN_PROGRESS or COMPLETED."""
+    result: str | None = None
+    """SUCCESSFUL, FAILED, STOPPED or ERROR once completed."""
+    branch: str | None = None
+    created: str | None = None
+    url: str
+    steps: _list[PipelineStep]
+
+
+class PipelineLog(_Model):
+    repo: str
+    id: str
+    log: str
+    """The step logs as text."""
+
+
+class PipelineStep(_Model):
+    uuid: str
+    name: str
+    state: str
+    """PENDING, IN_PROGRESS or COMPLETED."""
+    result: str | None = None
+    seconds: int | None = None
+
+
+class PrApproval(_Model):
+    repo: str
+    id: int
+    approved: bool
+    """True after an approve, false after an unapprove."""
+
+
+class PrChecks(_Model):
+    repo: str
+    id: int
+    passed: bool
+    """No check failed."""
+    pending: bool
+    """At least one check is still running."""
+    checks: _list[BuildStatus]
+
+
+class PrComment(_Model):
+    id: str
+    author: str | None = None
+    created: str | None = None
+    body: str
+    """Markdown."""
+    path: str | None = None
+    """File of an inline comment."""
+    line: int | None = None
+    """Line of an inline comment (in the new version of the file when known)."""
+    parent: str | None = None
+    """ID of the comment this one answers."""
+    resolved: bool
+
+
+class PrCommented(_Model):
+    repo: str
+    id: int
+    comment_id: str
+
+
+class PrDiff(_Model):
+    repo: str
+    id: int
+    diff: str
+    """The unified diff."""
+
+
+class Project(_Model):
+    key: str
+    name: str
+    id: str
+    type: str | None = None
+
+
+class PullRequest(_Model):
+    id: int
+    title: str
+    state: str
+    """OPEN, MERGED, DECLINED or SUPERSEDED."""
+    author: str | None = None
+    source: str
+    destination: str
+    updated: str | None = None
+    description: str
+    reviewers: _list[str]
+    approved_by: _list[str]
+    url: str
+    source_repo: str | None = None
+    """`owner/slug` of the repository the source branch is in (differs
+from the target repository for pull requests from forks)."""
+    draft: bool
+    """True for a draft (not yet ready for review)."""
+
+
+class Pushed(_Model):
+    file: str
+    id: str
+    title: str
+    version: int
+    action: str
+    """created, updated, unchanged, or planned (dry run)."""
+
+
+class Queue(_Model):
+    id: str
+    name: str
+    jql: str | None = None
+    issues: int | None = None
+
+
+class Release(_Model):
+    """A project version ("release")."""
+
+    id: str
+    name: str
+    released: bool
+    archived: bool
+    release_date: str | None = None
+    description: str | None = None
+
+
+class RemoteLink(_Model):
+    """A web link that `Jira::remote_link` added to an issue."""
+
+    key: str
+    id: int | None = None
+    """Jira's ID of the link."""
+    url: str
+    title: str
+
+
+class Repo(_Model):
+    repo: str
+    """`owner/slug`."""
+    name: str
+    description: str | None = None
+    default_branch: str | None = None
+    private: bool | None = None
+    url: str
+
+
+class Request(_Model):
+    key: str
+    summary: str
+    status: str
+    type: str | None = None
+    reporter: str | None = None
+    created: str | None = None
+    url: str
+
+
+class RequestAttachment(_Model):
+    filename: str
+    author: str | None = None
+    created: str | None = None
+    size: int | None = None
+    mime_type: str | None = None
+    url: str | None = None
+
+
+class RequestComment(_Model):
+    id: str
+    author: str | None = None
+    created: str | None = None
+    public: bool
+    """False for internal notes that customers cannot see."""
+    body: str
+
+
+class RequestDetail(_Model):
+    key: str
+    summary: str
+    status: str
+    type: str | None = None
+    reporter: str | None = None
+    created: str | None = None
+    url: str
+    description: str
+    comments: _list[RequestComment]
+
+
+class RequestMoved(_Model):
+    key: str
+    transition: str
+    """The transition that ran."""
+    id: str
+    """Its ID."""
+
+
+class RequestTransition(_Model):
+    id: str
+    name: str
+
+
+class RequestType(_Model):
+    id: str
+    name: str
+    description: str | None = None
+
+
+class SearchHit(_Model):
+    id: str
+    type: str
+    title: str
+    space: str | None = None
+    excerpt: str | None = None
+    url: str
+
+
+class SearchResults(_Model):
+    cql: str
+    """The CQL that ran."""
+    results: _list[SearchHit]
+
+
+class Sla(_Model):
+    name: str
+    state: str
+    """ongoing, paused, met or breached."""
+    breached: bool
+    remaining: str | None = None
+    """Time left (negative when breached), as Jira shows it."""
+    goal: str | None = None
+
+
+class Space(_Model):
+    key: str
+    name: str
+    id: str | None = None
+    type: str | None = None
+    url: str
+
+
+class Sprint(_Model):
+    id: int
+    name: str
+    state: str
+    start: str | None = None
+    end: str | None = None
+    goal: str | None = None
+
+
+class SprintIssues(_Model):
+    sprint: int
+    issues: _list[str]
+
+
+class Suggestion(_Model):
+    value: str
+    display: str
+
+
+class Transition(_Model):
+    id: str
+    name: str
+    to: str
+    """The status the transition leads to."""
+
+
+class TreeNode(_Model):
+    """One node of a page tree (see [`Confluence::tree`])."""
+
+    id: str
+    title: str
+    type: str
+    """page, folder, whiteboard, database or embed (Data Center: page)."""
+    depth: int
+    """1 for direct children of the root."""
+    parent: str
+    """ID of the parent node."""
+    url: str
+
+
+class TrelloBoard(_Model):
+    id: str
+    name: str
+    short_link: str | None = None
+    url: str | None = None
+
+
+class TrelloList(_Model):
+    id: str
+    name: str
+
+
+class Unlinked(_Model):
+    from_: str = pydantic.Field(alias="from")
+    to: str
+    removed: _list[str]
+    """The link types that were removed."""
+
+
+class User(_Model):
+    id: str
+    """Account ID (Cloud) or username (Data Center)."""
+    name: str
+    email: str | None = None
+
+
+class Watchers(_Model):
+    watching: bool
+    """True when the signed-in user watches the issue."""
+    count: int
+    watchers: _list[User]
+
+
+class Watching(_Model):
+    key: str
+    user: str
+    watching: bool
+    """True after a watch, false after an unwatch."""
+
+
+class Worklog(_Model):
+    id: str
+    author: str | None = None
+    time_spent: str | None = None
+    """As Jira shows it, for example "2h 30m"."""
+    seconds: int | None = None
+    started: str | None = None
+    comment: str | None = None
+    """Markdown."""
+
+
+class WorklogAdded(_Model):
+    """A worklog that `Jira::worklog` added."""
+
+    key: str
+    worklog_id: str | None = None
+    time_spent: str
+
+
+class _Tasks(Protocol):
+    def task(self, name: str, args: Mapping[str, Any] | None = None) -> Any: ...
+
+
+class _AsyncTasks(Protocol):
+    async def task(self, name: str, args: Mapping[str, Any] | None = None) -> Any: ...
+
+
+class JiraBoardApi:
+    """``atl jira board``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraBoardListArgs]) -> _list[Board]:
+        """Jira Software boards, optionally of one project."""
+        return [Board.model_validate(item) for item in self._client.task(TaskName.JIRA_BOARD_LIST, kwargs)]
+
+
+class JiraCommentApi:
+    """``atl jira comment``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraCommentListArgs]) -> _list[Comment]:
+        """Every comment of a Jira issue, oldest first, with IDs, as Markdown."""
+        return [Comment.model_validate(item) for item in self._client.task(TaskName.JIRA_COMMENT_LIST, kwargs)]
+
+    def edit(self, **kwargs: Unpack[JiraCommentEditArgs]) -> Comment:
+        """Replace the text of a Jira comment (Markdown)."""
+        return Comment.model_validate(self._client.task(TaskName.JIRA_COMMENT_EDIT, kwargs))
+
+    def delete(self, **kwargs: Unpack[JiraCommentDeleteArgs]) -> CommentDeleted:
+        """Delete a Jira comment. Cannot be undone."""
+        return CommentDeleted.model_validate(self._client.task(TaskName.JIRA_COMMENT_DELETE, kwargs))
+
+
+class JiraComponentApi:
+    """``atl jira component``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraComponentListArgs]) -> _list[Component]:
+        """Components of a Jira project with their leads."""
+        return [Component.model_validate(item) for item in self._client.task(TaskName.JIRA_COMPONENT_LIST, kwargs)]
+
+
+class JiraEpicApi:
+    """``atl jira epic``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraEpicListArgs]) -> _list[IssueSummary]:
+        """Open epics, optionally of one project."""
+        return [IssueSummary.model_validate(item) for item in self._client.task(TaskName.JIRA_EPIC_LIST, kwargs)]
+
+    def add(self, **kwargs: Unpack[JiraEpicAddArgs]) -> EpicIssues:
+        """Move issues into an epic."""
+        return EpicIssues.model_validate(self._client.task(TaskName.JIRA_EPIC_ADD, kwargs))
+
+    def remove(self, **kwargs: Unpack[JiraEpicRemoveArgs]) -> EpicIssues:
+        """Remove issues from their epic."""
+        return EpicIssues.model_validate(self._client.task(TaskName.JIRA_EPIC_REMOVE, kwargs))
+
+
+class JiraFieldApi:
+    """``atl jira field``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraFieldListArgs]) -> _list[Field]:
+        """Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view."""
+        return [Field.model_validate(item) for item in self._client.task(TaskName.JIRA_FIELD_LIST, kwargs)]
+
+
+class JiraFilterApi:
+    """``atl jira filter``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraFilterListArgs]) -> _list[Filter]:
+        """Saved Jira filters (Cloud: all visible, Data Center: favourites)."""
+        return [Filter.model_validate(item) for item in self._client.task(TaskName.JIRA_FILTER_LIST, kwargs)]
+
+    def run(self, **kwargs: Unpack[JiraFilterRunArgs]) -> IssueList:
+        """Run a saved Jira filter by ID or exact name; returns issue records."""
+        return IssueList.model_validate(self._client.task(TaskName.JIRA_FILTER_RUN, kwargs))
+
+
+class JiraIssueApi:
+    """``atl jira issue``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraIssueListArgs]) -> IssueList:
+        """Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues."""
+        return IssueList.model_validate(self._client.task(TaskName.JIRA_ISSUE_LIST, kwargs))
+
+    def count(self, **kwargs: Unpack[JiraIssueCountArgs]) -> IssueCount:
+        """Count Jira issues matching the same filters as issue_list."""
+        return IssueCount.model_validate(self._client.task(TaskName.JIRA_ISSUE_COUNT, kwargs))
+
+    def view(self, **kwargs: Unpack[JiraIssueViewArgs]) -> IssueDetail:
+        """One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name."""
+        return IssueDetail.model_validate(self._client.task(TaskName.JIRA_ISSUE_VIEW, kwargs))
+
+    def delete(self, **kwargs: Unpack[JiraIssueDeleteArgs]) -> IssueDeleted:
+        """Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone."""
+        return IssueDeleted.model_validate(self._client.task(TaskName.JIRA_ISSUE_DELETE, kwargs))
+
+    def watchers(self, **kwargs: Unpack[JiraIssueWatchersArgs]) -> Watchers:
+        """Who watches a Jira issue, and whether you do."""
+        return Watchers.model_validate(self._client.task(TaskName.JIRA_ISSUE_WATCHERS, kwargs))
+
+    def watch(self, **kwargs: Unpack[JiraIssueWatchArgs]) -> Watching:
+        """Add a watcher to a Jira issue (default: you)."""
+        return Watching.model_validate(self._client.task(TaskName.JIRA_ISSUE_WATCH, kwargs))
+
+    def unwatch(self, **kwargs: Unpack[JiraIssueUnwatchArgs]) -> Watching:
+        """Remove a watcher from a Jira issue (default: you)."""
+        return Watching.model_validate(self._client.task(TaskName.JIRA_ISSUE_UNWATCH, kwargs))
+
+    def create(self, **kwargs: Unpack[JiraIssueCreateArgs]) -> Created:
+        """Create a Jira issue; the description is Markdown."""
+        return Created.model_validate(self._client.task(TaskName.JIRA_ISSUE_CREATE, kwargs))
+
+    def edit(self, **kwargs: Unpack[JiraIssueEditArgs]) -> IssueUpdated:
+        """Change a Jira issue's summary, description (Markdown), priority or labels."""
+        return IssueUpdated.model_validate(self._client.task(TaskName.JIRA_ISSUE_EDIT, kwargs))
+
+    def assign(self, **kwargs: Unpack[JiraIssueAssignArgs]) -> Assigned:
+        """Assign a Jira issue to me, nobody (x), or a user."""
+        return Assigned.model_validate(self._client.task(TaskName.JIRA_ISSUE_ASSIGN, kwargs))
+
+    def transitions(self, **kwargs: Unpack[JiraIssueTransitionsArgs]) -> _list[Transition]:
+        """Statuses a Jira issue can move to."""
+        return [Transition.model_validate(item) for item in self._client.task(TaskName.JIRA_ISSUE_TRANSITIONS, kwargs)]
+
+    def move(self, **kwargs: Unpack[JiraIssueMoveArgs]) -> Moved:
+        """Move a Jira issue to another status (by status or transition name)."""
+        return Moved.model_validate(self._client.task(TaskName.JIRA_ISSUE_MOVE, kwargs))
+
+    def comment(self, **kwargs: Unpack[JiraIssueCommentArgs]) -> Comment:
+        """Add a Markdown comment to a Jira issue."""
+        return Comment.model_validate(self._client.task(TaskName.JIRA_ISSUE_COMMENT, kwargs))
+
+    def link(self, **kwargs: Unpack[JiraIssueLinkArgs]) -> Linked:
+        """Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2."""
+        return Linked.model_validate(self._client.task(TaskName.JIRA_ISSUE_LINK, kwargs))
+
+    def unlink(self, **kwargs: Unpack[JiraIssueUnlinkArgs]) -> Unlinked:
+        """Remove the links between two Jira issues (optionally only one link type)."""
+        return Unlinked.model_validate(self._client.task(TaskName.JIRA_ISSUE_UNLINK, kwargs))
+
+    def remote_link(self, **kwargs: Unpack[JiraIssueRemoteLinkArgs]) -> RemoteLink:
+        """Add a web link (URL and title) to a Jira issue."""
+        return RemoteLink.model_validate(self._client.task(TaskName.JIRA_ISSUE_REMOTE_LINK, kwargs))
+
+    def history(self, **kwargs: Unpack[JiraIssueHistoryArgs]) -> _list[Change]:
+        """Field changes of a Jira issue, newest first: when, who, field, from, to."""
+        return [Change.model_validate(item) for item in self._client.task(TaskName.JIRA_ISSUE_HISTORY, kwargs)]
+
+    def link_types(self, **kwargs: Unpack[JiraIssueLinkTypesArgs]) -> _list[LinkType]:
+        """Jira issue link types with their outward and inward phrases."""
+        return [LinkType.model_validate(item) for item in self._client.task(TaskName.JIRA_ISSUE_LINK_TYPES, kwargs)]
+
+    def clone(self, **kwargs: Unpack[JiraIssueCloneArgs]) -> Created:
+        """Copy a Jira issue (summary, description, type, labels, priority, components, parent)."""
+        return Created.model_validate(self._client.task(TaskName.JIRA_ISSUE_CLONE, kwargs))
+
+    def worklog(self, **kwargs: Unpack[JiraIssueWorklogArgs]) -> WorklogAdded:
+        """Log time on a Jira issue."""
+        return WorklogAdded.model_validate(self._client.task(TaskName.JIRA_ISSUE_WORKLOG, kwargs))
+
+    def attach(self, **kwargs: Unpack[JiraIssueAttachArgs]) -> _list[Attachment]:
+        """Upload local files to a Jira issue."""
+        return [Attachment.model_validate(item) for item in self._client.task(TaskName.JIRA_ISSUE_ATTACH, kwargs)]
+
+    def attachments(self, **kwargs: Unpack[JiraIssueAttachmentsArgs]) -> _list[Attachment]:
+        """List a Jira issue's attachments."""
+        return [Attachment.model_validate(item) for item in self._client.task(TaskName.JIRA_ISSUE_ATTACHMENTS, kwargs)]
+
+    def types(self, **kwargs: Unpack[JiraIssueTypesArgs]) -> _list[str]:
+        """Issue type names of a Jira project (without sub-task types), for the `type` argument of jira_issue_create."""
+        return self._client.task(TaskName.JIRA_ISSUE_TYPES, kwargs)
+
+
+class JiraJqlApi:
+    """``atl jira jql``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def check(self, **kwargs: Unpack[JiraJqlCheckArgs]) -> JqlCheck:
+        """Validate JQL with Jira's parser; returns valid, errors, warnings."""
+        return JqlCheck.model_validate(self._client.task(TaskName.JIRA_JQL_CHECK, kwargs))
+
+    def fields(self, **kwargs: Unpack[JiraJqlFieldsArgs]) -> JqlReference:
+        """Fields (with operators) and functions usable in JQL on this site."""
+        return JqlReference.model_validate(self._client.task(TaskName.JIRA_JQL_FIELDS, kwargs))
+
+    def suggest(self, **kwargs: Unpack[JiraJqlSuggestArgs]) -> _list[Suggestion]:
+        """Value suggestions for a JQL field, for example field=status prefix=In."""
+        return [Suggestion.model_validate(item) for item in self._client.task(TaskName.JIRA_JQL_SUGGEST, kwargs)]
+
+
+class JiraProjectApi:
+    """``atl jira project``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraProjectListArgs]) -> _list[Project]:
+        """Jira projects."""
+        return [Project.model_validate(item) for item in self._client.task(TaskName.JIRA_PROJECT_LIST, kwargs)]
+
+
+class JiraReleaseApi:
+    """``atl jira release``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraReleaseListArgs]) -> _list[Release]:
+        """Versions (releases) of a Jira project: name, released, archived, release date."""
+        return [Release.model_validate(item) for item in self._client.task(TaskName.JIRA_RELEASE_LIST, kwargs)]
+
+
+class JiraSprintApi:
+    """``atl jira sprint``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def create(self, **kwargs: Unpack[JiraSprintCreateArgs]) -> Sprint:
+        """Create a future sprint on a board (default: the project's first board)."""
+        return Sprint.model_validate(self._client.task(TaskName.JIRA_SPRINT_CREATE, kwargs))
+
+    def start(self, **kwargs: Unpack[JiraSprintStartArgs]) -> Sprint:
+        """Start a future sprint; Jira needs a start and an end date."""
+        return Sprint.model_validate(self._client.task(TaskName.JIRA_SPRINT_START, kwargs))
+
+    def close(self, **kwargs: Unpack[JiraSprintCloseArgs]) -> Sprint:
+        """Complete an active sprint."""
+        return Sprint.model_validate(self._client.task(TaskName.JIRA_SPRINT_CLOSE, kwargs))
+
+    def list(self, **kwargs: Unpack[JiraSprintListArgs]) -> BoardSprints:
+        """Sprints of a board."""
+        return BoardSprints.model_validate(self._client.task(TaskName.JIRA_SPRINT_LIST, kwargs))
+
+    def add(self, **kwargs: Unpack[JiraSprintAddArgs]) -> SprintIssues:
+        """Move issues into a sprint."""
+        return SprintIssues.model_validate(self._client.task(TaskName.JIRA_SPRINT_ADD, kwargs))
+
+
+class JiraWorklogApi:
+    """``atl jira worklog``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JiraWorklogListArgs]) -> _list[Worklog]:
+        """Time logged on a Jira issue: author, time spent, start, comment."""
+        return [Worklog.model_validate(item) for item in self._client.task(TaskName.JIRA_WORKLOG_LIST, kwargs)]
+
+
+class JiraApi:
+    """Jira and Jira Software: issues, comments, sprints, boards, filters and JQL."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.board = JiraBoardApi(client)
+        """``atl jira board``"""
+        self.comment = JiraCommentApi(client)
+        """``atl jira comment``"""
+        self.component = JiraComponentApi(client)
+        """``atl jira component``"""
+        self.epic = JiraEpicApi(client)
+        """``atl jira epic``"""
+        self.field = JiraFieldApi(client)
+        """``atl jira field``"""
+        self.filter = JiraFilterApi(client)
+        """``atl jira filter``"""
+        self.issue = JiraIssueApi(client)
+        """``atl jira issue``"""
+        self.jql = JiraJqlApi(client)
+        """``atl jira jql``"""
+        self.project = JiraProjectApi(client)
+        """``atl jira project``"""
+        self.release = JiraReleaseApi(client)
+        """``atl jira release``"""
+        self.sprint = JiraSprintApi(client)
+        """``atl jira sprint``"""
+        self.worklog = JiraWorklogApi(client)
+        """``atl jira worklog``"""
+
+    def me(self, **kwargs: Unpack[JiraMeArgs]) -> User:
+        """The signed-in Jira user."""
+        return User.model_validate(self._client.task(TaskName.JIRA_ME, kwargs))
+
+
+class ConfluenceAttachmentApi:
+    """``atl confluence attachment``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def delete(self, **kwargs: Unpack[ConfluenceAttachmentDeleteArgs]) -> Deleted:
+        """Delete a Confluence attachment by ID."""
+        return Deleted.model_validate(self._client.task(TaskName.CONFLUENCE_ATTACHMENT_DELETE, kwargs))
+
+
+class ConfluenceBlogApi:
+    """``atl confluence blog``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[ConfluenceBlogListArgs]) -> _list[PageSummary]:
+        """Blog posts of a Confluence space, newest first."""
+        return [PageSummary.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_BLOG_LIST, kwargs)]
+
+    def get(self, **kwargs: Unpack[ConfluenceBlogGetArgs]) -> Page:
+        """One Confluence blog post with its body as Markdown."""
+        return Page.model_validate(self._client.task(TaskName.CONFLUENCE_BLOG_GET, kwargs))
+
+    def create(self, **kwargs: Unpack[ConfluenceBlogCreateArgs]) -> PageSummary:
+        """Publish a Confluence blog post from Markdown."""
+        return PageSummary.model_validate(self._client.task(TaskName.CONFLUENCE_BLOG_CREATE, kwargs))
+
+
+class ConfluenceCommentApi:
+    """``atl confluence comment``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def delete(self, **kwargs: Unpack[ConfluenceCommentDeleteArgs]) -> Deleted:
+        """Delete a Confluence comment by ID."""
+        return Deleted.model_validate(self._client.task(TaskName.CONFLUENCE_COMMENT_DELETE, kwargs))
+
+
+class ConfluencePageApi:
+    """``atl confluence page``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def get(self, **kwargs: Unpack[ConfluencePageGetArgs]) -> PageView:
+        """A Confluence page as Markdown (with title, space, version, url)."""
+        return PageView.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_GET, kwargs))
+
+    def create(self, **kwargs: Unpack[ConfluencePageCreateArgs]) -> PageSummary:
+        """Create a Confluence page from Markdown (or storage format)."""
+        return PageSummary.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_CREATE, kwargs))
+
+    def update(self, **kwargs: Unpack[ConfluencePageUpdateArgs]) -> PageSummary:
+        """Replace a Confluence page's title and/or body; the version is bumped automatically."""
+        return PageSummary.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_UPDATE, kwargs))
+
+    def delete(self, **kwargs: Unpack[ConfluencePageDeleteArgs]) -> Deleted:
+        """Delete a Confluence page."""
+        return Deleted.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_DELETE, kwargs))
+
+    def children(self, **kwargs: Unpack[ConfluencePageChildrenArgs]) -> _list[TreeNode]:
+        """Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent."""
+        return [TreeNode.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_CHILDREN, kwargs)]
+
+    def find(self, **kwargs: Unpack[ConfluencePageFindArgs]) -> _list[SearchHit]:
+        """Confluence pages whose title contains the words, optionally in one space."""
+        return [SearchHit.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_FIND, kwargs)]
+
+    def attach(self, **kwargs: Unpack[ConfluencePageAttachArgs]) -> _list[PageAttachment]:
+        """Upload local files to a Confluence page."""
+        return [PageAttachment.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_ATTACH, kwargs)]
+
+    def attachments(self, **kwargs: Unpack[ConfluencePageAttachmentsArgs]) -> _list[PageAttachment]:
+        """Attachments of a Confluence page with download URLs."""
+        return [PageAttachment.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_ATTACHMENTS, kwargs)]
+
+    def comments(self, **kwargs: Unpack[ConfluencePageCommentsArgs]) -> _list[PageComment]:
+        """Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`."""
+        return [PageComment.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_COMMENTS, kwargs)]
+
+    def comment(self, **kwargs: Unpack[ConfluencePageCommentArgs]) -> PageComment:
+        """Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`."""
+        return PageComment.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_COMMENT, kwargs))
+
+    def export(self, **kwargs: Unpack[ConfluencePageExportArgs]) -> _list[Exported]:
+        """Export a Confluence page (and with `recursive` its tree) to local Markdown folders: <title>/index.md with front matter and _attachments/. Changes nothing on the server."""
+        return [Exported.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_EXPORT, kwargs)]
+
+    def push(self, **kwargs: Unpack[ConfluencePagePushArgs]) -> _list[Pushed]:
+        """Publish local Markdown files: update the page in each file's front matter (refusing pages changed on the server unless `force`, skipping unchanged ones), create pages for new files under their folder's index.md, upload referenced images, and write ids and versions back."""
+        return [Pushed.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_PUSH, kwargs)]
+
+    def copy_tree(self, **kwargs: Unpack[ConfluencePageCopyTreeArgs]) -> _list[Copied]:
+        """Copy a Confluence page and the pages below it under another page (titles, bodies, labels)."""
+        return [Copied.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_COPY_TREE, kwargs)]
+
+    def labels(self, **kwargs: Unpack[ConfluencePageLabelsArgs]) -> _list[str]:
+        """Labels of a Confluence page."""
+        return self._client.task(TaskName.CONFLUENCE_PAGE_LABELS, kwargs)
+
+    def label(self, **kwargs: Unpack[ConfluencePageLabelArgs]) -> _list[str]:
+        """Add and remove labels on a Confluence page; returns the resulting labels."""
+        return self._client.task(TaskName.CONFLUENCE_PAGE_LABEL, kwargs)
+
+    def move(self, **kwargs: Unpack[ConfluencePageMoveArgs]) -> PageSummary:
+        """Move a Confluence page under another page (position append) or next to it (before/after, Cloud only)."""
+        return PageSummary.model_validate(self._client.task(TaskName.CONFLUENCE_PAGE_MOVE, kwargs))
+
+    def history(self, **kwargs: Unpack[ConfluencePageHistoryArgs]) -> _list[PageVersion]:
+        """Versions of a Confluence page, newest first: number, author, date, message. Read one with confluence_page_get and `version`."""
+        return [PageVersion.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_PAGE_HISTORY, kwargs)]
+
+
+class ConfluenceSpaceApi:
+    """``atl confluence space``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def create(self, **kwargs: Unpack[ConfluenceSpaceCreateArgs]) -> Space:
+        """Create a Confluence space with a key, a name and an optional plain-text description."""
+        return Space.model_validate(self._client.task(TaskName.CONFLUENCE_SPACE_CREATE, kwargs))
+
+    def list(self, **kwargs: Unpack[ConfluenceSpaceListArgs]) -> _list[Space]:
+        """Confluence spaces."""
+        return [Space.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_SPACE_LIST, kwargs)]
+
+    def pages(self, **kwargs: Unpack[ConfluenceSpacePagesArgs]) -> _list[PageSummary]:
+        """Top-level pages of a Confluence space."""
+        return [PageSummary.model_validate(item) for item in self._client.task(TaskName.CONFLUENCE_SPACE_PAGES, kwargs)]
+
+
+class ConfluenceApi:
+    """Confluence pages, blogs, spaces, comments, labels and attachments."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.attachment = ConfluenceAttachmentApi(client)
+        """``atl confluence attachment``"""
+        self.blog = ConfluenceBlogApi(client)
+        """``atl confluence blog``"""
+        self.comment = ConfluenceCommentApi(client)
+        """``atl confluence comment``"""
+        self.page = ConfluencePageApi(client)
+        """``atl confluence page``"""
+        self.space = ConfluenceSpaceApi(client)
+        """``atl confluence space``"""
+
+    def search(self, **kwargs: Unpack[ConfluenceSearchArgs]) -> SearchResults:
+        """Search Confluence by words or CQL; returns id, type, title, space, excerpt, url."""
+        return SearchResults.model_validate(self._client.task(TaskName.CONFLUENCE_SEARCH, kwargs))
+
+
+class BitbucketBranchApi:
+    """``atl bitbucket branch``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[BitbucketBranchListArgs]) -> _list[Branch]:
+        """Branches of a Bitbucket repository, most recently changed first."""
+        return [Branch.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_BRANCH_LIST, kwargs)]
+
+    def create(self, **kwargs: Unpack[BitbucketBranchCreateArgs]) -> Branch:
+        """Create a branch from another branch, a tag or a commit (default: the main branch)."""
+        return Branch.model_validate(self._client.task(TaskName.BITBUCKET_BRANCH_CREATE, kwargs))
+
+    def delete(self, **kwargs: Unpack[BitbucketBranchDeleteArgs]) -> BranchDeleted:
+        """Delete a branch. Unmerged commits on it can be lost."""
+        return BranchDeleted.model_validate(self._client.task(TaskName.BITBUCKET_BRANCH_DELETE, kwargs))
+
+
+class BitbucketCommitApi:
+    """``atl bitbucket commit``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[BitbucketCommitListArgs]) -> _list[Commit]:
+        """Recent commits of a branch, newest first: hash, author, date, first line of the message."""
+        return [Commit.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_COMMIT_LIST, kwargs)]
+
+
+class BitbucketPipelineApi:
+    """``atl bitbucket pipeline``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[BitbucketPipelineListArgs]) -> _list[Pipeline]:
+        """Latest Bitbucket Pipelines runs, newest first (Cloud only)."""
+        return [Pipeline.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_PIPELINE_LIST, kwargs)]
+
+    def run(self, **kwargs: Unpack[BitbucketPipelineRunArgs]) -> Pipeline:
+        """Start the pipeline of a branch, or a custom pipeline (Cloud only)."""
+        return Pipeline.model_validate(self._client.task(TaskName.BITBUCKET_PIPELINE_RUN, kwargs))
+
+    def stop(self, **kwargs: Unpack[BitbucketPipelineStopArgs]) -> Pipeline:
+        """Stop a running Bitbucket pipeline by build number or UUID (Cloud only)."""
+        return Pipeline.model_validate(self._client.task(TaskName.BITBUCKET_PIPELINE_STOP, kwargs))
+
+    def view(self, **kwargs: Unpack[BitbucketPipelineViewArgs]) -> PipelineDetail:
+        """One Bitbucket pipeline by build number or UUID, with each step's state and result (Cloud only)."""
+        return PipelineDetail.model_validate(self._client.task(TaskName.BITBUCKET_PIPELINE_VIEW, kwargs))
+
+    def logs(self, **kwargs: Unpack[BitbucketPipelineLogsArgs]) -> PipelineLog:
+        """Log text of one pipeline step (by name or UUID) or of every step (Cloud only)."""
+        return PipelineLog.model_validate(self._client.task(TaskName.BITBUCKET_PIPELINE_LOGS, kwargs))
+
+
+class BitbucketPrApi:
+    """``atl bitbucket pr``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[BitbucketPrListArgs]) -> _list[PullRequest]:
+        """Pull requests of a Bitbucket repository by state."""
+        return [PullRequest.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_PR_LIST, kwargs)]
+
+    def view(self, **kwargs: Unpack[BitbucketPrViewArgs]) -> PullRequest:
+        """One pull request with description, reviewers and approvals."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_VIEW, kwargs))
+
+    def create(self, **kwargs: Unpack[BitbucketPrCreateArgs]) -> PullRequest:
+        """Open a pull request from a source branch."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_CREATE, kwargs))
+
+    def merge(self, **kwargs: Unpack[BitbucketPrMergeArgs]) -> PullRequest:
+        """Merge a pull request."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_MERGE, kwargs))
+
+    def approve(self, **kwargs: Unpack[BitbucketPrApproveArgs]) -> PrApproval:
+        """Approve a pull request as the signed-in user."""
+        return PrApproval.model_validate(self._client.task(TaskName.BITBUCKET_PR_APPROVE, kwargs))
+
+    def comment(self, **kwargs: Unpack[BitbucketPrCommentArgs]) -> PrCommented:
+        """Add a Markdown comment to a pull request."""
+        return PrCommented.model_validate(self._client.task(TaskName.BITBUCKET_PR_COMMENT, kwargs))
+
+    def diff(self, **kwargs: Unpack[BitbucketPrDiffArgs]) -> PrDiff:
+        """The unified diff of a pull request."""
+        return PrDiff.model_validate(self._client.task(TaskName.BITBUCKET_PR_DIFF, kwargs))
+
+    def comments(self, **kwargs: Unpack[BitbucketPrCommentsArgs]) -> _list[PrComment]:
+        """Comments of a pull request, oldest first, as Markdown: general and inline (path, line), replies flattened with `parent`."""
+        return [PrComment.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_PR_COMMENTS, kwargs)]
+
+    def checks(self, **kwargs: Unpack[BitbucketPrChecksArgs]) -> PrChecks:
+        """Build statuses of a pull request's latest commit, with `passed` (none failed) and `pending` (some still running)."""
+        return PrChecks.model_validate(self._client.task(TaskName.BITBUCKET_PR_CHECKS, kwargs))
+
+    def unapprove(self, **kwargs: Unpack[BitbucketPrUnapproveArgs]) -> PrApproval:
+        """Remove your approval from a pull request."""
+        return PrApproval.model_validate(self._client.task(TaskName.BITBUCKET_PR_UNAPPROVE, kwargs))
+
+    def ready(self, **kwargs: Unpack[BitbucketPrReadyArgs]) -> PullRequest:
+        """Mark a draft pull request as ready for review (or, with `draft: true`, as a draft again)."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_READY, kwargs))
+
+    def decline(self, **kwargs: Unpack[BitbucketPrDeclineArgs]) -> PullRequest:
+        """Decline a Bitbucket pull request (Cloud cannot reopen it)."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_DECLINE, kwargs))
+
+    def request_changes(self, **kwargs: Unpack[BitbucketPrRequestChangesArgs]) -> ChangesRequested:
+        """Mark a Bitbucket pull request as needing changes by you (Cloud: request changes; Data Center: needs work)."""
+        return ChangesRequested.model_validate(self._client.task(TaskName.BITBUCKET_PR_REQUEST_CHANGES, kwargs))
+
+    def edit(self, **kwargs: Unpack[BitbucketPrEditArgs]) -> PullRequest:
+        """Change a Bitbucket pull request's title, description (Markdown) or destination branch."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_EDIT, kwargs))
+
+    def reviewers(self, **kwargs: Unpack[BitbucketPrReviewersArgs]) -> PullRequest:
+        """Add and remove reviewers of a Bitbucket pull request; other reviewers are kept."""
+        return PullRequest.model_validate(self._client.task(TaskName.BITBUCKET_PR_REVIEWERS, kwargs))
+
+
+class BitbucketRepoApi:
+    """``atl bitbucket repo``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[BitbucketRepoListArgs]) -> _list[Repo]:
+        """Bitbucket repositories of a workspace (Cloud) or project (Data Center), or the ones you belong to."""
+        return [Repo.model_validate(item) for item in self._client.task(TaskName.BITBUCKET_REPO_LIST, kwargs)]
+
+    def view(self, **kwargs: Unpack[BitbucketRepoViewArgs]) -> Repo:
+        """One Bitbucket repository with its default branch and URL."""
+        return Repo.model_validate(self._client.task(TaskName.BITBUCKET_REPO_VIEW, kwargs))
+
+
+class BitbucketApi:
+    """Bitbucket repositories, branches, pull requests and pipelines."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.branch = BitbucketBranchApi(client)
+        """``atl bitbucket branch``"""
+        self.commit = BitbucketCommitApi(client)
+        """``atl bitbucket commit``"""
+        self.pipeline = BitbucketPipelineApi(client)
+        """``atl bitbucket pipeline``"""
+        self.pr = BitbucketPrApi(client)
+        """``atl bitbucket pr``"""
+        self.repo = BitbucketRepoApi(client)
+        """``atl bitbucket repo``"""
+
+
+class JsmDeskApi:
+    """``atl jsm desk``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JsmDeskListArgs]) -> _list[Desk]:
+        """Jira Service Management service desks (id, project key, name)."""
+        return [Desk.model_validate(item) for item in self._client.task(TaskName.JSM_DESK_LIST, kwargs)]
+
+
+class JsmQueueApi:
+    """``atl jsm queue``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[JsmQueueListArgs]) -> _list[Queue]:
+        """Queues of a service desk with issue counts."""
+        return [Queue.model_validate(item) for item in self._client.task(TaskName.JSM_QUEUE_LIST, kwargs)]
+
+    def issues(self, **kwargs: Unpack[JsmQueueIssuesArgs]) -> _list[IssueSummary]:
+        """Issues in a service desk queue (by queue ID or name)."""
+        return [IssueSummary.model_validate(item) for item in self._client.task(TaskName.JSM_QUEUE_ISSUES, kwargs)]
+
+
+class JsmRequestApi:
+    """``atl jsm request``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def types(self, **kwargs: Unpack[JsmRequestTypesArgs]) -> _list[RequestType]:
+        """Request types of a service desk."""
+        return [RequestType.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_TYPES, kwargs)]
+
+    def list(self, **kwargs: Unpack[JsmRequestListArgs]) -> _list[Request]:
+        """Customer requests by status, optionally of one service desk."""
+        return [Request.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_LIST, kwargs)]
+
+    def view(self, **kwargs: Unpack[JsmRequestViewArgs]) -> RequestDetail:
+        """One customer request with its description and latest comments."""
+        return RequestDetail.model_validate(self._client.task(TaskName.JSM_REQUEST_VIEW, kwargs))
+
+    def create(self, **kwargs: Unpack[JsmRequestCreateArgs]) -> Request:
+        """Raise a customer request, optionally for a customer."""
+        return Request.model_validate(self._client.task(TaskName.JSM_REQUEST_CREATE, kwargs))
+
+    def comment(self, **kwargs: Unpack[JsmRequestCommentArgs]) -> RequestComment:
+        """Reply to a customer request, or add an internal note."""
+        return RequestComment.model_validate(self._client.task(TaskName.JSM_REQUEST_COMMENT, kwargs))
+
+    def transitions(self, **kwargs: Unpack[JsmRequestTransitionsArgs]) -> _list[RequestTransition]:
+        """Transitions available on a customer request."""
+        return [RequestTransition.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_TRANSITIONS, kwargs)]
+
+    def move(self, **kwargs: Unpack[JsmRequestMoveArgs]) -> RequestMoved:
+        """Run a customer request transition by name or ID."""
+        return RequestMoved.model_validate(self._client.task(TaskName.JSM_REQUEST_MOVE, kwargs))
+
+    def approvals(self, **kwargs: Unpack[JsmRequestApprovalsArgs]) -> _list[Approval]:
+        """Approvals of a JSM request: name, decision (pending, approved, declined), approvers, and whether you can answer."""
+        return [Approval.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_APPROVALS, kwargs)]
+
+    def approve(self, **kwargs: Unpack[JsmRequestApproveArgs]) -> Approval:
+        """Approve or decline (decision: decline) a JSM request's approval; without an ID, the one pending approval you can answer."""
+        return Approval.model_validate(self._client.task(TaskName.JSM_REQUEST_APPROVE, kwargs))
+
+    def participants(self, **kwargs: Unpack[JsmRequestParticipantsArgs]) -> Participants:
+        """List a JSM request's participants, after adding and removing any (me, an email or a name)."""
+        return Participants.model_validate(self._client.task(TaskName.JSM_REQUEST_PARTICIPANTS, kwargs))
+
+    def sla(self, **kwargs: Unpack[JsmRequestSlaArgs]) -> _list[Sla]:
+        """SLAs of a JSM request: state (ongoing, paused, met, breached), time remaining and goal."""
+        return [Sla.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_SLA, kwargs)]
+
+    def attach(self, **kwargs: Unpack[JsmRequestAttachArgs]) -> _list[RequestAttachment]:
+        """Attach local files to a JSM request (public unless internal)."""
+        return [RequestAttachment.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_ATTACH, kwargs)]
+
+    def attachments(self, **kwargs: Unpack[JsmRequestAttachmentsArgs]) -> _list[RequestAttachment]:
+        """Attachments of a JSM request with download URLs."""
+        return [RequestAttachment.model_validate(item) for item in self._client.task(TaskName.JSM_REQUEST_ATTACHMENTS, kwargs)]
+
+
+class JsmApi:
+    """Jira Service Management desks, queues, requests and approvals."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.desk = JsmDeskApi(client)
+        """``atl jsm desk``"""
+        self.queue = JsmQueueApi(client)
+        """``atl jsm queue``"""
+        self.request = JsmRequestApi(client)
+        """``atl jsm request``"""
+
+
+class TrelloBoardApi:
+    """``atl trello board``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[TrelloBoardListArgs]) -> _list[TrelloBoard]:
+        """Your open Trello boards."""
+        return [TrelloBoard.model_validate(item) for item in self._client.task(TaskName.TRELLO_BOARD_LIST, kwargs)]
+
+
+class TrelloCardApi:
+    """``atl trello card``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[TrelloCardListArgs]) -> _list[Card]:
+        """Cards of a Trello board or one of its lists, or your cards on every board (`mine`)."""
+        return [Card.model_validate(item) for item in self._client.task(TaskName.TRELLO_CARD_LIST, kwargs)]
+
+    def view(self, **kwargs: Unpack[TrelloCardViewArgs]) -> CardDetail:
+        """One Trello card with list, board, description and latest comments."""
+        return CardDetail.model_validate(self._client.task(TaskName.TRELLO_CARD_VIEW, kwargs))
+
+    def create(self, **kwargs: Unpack[TrelloCardCreateArgs]) -> Card:
+        """Create a Trello card in a list (by name with `board`, or by list ID)."""
+        return Card.model_validate(self._client.task(TaskName.TRELLO_CARD_CREATE, kwargs))
+
+    def move(self, **kwargs: Unpack[TrelloCardMoveArgs]) -> Card:
+        """Move a Trello card to another list (by default on the card's own board)."""
+        return Card.model_validate(self._client.task(TaskName.TRELLO_CARD_MOVE, kwargs))
+
+    def comment(self, **kwargs: Unpack[TrelloCardCommentArgs]) -> CardComment:
+        """Add a comment to a Trello card."""
+        return CardComment.model_validate(self._client.task(TaskName.TRELLO_CARD_COMMENT, kwargs))
+
+    def archive(self, **kwargs: Unpack[TrelloCardArchiveArgs]) -> Card:
+        """Archive (close) a Trello card."""
+        return Card.model_validate(self._client.task(TaskName.TRELLO_CARD_ARCHIVE, kwargs))
+
+    def edit(self, **kwargs: Unpack[TrelloCardEditArgs]) -> Card:
+        """Change a Trello card: name, description, due date, done, labels (by name or color) and members (username, name or me)."""
+        return Card.model_validate(self._client.task(TaskName.TRELLO_CARD_EDIT, kwargs))
+
+
+class TrelloChecklistApi:
+    """``atl trello checklist``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[TrelloChecklistListArgs]) -> _list[Checklist]:
+        """Checklists of a Trello card with their items and whether each is done."""
+        return [Checklist.model_validate(item) for item in self._client.task(TaskName.TRELLO_CHECKLIST_LIST, kwargs)]
+
+    def create(self, **kwargs: Unpack[TrelloChecklistCreateArgs]) -> Checklist:
+        """Add a checklist with items to a Trello card."""
+        return Checklist.model_validate(self._client.task(TaskName.TRELLO_CHECKLIST_CREATE, kwargs))
+
+    def check(self, **kwargs: Unpack[TrelloChecklistCheckArgs]) -> CheckItem:
+        """Tick (or with done: false, untick) a Trello checklist item by name or ID."""
+        return CheckItem.model_validate(self._client.task(TaskName.TRELLO_CHECKLIST_CHECK, kwargs))
+
+
+class TrelloListApi:
+    """``atl trello list``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[TrelloListListArgs]) -> _list[TrelloList]:
+        """Open lists of a Trello board (board by name, URL, short link or ID)."""
+        return [TrelloList.model_validate(item) for item in self._client.task(TaskName.TRELLO_LIST_LIST, kwargs)]
+
+
+class TrelloApi:
+    """Trello boards, lists, cards and checklists."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.board = TrelloBoardApi(client)
+        """``atl trello board``"""
+        self.card = TrelloCardApi(client)
+        """``atl trello card``"""
+        self.checklist = TrelloChecklistApi(client)
+        """``atl trello checklist``"""
+        self.list = TrelloListApi(client)
+        """``atl trello list``"""
+
+
+class AdminDirectoryApi:
+    """``atl admin directory``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[AdminDirectoryListArgs]) -> _list[Directory]:
+        """User directories of an Atlassian organization."""
+        return [Directory.model_validate(item) for item in self._client.task(TaskName.ADMIN_DIRECTORY_LIST, kwargs)]
+
+
+class AdminDomainApi:
+    """``atl admin domain``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[AdminDomainListArgs]) -> _list[Domain]:
+        """Domains of an Atlassian organization with their verification status."""
+        return [Domain.model_validate(item) for item in self._client.task(TaskName.ADMIN_DOMAIN_LIST, kwargs)]
+
+
+class AdminEventApi:
+    """``atl admin event``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[AdminEventListArgs]) -> _list[Event]:
+        """Audit log events of an Atlassian organization, newest first, filtered by words, dates and action."""
+        return [Event.model_validate(item) for item in self._client.task(TaskName.ADMIN_EVENT_LIST, kwargs)]
+
+
+class AdminGroupApi:
+    """``atl admin group``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def add_member(self, **kwargs: Unpack[AdminGroupAddMemberArgs]) -> Membership:
+        """Add a managed user (email or account ID) to a group (name or ID) of an Atlassian organization."""
+        return Membership.model_validate(self._client.task(TaskName.ADMIN_GROUP_ADD_MEMBER, kwargs))
+
+    def remove_member(self, **kwargs: Unpack[AdminGroupRemoveMemberArgs]) -> Membership:
+        """Remove a managed user from a group of an Atlassian organization."""
+        return Membership.model_validate(self._client.task(TaskName.ADMIN_GROUP_REMOVE_MEMBER, kwargs))
+
+    def list(self, **kwargs: Unpack[AdminGroupListArgs]) -> _list[Group]:
+        """Groups of an Atlassian organization (every directory), optionally matching `search`."""
+        return [Group.model_validate(item) for item in self._client.task(TaskName.ADMIN_GROUP_LIST, kwargs)]
+
+
+class AdminOrgApi:
+    """``atl admin org``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[AdminOrgListArgs]) -> _list[Org]:
+        """Organizations the Atlassian Admin API key can see."""
+        return [Org.model_validate(item) for item in self._client.task(TaskName.ADMIN_ORG_LIST, kwargs)]
+
+
+class AdminUserApi:
+    """``atl admin user``"""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+
+    def list(self, **kwargs: Unpack[AdminUserListArgs]) -> _list[AdminUser]:
+        """Managed users of an Atlassian organization (every directory), optionally matching `search`."""
+        return [AdminUser.model_validate(item) for item in self._client.task(TaskName.ADMIN_USER_LIST, kwargs)]
+
+    def suspend(self, **kwargs: Unpack[AdminUserSuspendArgs]) -> AdminUser:
+        """Suspend a managed user's access to every product (by account ID or email)."""
+        return AdminUser.model_validate(self._client.task(TaskName.ADMIN_USER_SUSPEND, kwargs))
+
+    def restore(self, **kwargs: Unpack[AdminUserRestoreArgs]) -> AdminUser:
+        """Restore a suspended managed user's access (by account ID or email)."""
+        return AdminUser.model_validate(self._client.task(TaskName.ADMIN_USER_RESTORE, kwargs))
+
+
+class AdminApi:
+    """Atlassian Admin organizations, users, groups and audit events."""
+
+    def __init__(self, client: _Tasks) -> None:
+        self._client = client
+        self.directory = AdminDirectoryApi(client)
+        """``atl admin directory``"""
+        self.domain = AdminDomainApi(client)
+        """``atl admin domain``"""
+        self.event = AdminEventApi(client)
+        """``atl admin event``"""
+        self.group = AdminGroupApi(client)
+        """``atl admin group``"""
+        self.org = AdminOrgApi(client)
+        """``atl admin org``"""
+        self.user = AdminUserApi(client)
+        """``atl admin user``"""
+
+
+class GeneratedClient:
+    """The product namespaces of ``Client``; the client supplies ``task()``."""
+
+    def task(self, name: str, args: Mapping[str, Any] | None = None) -> Any:
         raise NotImplementedError
 
-    def jira_issue_list(self, **kwargs: Unpack[JiraIssueListArgs]) -> Any:
-        """Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues."""
-        return self.task(TaskName.JIRA_ISSUE_LIST, kwargs)
+    def __init__(self) -> None:
+        self.jira = JiraApi(self)
+        """Jira and Jira Software: issues, comments, sprints, boards, filters and JQL."""
+        self.confluence = ConfluenceApi(self)
+        """Confluence pages, blogs, spaces, comments, labels and attachments."""
+        self.bitbucket = BitbucketApi(self)
+        """Bitbucket repositories, branches, pull requests and pipelines."""
+        self.jsm = JsmApi(self)
+        """Jira Service Management desks, queues, requests and approvals."""
+        self.trello = TrelloApi(self)
+        """Trello boards, lists, cards and checklists."""
+        self.admin = AdminApi(self)
+        """Atlassian Admin organizations, users, groups and audit events."""
 
-    def jira_issue_count(self, **kwargs: Unpack[JiraIssueCountArgs]) -> Any:
-        """Count Jira issues matching the same filters as issue_list."""
-        return self.task(TaskName.JIRA_ISSUE_COUNT, kwargs)
 
-    def jira_issue_view(self, **kwargs: Unpack[JiraIssueViewArgs]) -> Any:
-        """One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name."""
-        return self.task(TaskName.JIRA_ISSUE_VIEW, kwargs)
+class AsyncJiraBoardApi:
+    """``atl jira board``"""
 
-    def jira_issue_delete(self, **kwargs: Unpack[JiraIssueDeleteArgs]) -> Any:
-        """Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone."""
-        return self.task(TaskName.JIRA_ISSUE_DELETE, kwargs)
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
 
-    def jira_issue_watchers(self, **kwargs: Unpack[JiraIssueWatchersArgs]) -> Any:
-        """Who watches a Jira issue, and whether you do."""
-        return self.task(TaskName.JIRA_ISSUE_WATCHERS, kwargs)
-
-    def jira_issue_watch(self, **kwargs: Unpack[JiraIssueWatchArgs]) -> Any:
-        """Add a watcher to a Jira issue (default: you)."""
-        return self.task(TaskName.JIRA_ISSUE_WATCH, kwargs)
-
-    def jira_issue_unwatch(self, **kwargs: Unpack[JiraIssueUnwatchArgs]) -> Any:
-        """Remove a watcher from a Jira issue (default: you)."""
-        return self.task(TaskName.JIRA_ISSUE_UNWATCH, kwargs)
-
-    def jira_field_list(self, **kwargs: Unpack[JiraFieldListArgs]) -> Any:
-        """Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view."""
-        return self.task(TaskName.JIRA_FIELD_LIST, kwargs)
-
-    def jira_issue_create(self, **kwargs: Unpack[JiraIssueCreateArgs]) -> Any:
-        """Create a Jira issue; the description is Markdown."""
-        return self.task(TaskName.JIRA_ISSUE_CREATE, kwargs)
-
-    def jira_issue_edit(self, **kwargs: Unpack[JiraIssueEditArgs]) -> Any:
-        """Change a Jira issue's summary, description (Markdown), priority or labels."""
-        return self.task(TaskName.JIRA_ISSUE_EDIT, kwargs)
-
-    def jira_issue_assign(self, **kwargs: Unpack[JiraIssueAssignArgs]) -> Any:
-        """Assign a Jira issue to me, nobody (x), or a user."""
-        return self.task(TaskName.JIRA_ISSUE_ASSIGN, kwargs)
-
-    def jira_issue_transitions(self, **kwargs: Unpack[JiraIssueTransitionsArgs]) -> Any:
-        """Statuses a Jira issue can move to."""
-        return self.task(TaskName.JIRA_ISSUE_TRANSITIONS, kwargs)
-
-    def jira_issue_move(self, **kwargs: Unpack[JiraIssueMoveArgs]) -> Any:
-        """Move a Jira issue to another status (by status or transition name)."""
-        return self.task(TaskName.JIRA_ISSUE_MOVE, kwargs)
-
-    def jira_issue_comment(self, **kwargs: Unpack[JiraIssueCommentArgs]) -> Any:
-        """Add a Markdown comment to a Jira issue."""
-        return self.task(TaskName.JIRA_ISSUE_COMMENT, kwargs)
-
-    def jira_issue_link(self, **kwargs: Unpack[JiraIssueLinkArgs]) -> Any:
-        """Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2."""
-        return self.task(TaskName.JIRA_ISSUE_LINK, kwargs)
-
-    def jira_issue_unlink(self, **kwargs: Unpack[JiraIssueUnlinkArgs]) -> Any:
-        """Remove the links between two Jira issues (optionally only one link type)."""
-        return self.task(TaskName.JIRA_ISSUE_UNLINK, kwargs)
-
-    def jira_issue_remote_link(self, **kwargs: Unpack[JiraIssueRemoteLinkArgs]) -> Any:
-        """Add a web link (URL and title) to a Jira issue."""
-        return self.task(TaskName.JIRA_ISSUE_REMOTE_LINK, kwargs)
-
-    def jira_comment_list(self, **kwargs: Unpack[JiraCommentListArgs]) -> Any:
-        """Every comment of a Jira issue, oldest first, with IDs, as Markdown."""
-        return self.task(TaskName.JIRA_COMMENT_LIST, kwargs)
-
-    def jira_comment_edit(self, **kwargs: Unpack[JiraCommentEditArgs]) -> Any:
-        """Replace the text of a Jira comment (Markdown)."""
-        return self.task(TaskName.JIRA_COMMENT_EDIT, kwargs)
-
-    def jira_comment_delete(self, **kwargs: Unpack[JiraCommentDeleteArgs]) -> Any:
-        """Delete a Jira comment. Cannot be undone."""
-        return self.task(TaskName.JIRA_COMMENT_DELETE, kwargs)
-
-    def jira_worklog_list(self, **kwargs: Unpack[JiraWorklogListArgs]) -> Any:
-        """Time logged on a Jira issue: author, time spent, start, comment."""
-        return self.task(TaskName.JIRA_WORKLOG_LIST, kwargs)
-
-    def jira_issue_history(self, **kwargs: Unpack[JiraIssueHistoryArgs]) -> Any:
-        """Field changes of a Jira issue, newest first: when, who, field, from, to."""
-        return self.task(TaskName.JIRA_ISSUE_HISTORY, kwargs)
-
-    def jira_component_list(self, **kwargs: Unpack[JiraComponentListArgs]) -> Any:
-        """Components of a Jira project with their leads."""
-        return self.task(TaskName.JIRA_COMPONENT_LIST, kwargs)
-
-    def jira_sprint_create(self, **kwargs: Unpack[JiraSprintCreateArgs]) -> Any:
-        """Create a future sprint on a board (default: the project's first board)."""
-        return self.task(TaskName.JIRA_SPRINT_CREATE, kwargs)
-
-    def jira_sprint_start(self, **kwargs: Unpack[JiraSprintStartArgs]) -> Any:
-        """Start a future sprint; Jira needs a start and an end date."""
-        return self.task(TaskName.JIRA_SPRINT_START, kwargs)
-
-    def jira_sprint_close(self, **kwargs: Unpack[JiraSprintCloseArgs]) -> Any:
-        """Complete an active sprint."""
-        return self.task(TaskName.JIRA_SPRINT_CLOSE, kwargs)
-
-    def jira_release_list(self, **kwargs: Unpack[JiraReleaseListArgs]) -> Any:
-        """Versions (releases) of a Jira project: name, released, archived, release date."""
-        return self.task(TaskName.JIRA_RELEASE_LIST, kwargs)
-
-    def jira_issue_link_types(self, **kwargs: Unpack[JiraIssueLinkTypesArgs]) -> Any:
-        """Jira issue link types with their outward and inward phrases."""
-        return self.task(TaskName.JIRA_ISSUE_LINK_TYPES, kwargs)
-
-    def jira_issue_clone(self, **kwargs: Unpack[JiraIssueCloneArgs]) -> Any:
-        """Copy a Jira issue (summary, description, type, labels, priority, components, parent)."""
-        return self.task(TaskName.JIRA_ISSUE_CLONE, kwargs)
-
-    def jira_issue_worklog(self, **kwargs: Unpack[JiraIssueWorklogArgs]) -> Any:
-        """Log time on a Jira issue."""
-        return self.task(TaskName.JIRA_ISSUE_WORKLOG, kwargs)
-
-    def jira_issue_attach(self, **kwargs: Unpack[JiraIssueAttachArgs]) -> Any:
-        """Upload local files to a Jira issue."""
-        return self.task(TaskName.JIRA_ISSUE_ATTACH, kwargs)
-
-    def jira_issue_attachments(self, **kwargs: Unpack[JiraIssueAttachmentsArgs]) -> Any:
-        """List a Jira issue's attachments."""
-        return self.task(TaskName.JIRA_ISSUE_ATTACHMENTS, kwargs)
-
-    def jira_jql_check(self, **kwargs: Unpack[JiraJqlCheckArgs]) -> Any:
-        """Validate JQL with Jira's parser; returns valid, errors, warnings."""
-        return self.task(TaskName.JIRA_JQL_CHECK, kwargs)
-
-    def jira_jql_fields(self, **kwargs: Unpack[JiraJqlFieldsArgs]) -> Any:
-        """Fields (with operators) and functions usable in JQL on this site."""
-        return self.task(TaskName.JIRA_JQL_FIELDS, kwargs)
-
-    def jira_jql_suggest(self, **kwargs: Unpack[JiraJqlSuggestArgs]) -> Any:
-        """Value suggestions for a JQL field, for example field=status prefix=In."""
-        return self.task(TaskName.JIRA_JQL_SUGGEST, kwargs)
-
-    def jira_filter_list(self, **kwargs: Unpack[JiraFilterListArgs]) -> Any:
-        """Saved Jira filters (Cloud: all visible, Data Center: favourites)."""
-        return self.task(TaskName.JIRA_FILTER_LIST, kwargs)
-
-    def jira_filter_run(self, **kwargs: Unpack[JiraFilterRunArgs]) -> Any:
-        """Run a saved Jira filter by ID or exact name; returns issue records."""
-        return self.task(TaskName.JIRA_FILTER_RUN, kwargs)
-
-    def jira_epic_list(self, **kwargs: Unpack[JiraEpicListArgs]) -> Any:
-        """Open epics, optionally of one project."""
-        return self.task(TaskName.JIRA_EPIC_LIST, kwargs)
-
-    def jira_epic_add(self, **kwargs: Unpack[JiraEpicAddArgs]) -> Any:
-        """Move issues into an epic."""
-        return self.task(TaskName.JIRA_EPIC_ADD, kwargs)
-
-    def jira_epic_remove(self, **kwargs: Unpack[JiraEpicRemoveArgs]) -> Any:
-        """Remove issues from their epic."""
-        return self.task(TaskName.JIRA_EPIC_REMOVE, kwargs)
-
-    def jira_board_list(self, **kwargs: Unpack[JiraBoardListArgs]) -> Any:
+    async def list(self, **kwargs: Unpack[JiraBoardListArgs]) -> _list[Board]:
         """Jira Software boards, optionally of one project."""
-        return self.task(TaskName.JIRA_BOARD_LIST, kwargs)
+        return [Board.model_validate(item) for item in await self._client.task(TaskName.JIRA_BOARD_LIST, kwargs)]
 
-    def jira_sprint_list(self, **kwargs: Unpack[JiraSprintListArgs]) -> Any:
-        """Sprints of a board."""
-        return self.task(TaskName.JIRA_SPRINT_LIST, kwargs)
 
-    def jira_sprint_add(self, **kwargs: Unpack[JiraSprintAddArgs]) -> Any:
-        """Move issues into a sprint."""
-        return self.task(TaskName.JIRA_SPRINT_ADD, kwargs)
+class AsyncJiraCommentApi:
+    """``atl jira comment``"""
 
-    def jira_project_list(self, **kwargs: Unpack[JiraProjectListArgs]) -> Any:
-        """Jira projects."""
-        return self.task(TaskName.JIRA_PROJECT_LIST, kwargs)
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
 
-    def jira_issue_types(self, **kwargs: Unpack[JiraIssueTypesArgs]) -> Any:
+    async def list(self, **kwargs: Unpack[JiraCommentListArgs]) -> _list[Comment]:
+        """Every comment of a Jira issue, oldest first, with IDs, as Markdown."""
+        return [Comment.model_validate(item) for item in await self._client.task(TaskName.JIRA_COMMENT_LIST, kwargs)]
+
+    async def edit(self, **kwargs: Unpack[JiraCommentEditArgs]) -> Comment:
+        """Replace the text of a Jira comment (Markdown)."""
+        return Comment.model_validate(await self._client.task(TaskName.JIRA_COMMENT_EDIT, kwargs))
+
+    async def delete(self, **kwargs: Unpack[JiraCommentDeleteArgs]) -> CommentDeleted:
+        """Delete a Jira comment. Cannot be undone."""
+        return CommentDeleted.model_validate(await self._client.task(TaskName.JIRA_COMMENT_DELETE, kwargs))
+
+
+class AsyncJiraComponentApi:
+    """``atl jira component``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraComponentListArgs]) -> _list[Component]:
+        """Components of a Jira project with their leads."""
+        return [Component.model_validate(item) for item in await self._client.task(TaskName.JIRA_COMPONENT_LIST, kwargs)]
+
+
+class AsyncJiraEpicApi:
+    """``atl jira epic``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraEpicListArgs]) -> _list[IssueSummary]:
+        """Open epics, optionally of one project."""
+        return [IssueSummary.model_validate(item) for item in await self._client.task(TaskName.JIRA_EPIC_LIST, kwargs)]
+
+    async def add(self, **kwargs: Unpack[JiraEpicAddArgs]) -> EpicIssues:
+        """Move issues into an epic."""
+        return EpicIssues.model_validate(await self._client.task(TaskName.JIRA_EPIC_ADD, kwargs))
+
+    async def remove(self, **kwargs: Unpack[JiraEpicRemoveArgs]) -> EpicIssues:
+        """Remove issues from their epic."""
+        return EpicIssues.model_validate(await self._client.task(TaskName.JIRA_EPIC_REMOVE, kwargs))
+
+
+class AsyncJiraFieldApi:
+    """``atl jira field``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraFieldListArgs]) -> _list[Field]:
+        """Jira system and custom fields (ID, name, type), optionally filtered by part of the name. Use the names in the `fields` argument of issue create, edit and view."""
+        return [Field.model_validate(item) for item in await self._client.task(TaskName.JIRA_FIELD_LIST, kwargs)]
+
+
+class AsyncJiraFilterApi:
+    """``atl jira filter``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraFilterListArgs]) -> _list[Filter]:
+        """Saved Jira filters (Cloud: all visible, Data Center: favourites)."""
+        return [Filter.model_validate(item) for item in await self._client.task(TaskName.JIRA_FILTER_LIST, kwargs)]
+
+    async def run(self, **kwargs: Unpack[JiraFilterRunArgs]) -> IssueList:
+        """Run a saved Jira filter by ID or exact name; returns issue records."""
+        return IssueList.model_validate(await self._client.task(TaskName.JIRA_FILTER_RUN, kwargs))
+
+
+class AsyncJiraIssueApi:
+    """``atl jira issue``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraIssueListArgs]) -> IssueList:
+        """Search Jira issues with filters (or extra JQL). Returns small records: key, summary, status, type, assignee, priority, updated, url. With no filters: your unresolved issues."""
+        return IssueList.model_validate(await self._client.task(TaskName.JIRA_ISSUE_LIST, kwargs))
+
+    async def count(self, **kwargs: Unpack[JiraIssueCountArgs]) -> IssueCount:
+        """Count Jira issues matching the same filters as issue_list."""
+        return IssueCount.model_validate(await self._client.task(TaskName.JIRA_ISSUE_COUNT, kwargs))
+
+    async def view(self, **kwargs: Unpack[JiraIssueViewArgs]) -> IssueDetail:
+        """One Jira issue with description and latest comments as Markdown, plus any `fields` asked for by name."""
+        return IssueDetail.model_validate(await self._client.task(TaskName.JIRA_ISSUE_VIEW, kwargs))
+
+    async def delete(self, **kwargs: Unpack[JiraIssueDeleteArgs]) -> IssueDeleted:
+        """Delete a Jira issue (with `subtasks: true`, also its sub-tasks). Cannot be undone."""
+        return IssueDeleted.model_validate(await self._client.task(TaskName.JIRA_ISSUE_DELETE, kwargs))
+
+    async def watchers(self, **kwargs: Unpack[JiraIssueWatchersArgs]) -> Watchers:
+        """Who watches a Jira issue, and whether you do."""
+        return Watchers.model_validate(await self._client.task(TaskName.JIRA_ISSUE_WATCHERS, kwargs))
+
+    async def watch(self, **kwargs: Unpack[JiraIssueWatchArgs]) -> Watching:
+        """Add a watcher to a Jira issue (default: you)."""
+        return Watching.model_validate(await self._client.task(TaskName.JIRA_ISSUE_WATCH, kwargs))
+
+    async def unwatch(self, **kwargs: Unpack[JiraIssueUnwatchArgs]) -> Watching:
+        """Remove a watcher from a Jira issue (default: you)."""
+        return Watching.model_validate(await self._client.task(TaskName.JIRA_ISSUE_UNWATCH, kwargs))
+
+    async def create(self, **kwargs: Unpack[JiraIssueCreateArgs]) -> Created:
+        """Create a Jira issue; the description is Markdown."""
+        return Created.model_validate(await self._client.task(TaskName.JIRA_ISSUE_CREATE, kwargs))
+
+    async def edit(self, **kwargs: Unpack[JiraIssueEditArgs]) -> IssueUpdated:
+        """Change a Jira issue's summary, description (Markdown), priority or labels."""
+        return IssueUpdated.model_validate(await self._client.task(TaskName.JIRA_ISSUE_EDIT, kwargs))
+
+    async def assign(self, **kwargs: Unpack[JiraIssueAssignArgs]) -> Assigned:
+        """Assign a Jira issue to me, nobody (x), or a user."""
+        return Assigned.model_validate(await self._client.task(TaskName.JIRA_ISSUE_ASSIGN, kwargs))
+
+    async def transitions(self, **kwargs: Unpack[JiraIssueTransitionsArgs]) -> _list[Transition]:
+        """Statuses a Jira issue can move to."""
+        return [Transition.model_validate(item) for item in await self._client.task(TaskName.JIRA_ISSUE_TRANSITIONS, kwargs)]
+
+    async def move(self, **kwargs: Unpack[JiraIssueMoveArgs]) -> Moved:
+        """Move a Jira issue to another status (by status or transition name)."""
+        return Moved.model_validate(await self._client.task(TaskName.JIRA_ISSUE_MOVE, kwargs))
+
+    async def comment(self, **kwargs: Unpack[JiraIssueCommentArgs]) -> Comment:
+        """Add a Markdown comment to a Jira issue."""
+        return Comment.model_validate(await self._client.task(TaskName.JIRA_ISSUE_COMMENT, kwargs))
+
+    async def link(self, **kwargs: Unpack[JiraIssueLinkArgs]) -> Linked:
+        """Link two Jira issues so that 'from <kind> to' reads true, for example from A-1 kind blocks to A-2."""
+        return Linked.model_validate(await self._client.task(TaskName.JIRA_ISSUE_LINK, kwargs))
+
+    async def unlink(self, **kwargs: Unpack[JiraIssueUnlinkArgs]) -> Unlinked:
+        """Remove the links between two Jira issues (optionally only one link type)."""
+        return Unlinked.model_validate(await self._client.task(TaskName.JIRA_ISSUE_UNLINK, kwargs))
+
+    async def remote_link(self, **kwargs: Unpack[JiraIssueRemoteLinkArgs]) -> RemoteLink:
+        """Add a web link (URL and title) to a Jira issue."""
+        return RemoteLink.model_validate(await self._client.task(TaskName.JIRA_ISSUE_REMOTE_LINK, kwargs))
+
+    async def history(self, **kwargs: Unpack[JiraIssueHistoryArgs]) -> _list[Change]:
+        """Field changes of a Jira issue, newest first: when, who, field, from, to."""
+        return [Change.model_validate(item) for item in await self._client.task(TaskName.JIRA_ISSUE_HISTORY, kwargs)]
+
+    async def link_types(self, **kwargs: Unpack[JiraIssueLinkTypesArgs]) -> _list[LinkType]:
+        """Jira issue link types with their outward and inward phrases."""
+        return [LinkType.model_validate(item) for item in await self._client.task(TaskName.JIRA_ISSUE_LINK_TYPES, kwargs)]
+
+    async def clone(self, **kwargs: Unpack[JiraIssueCloneArgs]) -> Created:
+        """Copy a Jira issue (summary, description, type, labels, priority, components, parent)."""
+        return Created.model_validate(await self._client.task(TaskName.JIRA_ISSUE_CLONE, kwargs))
+
+    async def worklog(self, **kwargs: Unpack[JiraIssueWorklogArgs]) -> WorklogAdded:
+        """Log time on a Jira issue."""
+        return WorklogAdded.model_validate(await self._client.task(TaskName.JIRA_ISSUE_WORKLOG, kwargs))
+
+    async def attach(self, **kwargs: Unpack[JiraIssueAttachArgs]) -> _list[Attachment]:
+        """Upload local files to a Jira issue."""
+        return [Attachment.model_validate(item) for item in await self._client.task(TaskName.JIRA_ISSUE_ATTACH, kwargs)]
+
+    async def attachments(self, **kwargs: Unpack[JiraIssueAttachmentsArgs]) -> _list[Attachment]:
+        """List a Jira issue's attachments."""
+        return [Attachment.model_validate(item) for item in await self._client.task(TaskName.JIRA_ISSUE_ATTACHMENTS, kwargs)]
+
+    async def types(self, **kwargs: Unpack[JiraIssueTypesArgs]) -> _list[str]:
         """Issue type names of a Jira project (without sub-task types), for the `type` argument of jira_issue_create."""
-        return self.task(TaskName.JIRA_ISSUE_TYPES, kwargs)
+        return await self._client.task(TaskName.JIRA_ISSUE_TYPES, kwargs)
 
-    def jira_me(self, **kwargs: Unpack[JiraMeArgs]) -> Any:
+
+class AsyncJiraJqlApi:
+    """``atl jira jql``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def check(self, **kwargs: Unpack[JiraJqlCheckArgs]) -> JqlCheck:
+        """Validate JQL with Jira's parser; returns valid, errors, warnings."""
+        return JqlCheck.model_validate(await self._client.task(TaskName.JIRA_JQL_CHECK, kwargs))
+
+    async def fields(self, **kwargs: Unpack[JiraJqlFieldsArgs]) -> JqlReference:
+        """Fields (with operators) and functions usable in JQL on this site."""
+        return JqlReference.model_validate(await self._client.task(TaskName.JIRA_JQL_FIELDS, kwargs))
+
+    async def suggest(self, **kwargs: Unpack[JiraJqlSuggestArgs]) -> _list[Suggestion]:
+        """Value suggestions for a JQL field, for example field=status prefix=In."""
+        return [Suggestion.model_validate(item) for item in await self._client.task(TaskName.JIRA_JQL_SUGGEST, kwargs)]
+
+
+class AsyncJiraProjectApi:
+    """``atl jira project``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraProjectListArgs]) -> _list[Project]:
+        """Jira projects."""
+        return [Project.model_validate(item) for item in await self._client.task(TaskName.JIRA_PROJECT_LIST, kwargs)]
+
+
+class AsyncJiraReleaseApi:
+    """``atl jira release``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraReleaseListArgs]) -> _list[Release]:
+        """Versions (releases) of a Jira project: name, released, archived, release date."""
+        return [Release.model_validate(item) for item in await self._client.task(TaskName.JIRA_RELEASE_LIST, kwargs)]
+
+
+class AsyncJiraSprintApi:
+    """``atl jira sprint``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def create(self, **kwargs: Unpack[JiraSprintCreateArgs]) -> Sprint:
+        """Create a future sprint on a board (default: the project's first board)."""
+        return Sprint.model_validate(await self._client.task(TaskName.JIRA_SPRINT_CREATE, kwargs))
+
+    async def start(self, **kwargs: Unpack[JiraSprintStartArgs]) -> Sprint:
+        """Start a future sprint; Jira needs a start and an end date."""
+        return Sprint.model_validate(await self._client.task(TaskName.JIRA_SPRINT_START, kwargs))
+
+    async def close(self, **kwargs: Unpack[JiraSprintCloseArgs]) -> Sprint:
+        """Complete an active sprint."""
+        return Sprint.model_validate(await self._client.task(TaskName.JIRA_SPRINT_CLOSE, kwargs))
+
+    async def list(self, **kwargs: Unpack[JiraSprintListArgs]) -> BoardSprints:
+        """Sprints of a board."""
+        return BoardSprints.model_validate(await self._client.task(TaskName.JIRA_SPRINT_LIST, kwargs))
+
+    async def add(self, **kwargs: Unpack[JiraSprintAddArgs]) -> SprintIssues:
+        """Move issues into a sprint."""
+        return SprintIssues.model_validate(await self._client.task(TaskName.JIRA_SPRINT_ADD, kwargs))
+
+
+class AsyncJiraWorklogApi:
+    """``atl jira worklog``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JiraWorklogListArgs]) -> _list[Worklog]:
+        """Time logged on a Jira issue: author, time spent, start, comment."""
+        return [Worklog.model_validate(item) for item in await self._client.task(TaskName.JIRA_WORKLOG_LIST, kwargs)]
+
+
+class AsyncJiraApi:
+    """Jira and Jira Software: issues, comments, sprints, boards, filters and JQL."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.board = AsyncJiraBoardApi(client)
+        """``atl jira board``"""
+        self.comment = AsyncJiraCommentApi(client)
+        """``atl jira comment``"""
+        self.component = AsyncJiraComponentApi(client)
+        """``atl jira component``"""
+        self.epic = AsyncJiraEpicApi(client)
+        """``atl jira epic``"""
+        self.field = AsyncJiraFieldApi(client)
+        """``atl jira field``"""
+        self.filter = AsyncJiraFilterApi(client)
+        """``atl jira filter``"""
+        self.issue = AsyncJiraIssueApi(client)
+        """``atl jira issue``"""
+        self.jql = AsyncJiraJqlApi(client)
+        """``atl jira jql``"""
+        self.project = AsyncJiraProjectApi(client)
+        """``atl jira project``"""
+        self.release = AsyncJiraReleaseApi(client)
+        """``atl jira release``"""
+        self.sprint = AsyncJiraSprintApi(client)
+        """``atl jira sprint``"""
+        self.worklog = AsyncJiraWorklogApi(client)
+        """``atl jira worklog``"""
+
+    async def me(self, **kwargs: Unpack[JiraMeArgs]) -> User:
         """The signed-in Jira user."""
-        return self.task(TaskName.JIRA_ME, kwargs)
+        return User.model_validate(await self._client.task(TaskName.JIRA_ME, kwargs))
 
-    def confluence_page_get(self, **kwargs: Unpack[ConfluencePageGetArgs]) -> Any:
-        """A Confluence page as Markdown (with title, space, version, url)."""
-        return self.task(TaskName.CONFLUENCE_PAGE_GET, kwargs)
 
-    def confluence_page_create(self, **kwargs: Unpack[ConfluencePageCreateArgs]) -> Any:
-        """Create a Confluence page from Markdown (or storage format)."""
-        return self.task(TaskName.CONFLUENCE_PAGE_CREATE, kwargs)
+class AsyncConfluenceAttachmentApi:
+    """``atl confluence attachment``"""
 
-    def confluence_blog_list(self, **kwargs: Unpack[ConfluenceBlogListArgs]) -> Any:
-        """Blog posts of a Confluence space, newest first."""
-        return self.task(TaskName.CONFLUENCE_BLOG_LIST, kwargs)
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
 
-    def confluence_blog_get(self, **kwargs: Unpack[ConfluenceBlogGetArgs]) -> Any:
-        """One Confluence blog post with its body as Markdown."""
-        return self.task(TaskName.CONFLUENCE_BLOG_GET, kwargs)
-
-    def confluence_blog_create(self, **kwargs: Unpack[ConfluenceBlogCreateArgs]) -> Any:
-        """Publish a Confluence blog post from Markdown."""
-        return self.task(TaskName.CONFLUENCE_BLOG_CREATE, kwargs)
-
-    def confluence_space_create(self, **kwargs: Unpack[ConfluenceSpaceCreateArgs]) -> Any:
-        """Create a Confluence space with a key, a name and an optional plain-text description."""
-        return self.task(TaskName.CONFLUENCE_SPACE_CREATE, kwargs)
-
-    def confluence_page_update(self, **kwargs: Unpack[ConfluencePageUpdateArgs]) -> Any:
-        """Replace a Confluence page's title and/or body; the version is bumped automatically."""
-        return self.task(TaskName.CONFLUENCE_PAGE_UPDATE, kwargs)
-
-    def confluence_page_delete(self, **kwargs: Unpack[ConfluencePageDeleteArgs]) -> Any:
-        """Delete a Confluence page."""
-        return self.task(TaskName.CONFLUENCE_PAGE_DELETE, kwargs)
-
-    def confluence_page_children(self, **kwargs: Unpack[ConfluencePageChildrenArgs]) -> Any:
-        """Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent."""
-        return self.task(TaskName.CONFLUENCE_PAGE_CHILDREN, kwargs)
-
-    def confluence_page_find(self, **kwargs: Unpack[ConfluencePageFindArgs]) -> Any:
-        """Confluence pages whose title contains the words, optionally in one space."""
-        return self.task(TaskName.CONFLUENCE_PAGE_FIND, kwargs)
-
-    def confluence_page_attach(self, **kwargs: Unpack[ConfluencePageAttachArgs]) -> Any:
-        """Upload local files to a Confluence page."""
-        return self.task(TaskName.CONFLUENCE_PAGE_ATTACH, kwargs)
-
-    def confluence_page_attachments(self, **kwargs: Unpack[ConfluencePageAttachmentsArgs]) -> Any:
-        """Attachments of a Confluence page with download URLs."""
-        return self.task(TaskName.CONFLUENCE_PAGE_ATTACHMENTS, kwargs)
-
-    def confluence_page_comments(self, **kwargs: Unpack[ConfluencePageCommentsArgs]) -> Any:
-        """Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`."""
-        return self.task(TaskName.CONFLUENCE_PAGE_COMMENTS, kwargs)
-
-    def confluence_page_comment(self, **kwargs: Unpack[ConfluencePageCommentArgs]) -> Any:
-        """Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`."""
-        return self.task(TaskName.CONFLUENCE_PAGE_COMMENT, kwargs)
-
-    def confluence_comment_delete(self, **kwargs: Unpack[ConfluenceCommentDeleteArgs]) -> Any:
-        """Delete a Confluence comment by ID."""
-        return self.task(TaskName.CONFLUENCE_COMMENT_DELETE, kwargs)
-
-    def confluence_attachment_delete(self, **kwargs: Unpack[ConfluenceAttachmentDeleteArgs]) -> Any:
+    async def delete(self, **kwargs: Unpack[ConfluenceAttachmentDeleteArgs]) -> Deleted:
         """Delete a Confluence attachment by ID."""
-        return self.task(TaskName.CONFLUENCE_ATTACHMENT_DELETE, kwargs)
+        return Deleted.model_validate(await self._client.task(TaskName.CONFLUENCE_ATTACHMENT_DELETE, kwargs))
 
-    def confluence_page_export(self, **kwargs: Unpack[ConfluencePageExportArgs]) -> Any:
+
+class AsyncConfluenceBlogApi:
+    """``atl confluence blog``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[ConfluenceBlogListArgs]) -> _list[PageSummary]:
+        """Blog posts of a Confluence space, newest first."""
+        return [PageSummary.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_BLOG_LIST, kwargs)]
+
+    async def get(self, **kwargs: Unpack[ConfluenceBlogGetArgs]) -> Page:
+        """One Confluence blog post with its body as Markdown."""
+        return Page.model_validate(await self._client.task(TaskName.CONFLUENCE_BLOG_GET, kwargs))
+
+    async def create(self, **kwargs: Unpack[ConfluenceBlogCreateArgs]) -> PageSummary:
+        """Publish a Confluence blog post from Markdown."""
+        return PageSummary.model_validate(await self._client.task(TaskName.CONFLUENCE_BLOG_CREATE, kwargs))
+
+
+class AsyncConfluenceCommentApi:
+    """``atl confluence comment``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def delete(self, **kwargs: Unpack[ConfluenceCommentDeleteArgs]) -> Deleted:
+        """Delete a Confluence comment by ID."""
+        return Deleted.model_validate(await self._client.task(TaskName.CONFLUENCE_COMMENT_DELETE, kwargs))
+
+
+class AsyncConfluencePageApi:
+    """``atl confluence page``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def get(self, **kwargs: Unpack[ConfluencePageGetArgs]) -> PageView:
+        """A Confluence page as Markdown (with title, space, version, url)."""
+        return PageView.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_GET, kwargs))
+
+    async def create(self, **kwargs: Unpack[ConfluencePageCreateArgs]) -> PageSummary:
+        """Create a Confluence page from Markdown (or storage format)."""
+        return PageSummary.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_CREATE, kwargs))
+
+    async def update(self, **kwargs: Unpack[ConfluencePageUpdateArgs]) -> PageSummary:
+        """Replace a Confluence page's title and/or body; the version is bumped automatically."""
+        return PageSummary.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_UPDATE, kwargs))
+
+    async def delete(self, **kwargs: Unpack[ConfluencePageDeleteArgs]) -> Deleted:
+        """Delete a Confluence page."""
+        return Deleted.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_DELETE, kwargs))
+
+    async def children(self, **kwargs: Unpack[ConfluencePageChildrenArgs]) -> _list[TreeNode]:
+        """Children of a Confluence page (Cloud: also folders), or with `recursive` the whole tree, depth first, each row with type, depth and parent."""
+        return [TreeNode.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_CHILDREN, kwargs)]
+
+    async def find(self, **kwargs: Unpack[ConfluencePageFindArgs]) -> _list[SearchHit]:
+        """Confluence pages whose title contains the words, optionally in one space."""
+        return [SearchHit.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_FIND, kwargs)]
+
+    async def attach(self, **kwargs: Unpack[ConfluencePageAttachArgs]) -> _list[PageAttachment]:
+        """Upload local files to a Confluence page."""
+        return [PageAttachment.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_ATTACH, kwargs)]
+
+    async def attachments(self, **kwargs: Unpack[ConfluencePageAttachmentsArgs]) -> _list[PageAttachment]:
+        """Attachments of a Confluence page with download URLs."""
+        return [PageAttachment.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_ATTACHMENTS, kwargs)]
+
+    async def comments(self, **kwargs: Unpack[ConfluencePageCommentsArgs]) -> _list[PageComment]:
+        """Footer (or with `inline`, inline) comments of a Confluence page, oldest first, as Markdown, with the replied-to `parent`."""
+        return [PageComment.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_COMMENTS, kwargs)]
+
+    async def comment(self, **kwargs: Unpack[ConfluencePageCommentArgs]) -> PageComment:
+        """Add a footer comment (Markdown) to a Confluence page, or a reply with `parent`."""
+        return PageComment.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_COMMENT, kwargs))
+
+    async def export(self, **kwargs: Unpack[ConfluencePageExportArgs]) -> _list[Exported]:
         """Export a Confluence page (and with `recursive` its tree) to local Markdown folders: <title>/index.md with front matter and _attachments/. Changes nothing on the server."""
-        return self.task(TaskName.CONFLUENCE_PAGE_EXPORT, kwargs)
+        return [Exported.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_EXPORT, kwargs)]
 
-    def confluence_page_push(self, **kwargs: Unpack[ConfluencePagePushArgs]) -> Any:
+    async def push(self, **kwargs: Unpack[ConfluencePagePushArgs]) -> _list[Pushed]:
         """Publish local Markdown files: update the page in each file's front matter (refusing pages changed on the server unless `force`, skipping unchanged ones), create pages for new files under their folder's index.md, upload referenced images, and write ids and versions back."""
-        return self.task(TaskName.CONFLUENCE_PAGE_PUSH, kwargs)
+        return [Pushed.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_PUSH, kwargs)]
 
-    def confluence_page_copy_tree(self, **kwargs: Unpack[ConfluencePageCopyTreeArgs]) -> Any:
+    async def copy_tree(self, **kwargs: Unpack[ConfluencePageCopyTreeArgs]) -> _list[Copied]:
         """Copy a Confluence page and the pages below it under another page (titles, bodies, labels)."""
-        return self.task(TaskName.CONFLUENCE_PAGE_COPY_TREE, kwargs)
+        return [Copied.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_COPY_TREE, kwargs)]
 
-    def confluence_page_labels(self, **kwargs: Unpack[ConfluencePageLabelsArgs]) -> Any:
+    async def labels(self, **kwargs: Unpack[ConfluencePageLabelsArgs]) -> _list[str]:
         """Labels of a Confluence page."""
-        return self.task(TaskName.CONFLUENCE_PAGE_LABELS, kwargs)
+        return await self._client.task(TaskName.CONFLUENCE_PAGE_LABELS, kwargs)
 
-    def confluence_page_label(self, **kwargs: Unpack[ConfluencePageLabelArgs]) -> Any:
+    async def label(self, **kwargs: Unpack[ConfluencePageLabelArgs]) -> _list[str]:
         """Add and remove labels on a Confluence page; returns the resulting labels."""
-        return self.task(TaskName.CONFLUENCE_PAGE_LABEL, kwargs)
+        return await self._client.task(TaskName.CONFLUENCE_PAGE_LABEL, kwargs)
 
-    def confluence_page_move(self, **kwargs: Unpack[ConfluencePageMoveArgs]) -> Any:
+    async def move(self, **kwargs: Unpack[ConfluencePageMoveArgs]) -> PageSummary:
         """Move a Confluence page under another page (position append) or next to it (before/after, Cloud only)."""
-        return self.task(TaskName.CONFLUENCE_PAGE_MOVE, kwargs)
+        return PageSummary.model_validate(await self._client.task(TaskName.CONFLUENCE_PAGE_MOVE, kwargs))
 
-    def confluence_page_history(self, **kwargs: Unpack[ConfluencePageHistoryArgs]) -> Any:
+    async def history(self, **kwargs: Unpack[ConfluencePageHistoryArgs]) -> _list[PageVersion]:
         """Versions of a Confluence page, newest first: number, author, date, message. Read one with confluence_page_get and `version`."""
-        return self.task(TaskName.CONFLUENCE_PAGE_HISTORY, kwargs)
+        return [PageVersion.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_PAGE_HISTORY, kwargs)]
 
-    def confluence_space_list(self, **kwargs: Unpack[ConfluenceSpaceListArgs]) -> Any:
+
+class AsyncConfluenceSpaceApi:
+    """``atl confluence space``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def create(self, **kwargs: Unpack[ConfluenceSpaceCreateArgs]) -> Space:
+        """Create a Confluence space with a key, a name and an optional plain-text description."""
+        return Space.model_validate(await self._client.task(TaskName.CONFLUENCE_SPACE_CREATE, kwargs))
+
+    async def list(self, **kwargs: Unpack[ConfluenceSpaceListArgs]) -> _list[Space]:
         """Confluence spaces."""
-        return self.task(TaskName.CONFLUENCE_SPACE_LIST, kwargs)
+        return [Space.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_SPACE_LIST, kwargs)]
 
-    def confluence_space_pages(self, **kwargs: Unpack[ConfluenceSpacePagesArgs]) -> Any:
+    async def pages(self, **kwargs: Unpack[ConfluenceSpacePagesArgs]) -> _list[PageSummary]:
         """Top-level pages of a Confluence space."""
-        return self.task(TaskName.CONFLUENCE_SPACE_PAGES, kwargs)
+        return [PageSummary.model_validate(item) for item in await self._client.task(TaskName.CONFLUENCE_SPACE_PAGES, kwargs)]
 
-    def confluence_search(self, **kwargs: Unpack[ConfluenceSearchArgs]) -> Any:
+
+class AsyncConfluenceApi:
+    """Confluence pages, blogs, spaces, comments, labels and attachments."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.attachment = AsyncConfluenceAttachmentApi(client)
+        """``atl confluence attachment``"""
+        self.blog = AsyncConfluenceBlogApi(client)
+        """``atl confluence blog``"""
+        self.comment = AsyncConfluenceCommentApi(client)
+        """``atl confluence comment``"""
+        self.page = AsyncConfluencePageApi(client)
+        """``atl confluence page``"""
+        self.space = AsyncConfluenceSpaceApi(client)
+        """``atl confluence space``"""
+
+    async def search(self, **kwargs: Unpack[ConfluenceSearchArgs]) -> SearchResults:
         """Search Confluence by words or CQL; returns id, type, title, space, excerpt, url."""
-        return self.task(TaskName.CONFLUENCE_SEARCH, kwargs)
+        return SearchResults.model_validate(await self._client.task(TaskName.CONFLUENCE_SEARCH, kwargs))
 
-    def bitbucket_repo_list(self, **kwargs: Unpack[BitbucketRepoListArgs]) -> Any:
-        """Bitbucket repositories of a workspace (Cloud) or project (Data Center), or the ones you belong to."""
-        return self.task(TaskName.BITBUCKET_REPO_LIST, kwargs)
 
-    def bitbucket_repo_view(self, **kwargs: Unpack[BitbucketRepoViewArgs]) -> Any:
-        """One Bitbucket repository with its default branch and URL."""
-        return self.task(TaskName.BITBUCKET_REPO_VIEW, kwargs)
+class AsyncBitbucketBranchApi:
+    """``atl bitbucket branch``"""
 
-    def bitbucket_branch_list(self, **kwargs: Unpack[BitbucketBranchListArgs]) -> Any:
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[BitbucketBranchListArgs]) -> _list[Branch]:
         """Branches of a Bitbucket repository, most recently changed first."""
-        return self.task(TaskName.BITBUCKET_BRANCH_LIST, kwargs)
+        return [Branch.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_BRANCH_LIST, kwargs)]
 
-    def bitbucket_pr_list(self, **kwargs: Unpack[BitbucketPrListArgs]) -> Any:
-        """Pull requests of a Bitbucket repository by state."""
-        return self.task(TaskName.BITBUCKET_PR_LIST, kwargs)
-
-    def bitbucket_pr_view(self, **kwargs: Unpack[BitbucketPrViewArgs]) -> Any:
-        """One pull request with description, reviewers and approvals."""
-        return self.task(TaskName.BITBUCKET_PR_VIEW, kwargs)
-
-    def bitbucket_pr_create(self, **kwargs: Unpack[BitbucketPrCreateArgs]) -> Any:
-        """Open a pull request from a source branch."""
-        return self.task(TaskName.BITBUCKET_PR_CREATE, kwargs)
-
-    def bitbucket_pr_merge(self, **kwargs: Unpack[BitbucketPrMergeArgs]) -> Any:
-        """Merge a pull request."""
-        return self.task(TaskName.BITBUCKET_PR_MERGE, kwargs)
-
-    def bitbucket_pr_approve(self, **kwargs: Unpack[BitbucketPrApproveArgs]) -> Any:
-        """Approve a pull request as the signed-in user."""
-        return self.task(TaskName.BITBUCKET_PR_APPROVE, kwargs)
-
-    def bitbucket_pr_comment(self, **kwargs: Unpack[BitbucketPrCommentArgs]) -> Any:
-        """Add a Markdown comment to a pull request."""
-        return self.task(TaskName.BITBUCKET_PR_COMMENT, kwargs)
-
-    def bitbucket_pr_diff(self, **kwargs: Unpack[BitbucketPrDiffArgs]) -> Any:
-        """The unified diff of a pull request."""
-        return self.task(TaskName.BITBUCKET_PR_DIFF, kwargs)
-
-    def bitbucket_pr_comments(self, **kwargs: Unpack[BitbucketPrCommentsArgs]) -> Any:
-        """Comments of a pull request, oldest first, as Markdown: general and inline (path, line), replies flattened with `parent`."""
-        return self.task(TaskName.BITBUCKET_PR_COMMENTS, kwargs)
-
-    def bitbucket_pr_checks(self, **kwargs: Unpack[BitbucketPrChecksArgs]) -> Any:
-        """Build statuses of a pull request's latest commit, with `passed` (none failed) and `pending` (some still running)."""
-        return self.task(TaskName.BITBUCKET_PR_CHECKS, kwargs)
-
-    def bitbucket_pr_unapprove(self, **kwargs: Unpack[BitbucketPrUnapproveArgs]) -> Any:
-        """Remove your approval from a pull request."""
-        return self.task(TaskName.BITBUCKET_PR_UNAPPROVE, kwargs)
-
-    def bitbucket_pr_ready(self, **kwargs: Unpack[BitbucketPrReadyArgs]) -> Any:
-        """Mark a draft pull request as ready for review (or, with `draft: true`, as a draft again)."""
-        return self.task(TaskName.BITBUCKET_PR_READY, kwargs)
-
-    def bitbucket_branch_create(self, **kwargs: Unpack[BitbucketBranchCreateArgs]) -> Any:
+    async def create(self, **kwargs: Unpack[BitbucketBranchCreateArgs]) -> Branch:
         """Create a branch from another branch, a tag or a commit (default: the main branch)."""
-        return self.task(TaskName.BITBUCKET_BRANCH_CREATE, kwargs)
+        return Branch.model_validate(await self._client.task(TaskName.BITBUCKET_BRANCH_CREATE, kwargs))
 
-    def bitbucket_branch_delete(self, **kwargs: Unpack[BitbucketBranchDeleteArgs]) -> Any:
+    async def delete(self, **kwargs: Unpack[BitbucketBranchDeleteArgs]) -> BranchDeleted:
         """Delete a branch. Unmerged commits on it can be lost."""
-        return self.task(TaskName.BITBUCKET_BRANCH_DELETE, kwargs)
+        return BranchDeleted.model_validate(await self._client.task(TaskName.BITBUCKET_BRANCH_DELETE, kwargs))
 
-    def bitbucket_commit_list(self, **kwargs: Unpack[BitbucketCommitListArgs]) -> Any:
+
+class AsyncBitbucketCommitApi:
+    """``atl bitbucket commit``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[BitbucketCommitListArgs]) -> _list[Commit]:
         """Recent commits of a branch, newest first: hash, author, date, first line of the message."""
-        return self.task(TaskName.BITBUCKET_COMMIT_LIST, kwargs)
+        return [Commit.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_COMMIT_LIST, kwargs)]
 
-    def bitbucket_pipeline_list(self, **kwargs: Unpack[BitbucketPipelineListArgs]) -> Any:
+
+class AsyncBitbucketPipelineApi:
+    """``atl bitbucket pipeline``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[BitbucketPipelineListArgs]) -> _list[Pipeline]:
         """Latest Bitbucket Pipelines runs, newest first (Cloud only)."""
-        return self.task(TaskName.BITBUCKET_PIPELINE_LIST, kwargs)
+        return [Pipeline.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_PIPELINE_LIST, kwargs)]
 
-    def bitbucket_pipeline_run(self, **kwargs: Unpack[BitbucketPipelineRunArgs]) -> Any:
+    async def run(self, **kwargs: Unpack[BitbucketPipelineRunArgs]) -> Pipeline:
         """Start the pipeline of a branch, or a custom pipeline (Cloud only)."""
-        return self.task(TaskName.BITBUCKET_PIPELINE_RUN, kwargs)
+        return Pipeline.model_validate(await self._client.task(TaskName.BITBUCKET_PIPELINE_RUN, kwargs))
 
-    def bitbucket_pr_decline(self, **kwargs: Unpack[BitbucketPrDeclineArgs]) -> Any:
-        """Decline a Bitbucket pull request (Cloud cannot reopen it)."""
-        return self.task(TaskName.BITBUCKET_PR_DECLINE, kwargs)
-
-    def bitbucket_pr_request_changes(self, **kwargs: Unpack[BitbucketPrRequestChangesArgs]) -> Any:
-        """Mark a Bitbucket pull request as needing changes by you (Cloud: request changes; Data Center: needs work)."""
-        return self.task(TaskName.BITBUCKET_PR_REQUEST_CHANGES, kwargs)
-
-    def bitbucket_pr_edit(self, **kwargs: Unpack[BitbucketPrEditArgs]) -> Any:
-        """Change a Bitbucket pull request's title, description (Markdown) or destination branch."""
-        return self.task(TaskName.BITBUCKET_PR_EDIT, kwargs)
-
-    def bitbucket_pr_reviewers(self, **kwargs: Unpack[BitbucketPrReviewersArgs]) -> Any:
-        """Add and remove reviewers of a Bitbucket pull request; other reviewers are kept."""
-        return self.task(TaskName.BITBUCKET_PR_REVIEWERS, kwargs)
-
-    def bitbucket_pipeline_stop(self, **kwargs: Unpack[BitbucketPipelineStopArgs]) -> Any:
+    async def stop(self, **kwargs: Unpack[BitbucketPipelineStopArgs]) -> Pipeline:
         """Stop a running Bitbucket pipeline by build number or UUID (Cloud only)."""
-        return self.task(TaskName.BITBUCKET_PIPELINE_STOP, kwargs)
+        return Pipeline.model_validate(await self._client.task(TaskName.BITBUCKET_PIPELINE_STOP, kwargs))
 
-    def bitbucket_pipeline_view(self, **kwargs: Unpack[BitbucketPipelineViewArgs]) -> Any:
+    async def view(self, **kwargs: Unpack[BitbucketPipelineViewArgs]) -> PipelineDetail:
         """One Bitbucket pipeline by build number or UUID, with each step's state and result (Cloud only)."""
-        return self.task(TaskName.BITBUCKET_PIPELINE_VIEW, kwargs)
+        return PipelineDetail.model_validate(await self._client.task(TaskName.BITBUCKET_PIPELINE_VIEW, kwargs))
 
-    def bitbucket_pipeline_logs(self, **kwargs: Unpack[BitbucketPipelineLogsArgs]) -> Any:
+    async def logs(self, **kwargs: Unpack[BitbucketPipelineLogsArgs]) -> PipelineLog:
         """Log text of one pipeline step (by name or UUID) or of every step (Cloud only)."""
-        return self.task(TaskName.BITBUCKET_PIPELINE_LOGS, kwargs)
+        return PipelineLog.model_validate(await self._client.task(TaskName.BITBUCKET_PIPELINE_LOGS, kwargs))
 
-    def jsm_desk_list(self, **kwargs: Unpack[JsmDeskListArgs]) -> Any:
+
+class AsyncBitbucketPrApi:
+    """``atl bitbucket pr``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[BitbucketPrListArgs]) -> _list[PullRequest]:
+        """Pull requests of a Bitbucket repository by state."""
+        return [PullRequest.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_PR_LIST, kwargs)]
+
+    async def view(self, **kwargs: Unpack[BitbucketPrViewArgs]) -> PullRequest:
+        """One pull request with description, reviewers and approvals."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_VIEW, kwargs))
+
+    async def create(self, **kwargs: Unpack[BitbucketPrCreateArgs]) -> PullRequest:
+        """Open a pull request from a source branch."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_CREATE, kwargs))
+
+    async def merge(self, **kwargs: Unpack[BitbucketPrMergeArgs]) -> PullRequest:
+        """Merge a pull request."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_MERGE, kwargs))
+
+    async def approve(self, **kwargs: Unpack[BitbucketPrApproveArgs]) -> PrApproval:
+        """Approve a pull request as the signed-in user."""
+        return PrApproval.model_validate(await self._client.task(TaskName.BITBUCKET_PR_APPROVE, kwargs))
+
+    async def comment(self, **kwargs: Unpack[BitbucketPrCommentArgs]) -> PrCommented:
+        """Add a Markdown comment to a pull request."""
+        return PrCommented.model_validate(await self._client.task(TaskName.BITBUCKET_PR_COMMENT, kwargs))
+
+    async def diff(self, **kwargs: Unpack[BitbucketPrDiffArgs]) -> PrDiff:
+        """The unified diff of a pull request."""
+        return PrDiff.model_validate(await self._client.task(TaskName.BITBUCKET_PR_DIFF, kwargs))
+
+    async def comments(self, **kwargs: Unpack[BitbucketPrCommentsArgs]) -> _list[PrComment]:
+        """Comments of a pull request, oldest first, as Markdown: general and inline (path, line), replies flattened with `parent`."""
+        return [PrComment.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_PR_COMMENTS, kwargs)]
+
+    async def checks(self, **kwargs: Unpack[BitbucketPrChecksArgs]) -> PrChecks:
+        """Build statuses of a pull request's latest commit, with `passed` (none failed) and `pending` (some still running)."""
+        return PrChecks.model_validate(await self._client.task(TaskName.BITBUCKET_PR_CHECKS, kwargs))
+
+    async def unapprove(self, **kwargs: Unpack[BitbucketPrUnapproveArgs]) -> PrApproval:
+        """Remove your approval from a pull request."""
+        return PrApproval.model_validate(await self._client.task(TaskName.BITBUCKET_PR_UNAPPROVE, kwargs))
+
+    async def ready(self, **kwargs: Unpack[BitbucketPrReadyArgs]) -> PullRequest:
+        """Mark a draft pull request as ready for review (or, with `draft: true`, as a draft again)."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_READY, kwargs))
+
+    async def decline(self, **kwargs: Unpack[BitbucketPrDeclineArgs]) -> PullRequest:
+        """Decline a Bitbucket pull request (Cloud cannot reopen it)."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_DECLINE, kwargs))
+
+    async def request_changes(self, **kwargs: Unpack[BitbucketPrRequestChangesArgs]) -> ChangesRequested:
+        """Mark a Bitbucket pull request as needing changes by you (Cloud: request changes; Data Center: needs work)."""
+        return ChangesRequested.model_validate(await self._client.task(TaskName.BITBUCKET_PR_REQUEST_CHANGES, kwargs))
+
+    async def edit(self, **kwargs: Unpack[BitbucketPrEditArgs]) -> PullRequest:
+        """Change a Bitbucket pull request's title, description (Markdown) or destination branch."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_EDIT, kwargs))
+
+    async def reviewers(self, **kwargs: Unpack[BitbucketPrReviewersArgs]) -> PullRequest:
+        """Add and remove reviewers of a Bitbucket pull request; other reviewers are kept."""
+        return PullRequest.model_validate(await self._client.task(TaskName.BITBUCKET_PR_REVIEWERS, kwargs))
+
+
+class AsyncBitbucketRepoApi:
+    """``atl bitbucket repo``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[BitbucketRepoListArgs]) -> _list[Repo]:
+        """Bitbucket repositories of a workspace (Cloud) or project (Data Center), or the ones you belong to."""
+        return [Repo.model_validate(item) for item in await self._client.task(TaskName.BITBUCKET_REPO_LIST, kwargs)]
+
+    async def view(self, **kwargs: Unpack[BitbucketRepoViewArgs]) -> Repo:
+        """One Bitbucket repository with its default branch and URL."""
+        return Repo.model_validate(await self._client.task(TaskName.BITBUCKET_REPO_VIEW, kwargs))
+
+
+class AsyncBitbucketApi:
+    """Bitbucket repositories, branches, pull requests and pipelines."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.branch = AsyncBitbucketBranchApi(client)
+        """``atl bitbucket branch``"""
+        self.commit = AsyncBitbucketCommitApi(client)
+        """``atl bitbucket commit``"""
+        self.pipeline = AsyncBitbucketPipelineApi(client)
+        """``atl bitbucket pipeline``"""
+        self.pr = AsyncBitbucketPrApi(client)
+        """``atl bitbucket pr``"""
+        self.repo = AsyncBitbucketRepoApi(client)
+        """``atl bitbucket repo``"""
+
+
+class AsyncJsmDeskApi:
+    """``atl jsm desk``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JsmDeskListArgs]) -> _list[Desk]:
         """Jira Service Management service desks (id, project key, name)."""
-        return self.task(TaskName.JSM_DESK_LIST, kwargs)
+        return [Desk.model_validate(item) for item in await self._client.task(TaskName.JSM_DESK_LIST, kwargs)]
 
-    def jsm_request_types(self, **kwargs: Unpack[JsmRequestTypesArgs]) -> Any:
-        """Request types of a service desk."""
-        return self.task(TaskName.JSM_REQUEST_TYPES, kwargs)
 
-    def jsm_queue_list(self, **kwargs: Unpack[JsmQueueListArgs]) -> Any:
+class AsyncJsmQueueApi:
+    """``atl jsm queue``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[JsmQueueListArgs]) -> _list[Queue]:
         """Queues of a service desk with issue counts."""
-        return self.task(TaskName.JSM_QUEUE_LIST, kwargs)
+        return [Queue.model_validate(item) for item in await self._client.task(TaskName.JSM_QUEUE_LIST, kwargs)]
 
-    def jsm_queue_issues(self, **kwargs: Unpack[JsmQueueIssuesArgs]) -> Any:
+    async def issues(self, **kwargs: Unpack[JsmQueueIssuesArgs]) -> _list[IssueSummary]:
         """Issues in a service desk queue (by queue ID or name)."""
-        return self.task(TaskName.JSM_QUEUE_ISSUES, kwargs)
+        return [IssueSummary.model_validate(item) for item in await self._client.task(TaskName.JSM_QUEUE_ISSUES, kwargs)]
 
-    def jsm_request_list(self, **kwargs: Unpack[JsmRequestListArgs]) -> Any:
+
+class AsyncJsmRequestApi:
+    """``atl jsm request``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def types(self, **kwargs: Unpack[JsmRequestTypesArgs]) -> _list[RequestType]:
+        """Request types of a service desk."""
+        return [RequestType.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_TYPES, kwargs)]
+
+    async def list(self, **kwargs: Unpack[JsmRequestListArgs]) -> _list[Request]:
         """Customer requests by status, optionally of one service desk."""
-        return self.task(TaskName.JSM_REQUEST_LIST, kwargs)
+        return [Request.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_LIST, kwargs)]
 
-    def jsm_request_view(self, **kwargs: Unpack[JsmRequestViewArgs]) -> Any:
+    async def view(self, **kwargs: Unpack[JsmRequestViewArgs]) -> RequestDetail:
         """One customer request with its description and latest comments."""
-        return self.task(TaskName.JSM_REQUEST_VIEW, kwargs)
+        return RequestDetail.model_validate(await self._client.task(TaskName.JSM_REQUEST_VIEW, kwargs))
 
-    def jsm_request_create(self, **kwargs: Unpack[JsmRequestCreateArgs]) -> Any:
+    async def create(self, **kwargs: Unpack[JsmRequestCreateArgs]) -> Request:
         """Raise a customer request, optionally for a customer."""
-        return self.task(TaskName.JSM_REQUEST_CREATE, kwargs)
+        return Request.model_validate(await self._client.task(TaskName.JSM_REQUEST_CREATE, kwargs))
 
-    def jsm_request_comment(self, **kwargs: Unpack[JsmRequestCommentArgs]) -> Any:
+    async def comment(self, **kwargs: Unpack[JsmRequestCommentArgs]) -> RequestComment:
         """Reply to a customer request, or add an internal note."""
-        return self.task(TaskName.JSM_REQUEST_COMMENT, kwargs)
+        return RequestComment.model_validate(await self._client.task(TaskName.JSM_REQUEST_COMMENT, kwargs))
 
-    def jsm_request_transitions(self, **kwargs: Unpack[JsmRequestTransitionsArgs]) -> Any:
+    async def transitions(self, **kwargs: Unpack[JsmRequestTransitionsArgs]) -> _list[RequestTransition]:
         """Transitions available on a customer request."""
-        return self.task(TaskName.JSM_REQUEST_TRANSITIONS, kwargs)
+        return [RequestTransition.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_TRANSITIONS, kwargs)]
 
-    def jsm_request_move(self, **kwargs: Unpack[JsmRequestMoveArgs]) -> Any:
+    async def move(self, **kwargs: Unpack[JsmRequestMoveArgs]) -> RequestMoved:
         """Run a customer request transition by name or ID."""
-        return self.task(TaskName.JSM_REQUEST_MOVE, kwargs)
+        return RequestMoved.model_validate(await self._client.task(TaskName.JSM_REQUEST_MOVE, kwargs))
 
-    def jsm_request_approvals(self, **kwargs: Unpack[JsmRequestApprovalsArgs]) -> Any:
+    async def approvals(self, **kwargs: Unpack[JsmRequestApprovalsArgs]) -> _list[Approval]:
         """Approvals of a JSM request: name, decision (pending, approved, declined), approvers, and whether you can answer."""
-        return self.task(TaskName.JSM_REQUEST_APPROVALS, kwargs)
+        return [Approval.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_APPROVALS, kwargs)]
 
-    def jsm_request_approve(self, **kwargs: Unpack[JsmRequestApproveArgs]) -> Any:
+    async def approve(self, **kwargs: Unpack[JsmRequestApproveArgs]) -> Approval:
         """Approve or decline (decision: decline) a JSM request's approval; without an ID, the one pending approval you can answer."""
-        return self.task(TaskName.JSM_REQUEST_APPROVE, kwargs)
+        return Approval.model_validate(await self._client.task(TaskName.JSM_REQUEST_APPROVE, kwargs))
 
-    def jsm_request_participants(self, **kwargs: Unpack[JsmRequestParticipantsArgs]) -> Any:
+    async def participants(self, **kwargs: Unpack[JsmRequestParticipantsArgs]) -> Participants:
         """List a JSM request's participants, after adding and removing any (me, an email or a name)."""
-        return self.task(TaskName.JSM_REQUEST_PARTICIPANTS, kwargs)
+        return Participants.model_validate(await self._client.task(TaskName.JSM_REQUEST_PARTICIPANTS, kwargs))
 
-    def jsm_request_sla(self, **kwargs: Unpack[JsmRequestSlaArgs]) -> Any:
+    async def sla(self, **kwargs: Unpack[JsmRequestSlaArgs]) -> _list[Sla]:
         """SLAs of a JSM request: state (ongoing, paused, met, breached), time remaining and goal."""
-        return self.task(TaskName.JSM_REQUEST_SLA, kwargs)
+        return [Sla.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_SLA, kwargs)]
 
-    def jsm_request_attach(self, **kwargs: Unpack[JsmRequestAttachArgs]) -> Any:
+    async def attach(self, **kwargs: Unpack[JsmRequestAttachArgs]) -> _list[RequestAttachment]:
         """Attach local files to a JSM request (public unless internal)."""
-        return self.task(TaskName.JSM_REQUEST_ATTACH, kwargs)
+        return [RequestAttachment.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_ATTACH, kwargs)]
 
-    def jsm_request_attachments(self, **kwargs: Unpack[JsmRequestAttachmentsArgs]) -> Any:
+    async def attachments(self, **kwargs: Unpack[JsmRequestAttachmentsArgs]) -> _list[RequestAttachment]:
         """Attachments of a JSM request with download URLs."""
-        return self.task(TaskName.JSM_REQUEST_ATTACHMENTS, kwargs)
+        return [RequestAttachment.model_validate(item) for item in await self._client.task(TaskName.JSM_REQUEST_ATTACHMENTS, kwargs)]
 
-    def trello_board_list(self, **kwargs: Unpack[TrelloBoardListArgs]) -> Any:
+
+class AsyncJsmApi:
+    """Jira Service Management desks, queues, requests and approvals."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.desk = AsyncJsmDeskApi(client)
+        """``atl jsm desk``"""
+        self.queue = AsyncJsmQueueApi(client)
+        """``atl jsm queue``"""
+        self.request = AsyncJsmRequestApi(client)
+        """``atl jsm request``"""
+
+
+class AsyncTrelloBoardApi:
+    """``atl trello board``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[TrelloBoardListArgs]) -> _list[TrelloBoard]:
         """Your open Trello boards."""
-        return self.task(TaskName.TRELLO_BOARD_LIST, kwargs)
+        return [TrelloBoard.model_validate(item) for item in await self._client.task(TaskName.TRELLO_BOARD_LIST, kwargs)]
 
-    def trello_list_list(self, **kwargs: Unpack[TrelloListListArgs]) -> Any:
-        """Open lists of a Trello board (board by name, URL, short link or ID)."""
-        return self.task(TaskName.TRELLO_LIST_LIST, kwargs)
 
-    def trello_card_list(self, **kwargs: Unpack[TrelloCardListArgs]) -> Any:
+class AsyncTrelloCardApi:
+    """``atl trello card``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[TrelloCardListArgs]) -> _list[Card]:
         """Cards of a Trello board or one of its lists, or your cards on every board (`mine`)."""
-        return self.task(TaskName.TRELLO_CARD_LIST, kwargs)
+        return [Card.model_validate(item) for item in await self._client.task(TaskName.TRELLO_CARD_LIST, kwargs)]
 
-    def trello_card_view(self, **kwargs: Unpack[TrelloCardViewArgs]) -> Any:
+    async def view(self, **kwargs: Unpack[TrelloCardViewArgs]) -> CardDetail:
         """One Trello card with list, board, description and latest comments."""
-        return self.task(TaskName.TRELLO_CARD_VIEW, kwargs)
+        return CardDetail.model_validate(await self._client.task(TaskName.TRELLO_CARD_VIEW, kwargs))
 
-    def trello_card_create(self, **kwargs: Unpack[TrelloCardCreateArgs]) -> Any:
+    async def create(self, **kwargs: Unpack[TrelloCardCreateArgs]) -> Card:
         """Create a Trello card in a list (by name with `board`, or by list ID)."""
-        return self.task(TaskName.TRELLO_CARD_CREATE, kwargs)
+        return Card.model_validate(await self._client.task(TaskName.TRELLO_CARD_CREATE, kwargs))
 
-    def trello_card_move(self, **kwargs: Unpack[TrelloCardMoveArgs]) -> Any:
+    async def move(self, **kwargs: Unpack[TrelloCardMoveArgs]) -> Card:
         """Move a Trello card to another list (by default on the card's own board)."""
-        return self.task(TaskName.TRELLO_CARD_MOVE, kwargs)
+        return Card.model_validate(await self._client.task(TaskName.TRELLO_CARD_MOVE, kwargs))
 
-    def trello_card_comment(self, **kwargs: Unpack[TrelloCardCommentArgs]) -> Any:
+    async def comment(self, **kwargs: Unpack[TrelloCardCommentArgs]) -> CardComment:
         """Add a comment to a Trello card."""
-        return self.task(TaskName.TRELLO_CARD_COMMENT, kwargs)
+        return CardComment.model_validate(await self._client.task(TaskName.TRELLO_CARD_COMMENT, kwargs))
 
-    def trello_card_archive(self, **kwargs: Unpack[TrelloCardArchiveArgs]) -> Any:
+    async def archive(self, **kwargs: Unpack[TrelloCardArchiveArgs]) -> Card:
         """Archive (close) a Trello card."""
-        return self.task(TaskName.TRELLO_CARD_ARCHIVE, kwargs)
+        return Card.model_validate(await self._client.task(TaskName.TRELLO_CARD_ARCHIVE, kwargs))
 
-    def trello_card_edit(self, **kwargs: Unpack[TrelloCardEditArgs]) -> Any:
+    async def edit(self, **kwargs: Unpack[TrelloCardEditArgs]) -> Card:
         """Change a Trello card: name, description, due date, done, labels (by name or color) and members (username, name or me)."""
-        return self.task(TaskName.TRELLO_CARD_EDIT, kwargs)
+        return Card.model_validate(await self._client.task(TaskName.TRELLO_CARD_EDIT, kwargs))
 
-    def trello_checklist_list(self, **kwargs: Unpack[TrelloChecklistListArgs]) -> Any:
+
+class AsyncTrelloChecklistApi:
+    """``atl trello checklist``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[TrelloChecklistListArgs]) -> _list[Checklist]:
         """Checklists of a Trello card with their items and whether each is done."""
-        return self.task(TaskName.TRELLO_CHECKLIST_LIST, kwargs)
+        return [Checklist.model_validate(item) for item in await self._client.task(TaskName.TRELLO_CHECKLIST_LIST, kwargs)]
 
-    def trello_checklist_create(self, **kwargs: Unpack[TrelloChecklistCreateArgs]) -> Any:
+    async def create(self, **kwargs: Unpack[TrelloChecklistCreateArgs]) -> Checklist:
         """Add a checklist with items to a Trello card."""
-        return self.task(TaskName.TRELLO_CHECKLIST_CREATE, kwargs)
+        return Checklist.model_validate(await self._client.task(TaskName.TRELLO_CHECKLIST_CREATE, kwargs))
 
-    def trello_checklist_check(self, **kwargs: Unpack[TrelloChecklistCheckArgs]) -> Any:
+    async def check(self, **kwargs: Unpack[TrelloChecklistCheckArgs]) -> CheckItem:
         """Tick (or with done: false, untick) a Trello checklist item by name or ID."""
-        return self.task(TaskName.TRELLO_CHECKLIST_CHECK, kwargs)
+        return CheckItem.model_validate(await self._client.task(TaskName.TRELLO_CHECKLIST_CHECK, kwargs))
 
-    def admin_org_list(self, **kwargs: Unpack[AdminOrgListArgs]) -> Any:
-        """Organizations the Atlassian Admin API key can see."""
-        return self.task(TaskName.ADMIN_ORG_LIST, kwargs)
 
-    def admin_directory_list(self, **kwargs: Unpack[AdminDirectoryListArgs]) -> Any:
+class AsyncTrelloListApi:
+    """``atl trello list``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[TrelloListListArgs]) -> _list[TrelloList]:
+        """Open lists of a Trello board (board by name, URL, short link or ID)."""
+        return [TrelloList.model_validate(item) for item in await self._client.task(TaskName.TRELLO_LIST_LIST, kwargs)]
+
+
+class AsyncTrelloApi:
+    """Trello boards, lists, cards and checklists."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.board = AsyncTrelloBoardApi(client)
+        """``atl trello board``"""
+        self.card = AsyncTrelloCardApi(client)
+        """``atl trello card``"""
+        self.checklist = AsyncTrelloChecklistApi(client)
+        """``atl trello checklist``"""
+        self.list = AsyncTrelloListApi(client)
+        """``atl trello list``"""
+
+
+class AsyncAdminDirectoryApi:
+    """``atl admin directory``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[AdminDirectoryListArgs]) -> _list[Directory]:
         """User directories of an Atlassian organization."""
-        return self.task(TaskName.ADMIN_DIRECTORY_LIST, kwargs)
+        return [Directory.model_validate(item) for item in await self._client.task(TaskName.ADMIN_DIRECTORY_LIST, kwargs)]
 
-    def admin_user_list(self, **kwargs: Unpack[AdminUserListArgs]) -> Any:
-        """Managed users of an Atlassian organization (every directory), optionally matching `search`."""
-        return self.task(TaskName.ADMIN_USER_LIST, kwargs)
 
-    def admin_user_suspend(self, **kwargs: Unpack[AdminUserSuspendArgs]) -> Any:
-        """Suspend a managed user's access to every product (by account ID or email)."""
-        return self.task(TaskName.ADMIN_USER_SUSPEND, kwargs)
+class AsyncAdminDomainApi:
+    """``atl admin domain``"""
 
-    def admin_user_restore(self, **kwargs: Unpack[AdminUserRestoreArgs]) -> Any:
-        """Restore a suspended managed user's access (by account ID or email)."""
-        return self.task(TaskName.ADMIN_USER_RESTORE, kwargs)
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
 
-    def admin_group_add_member(self, **kwargs: Unpack[AdminGroupAddMemberArgs]) -> Any:
-        """Add a managed user (email or account ID) to a group (name or ID) of an Atlassian organization."""
-        return self.task(TaskName.ADMIN_GROUP_ADD_MEMBER, kwargs)
-
-    def admin_group_remove_member(self, **kwargs: Unpack[AdminGroupRemoveMemberArgs]) -> Any:
-        """Remove a managed user from a group of an Atlassian organization."""
-        return self.task(TaskName.ADMIN_GROUP_REMOVE_MEMBER, kwargs)
-
-    def admin_group_list(self, **kwargs: Unpack[AdminGroupListArgs]) -> Any:
-        """Groups of an Atlassian organization (every directory), optionally matching `search`."""
-        return self.task(TaskName.ADMIN_GROUP_LIST, kwargs)
-
-    def admin_domain_list(self, **kwargs: Unpack[AdminDomainListArgs]) -> Any:
+    async def list(self, **kwargs: Unpack[AdminDomainListArgs]) -> _list[Domain]:
         """Domains of an Atlassian organization with their verification status."""
-        return self.task(TaskName.ADMIN_DOMAIN_LIST, kwargs)
+        return [Domain.model_validate(item) for item in await self._client.task(TaskName.ADMIN_DOMAIN_LIST, kwargs)]
 
-    def admin_event_list(self, **kwargs: Unpack[AdminEventListArgs]) -> Any:
+
+class AsyncAdminEventApi:
+    """``atl admin event``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[AdminEventListArgs]) -> _list[Event]:
         """Audit log events of an Atlassian organization, newest first, filtered by words, dates and action."""
-        return self.task(TaskName.ADMIN_EVENT_LIST, kwargs)
+        return [Event.model_validate(item) for item in await self._client.task(TaskName.ADMIN_EVENT_LIST, kwargs)]
+
+
+class AsyncAdminGroupApi:
+    """``atl admin group``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def add_member(self, **kwargs: Unpack[AdminGroupAddMemberArgs]) -> Membership:
+        """Add a managed user (email or account ID) to a group (name or ID) of an Atlassian organization."""
+        return Membership.model_validate(await self._client.task(TaskName.ADMIN_GROUP_ADD_MEMBER, kwargs))
+
+    async def remove_member(self, **kwargs: Unpack[AdminGroupRemoveMemberArgs]) -> Membership:
+        """Remove a managed user from a group of an Atlassian organization."""
+        return Membership.model_validate(await self._client.task(TaskName.ADMIN_GROUP_REMOVE_MEMBER, kwargs))
+
+    async def list(self, **kwargs: Unpack[AdminGroupListArgs]) -> _list[Group]:
+        """Groups of an Atlassian organization (every directory), optionally matching `search`."""
+        return [Group.model_validate(item) for item in await self._client.task(TaskName.ADMIN_GROUP_LIST, kwargs)]
+
+
+class AsyncAdminOrgApi:
+    """``atl admin org``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[AdminOrgListArgs]) -> _list[Org]:
+        """Organizations the Atlassian Admin API key can see."""
+        return [Org.model_validate(item) for item in await self._client.task(TaskName.ADMIN_ORG_LIST, kwargs)]
+
+
+class AsyncAdminUserApi:
+    """``atl admin user``"""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+
+    async def list(self, **kwargs: Unpack[AdminUserListArgs]) -> _list[AdminUser]:
+        """Managed users of an Atlassian organization (every directory), optionally matching `search`."""
+        return [AdminUser.model_validate(item) for item in await self._client.task(TaskName.ADMIN_USER_LIST, kwargs)]
+
+    async def suspend(self, **kwargs: Unpack[AdminUserSuspendArgs]) -> AdminUser:
+        """Suspend a managed user's access to every product (by account ID or email)."""
+        return AdminUser.model_validate(await self._client.task(TaskName.ADMIN_USER_SUSPEND, kwargs))
+
+    async def restore(self, **kwargs: Unpack[AdminUserRestoreArgs]) -> AdminUser:
+        """Restore a suspended managed user's access (by account ID or email)."""
+        return AdminUser.model_validate(await self._client.task(TaskName.ADMIN_USER_RESTORE, kwargs))
+
+
+class AsyncAdminApi:
+    """Atlassian Admin organizations, users, groups and audit events."""
+
+    def __init__(self, client: _AsyncTasks) -> None:
+        self._client = client
+        self.directory = AsyncAdminDirectoryApi(client)
+        """``atl admin directory``"""
+        self.domain = AsyncAdminDomainApi(client)
+        """``atl admin domain``"""
+        self.event = AsyncAdminEventApi(client)
+        """``atl admin event``"""
+        self.group = AsyncAdminGroupApi(client)
+        """``atl admin group``"""
+        self.org = AsyncAdminOrgApi(client)
+        """``atl admin org``"""
+        self.user = AsyncAdminUserApi(client)
+        """``atl admin user``"""
+
+
+class GeneratedAsyncClient:
+    """The product namespaces of ``AsyncClient``; the client supplies ``task()``."""
+
+    async def task(self, name: str, args: Mapping[str, Any] | None = None) -> Any:
+        raise NotImplementedError
+
+    def __init__(self) -> None:
+        self.jira = AsyncJiraApi(self)
+        """Jira and Jira Software: issues, comments, sprints, boards, filters and JQL."""
+        self.confluence = AsyncConfluenceApi(self)
+        """Confluence pages, blogs, spaces, comments, labels and attachments."""
+        self.bitbucket = AsyncBitbucketApi(self)
+        """Bitbucket repositories, branches, pull requests and pipelines."""
+        self.jsm = AsyncJsmApi(self)
+        """Jira Service Management desks, queues, requests and approvals."""
+        self.trello = AsyncTrelloApi(self)
+        """Trello boards, lists, cards and checklists."""
+        self.admin = AsyncAdminApi(self)
+        """Atlassian Admin organizations, users, groups and audit events."""

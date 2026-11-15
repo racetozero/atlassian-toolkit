@@ -64,15 +64,15 @@ def client():
 
 
 def test_tasks_return_small_records_and_send_credentials(client):
-    page = client.jira_issue_list(project='A', status=['~Done'])
-    assert page['issues'][0]['key'] == 'A-1'
-    assert page['next_page_token'] == 'p2'
-    assert (
-        page['jql'] == 'project = "A" AND status NOT IN ("Done") ORDER BY updated DESC'
-    )
+    page = client.jira.issue.list(project='A', status=['~Done'])
+    assert isinstance(page, atl_sdk.IssueList)
+    assert page.issues[0].key == 'A-1'
+    assert page.issues[0].status_category == 'new'
+    assert page.next_page_token == 'p2'
+    assert page.jql == 'project = "A" AND status NOT IN ("Done") ORDER BY updated DESC'
     method, path, body, auth = REQUESTS[-1]
     assert (method, path, auth) == ('POST', '/rest/api/3/search/jql', 'Bearer t')
-    assert body['jql'] == page['jql']
+    assert body['jql'] == page.jql
 
 
 def test_generated_operations_and_raw_requests(client):
@@ -87,11 +87,11 @@ def test_generated_operations_and_raw_requests(client):
 
 def test_errors_carry_code_status_and_details(client):
     with pytest.raises(atl_sdk.AtlError) as error:
-        client.jira_issue_view(key='NOPE-1')
+        client.jira.issue.view(key='NOPE-1')
     assert (error.value.code, error.value.status) == ('api', 404)
     assert error.value.details == {'errorMessages': ['Issue does not exist']}
     with pytest.raises(atl_sdk.AtlError) as error:
-        client.jira_issue_view(keys='A-1')
+        client.jira.issue.view(keys='A-1')  # type: ignore[call-arg]
     assert error.value.code == 'invalid' and 'unknown field `keys`' in str(error.value)
     read_only = atl_sdk.Client(
         connections={
@@ -104,7 +104,7 @@ def test_errors_carry_code_status_and_details(client):
         read_only=True,
     )
     with pytest.raises(atl_sdk.AtlError) as error:
-        read_only.jira_issue_comment(key='A-1', body='hi')
+        read_only.jira.issue.comment(key='A-1', body='hi')
     assert error.value.code == 'read_only'
 
 
@@ -117,19 +117,50 @@ def test_markup_and_task_catalog():
     assert {'jira_issue_list', 'confluence_page_get', 'jira_jql_check'} <= names
 
 
-def test_every_task_has_a_typed_method_and_a_name():
-    methods = set(dir(atl_sdk.Client))
+def test_every_task_is_a_method_on_its_cli_path(client):
+    sync = client
+    asynchronous = atl_sdk.AsyncClient(connections={})
     for task in atl_sdk.tasks():
-        assert task['name'] in methods, task['name']
+        product, *rest = task['name'].split('_')
+        # `jira_me` is `client.jira.me`; `jira_issue_link_types` is `client.jira.issue.link_types`.
+        path = rest if len(rest) == 1 else [rest[0], '_'.join(rest[1:])]
+        for root in (sync, asynchronous):
+            target = getattr(root, product)
+            for part in path:
+                target = getattr(target, part)
+            assert callable(target), task['name']
         assert atl_sdk.TaskName(task['name']) == task['name']
         assert task['description']
         assert task['schema']['type'] == 'object'
+        assert task['output_schema']['type'] in ('object', 'array')
 
 
-def test_task_by_name_matches_the_typed_method(client):
-    typed = client.jira_issue_list(project='A')
+def test_namespaced_results_match_the_task_by_name(client):
+    typed = client.jira.issue.list(project='A')
     by_name = client.task(atl_sdk.TaskName.JIRA_ISSUE_LIST, {'project': 'A'})
-    assert typed == by_name
+    assert typed.model_dump(mode='json') == by_name
+
+
+def test_models_keep_fields_a_newer_server_adds():
+    issue = atl_sdk.IssueSummary.model_validate(
+        {
+            'key': 'A-1',
+            'summary': 's',
+            'status': 'Done',
+            'status_category': 'done',
+            'type': 'Bug',
+            'url': 'u',
+            'rank': 7,
+        }
+    )
+    assert issue.model_extra == {'rank': 7}
+    assert issue.assignee is None
+
+
+def test_python_keyword_fields_use_an_alias():
+    link = atl_sdk.Linked.model_validate({'from': 'A-1', 'to': 'A-2', 'type': 'Blocks'})
+    assert link.from_ == 'A-1'
+    assert link.model_dump() == {'from': 'A-1', 'to': 'A-2', 'type': 'Blocks'}
 
 
 def test_calls_from_many_threads_share_one_client(client):
@@ -137,8 +168,8 @@ def test_calls_from_many_threads_share_one_client(client):
     from concurrent.futures import ThreadPoolExecutor
 
     with ThreadPoolExecutor(max_workers=16) as pool:
-        pages = list(pool.map(lambda _: client.jira_issue_list(project='A'), range(64)))
-    assert {page['issues'][0]['key'] for page in pages} == {'A-1'}
+        pages = list(pool.map(lambda _: client.jira.issue.list(project='A'), range(64)))
+    assert {page.issues[0].key for page in pages} == {'A-1'}
 
 
 @pytest.mark.parametrize(

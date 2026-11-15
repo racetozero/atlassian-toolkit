@@ -6,7 +6,7 @@
  * import { init, Client } from "./index.ts"
  * await init()
  * const client = Client.withConnections({ jira: { deployment: "cloud", base_url: "https://proxy.example/jira", auth: { kind: "bearer", token } } })
- * const { issues } = await client.jiraIssueList({ assignee: "me" })
+ * const { issues } = await client.jira.issue.list({ assignee: "me" })
  * ```
  *
  * Browsers enforce CORS: Atlassian site APIs do not allow arbitrary origins,
@@ -14,7 +14,15 @@
  * extension, worker, or Deno, where CORS does not apply).
  */
 import initWasm, * as native from "../pkg/atl_wasm.js"
-import { type Connections, rethrow, type TaskDef, Tasks } from "../../atl-node/ts/common.ts"
+import {
+  type Connections,
+  rethrow,
+  type TaskArgs,
+  type TaskDef,
+  type TaskName,
+  type TaskResults,
+  Tasks,
+} from "../../atl-node/ts/common.ts"
 
 export * from "../../atl-node/ts/common.ts"
 
@@ -50,8 +58,9 @@ export class Client extends Tasks {
     return new Client(this.inner.configured(options.readOnly, options.maxRetries))
   }
 
-  task<T = unknown>(name: string, args: Record<string, unknown> = {}): Promise<T> {
-    return run<T>(() => this.inner.task(name, args))
+  /** Runs any task by name, for example `task("jira_issue_view", { key: "A-1" })`. */
+  task<N extends TaskName>(name: N, args?: TaskArgs[N]): Promise<TaskResults[N]> {
+    return run<TaskResults[N]>(() => this.inner.task(name, args ?? {}))
   }
 
   call<T = unknown>(
